@@ -28,7 +28,7 @@ La forma más fácil de instalar Creative es usar [Composer] (https://github.com
                 "source": {
                     "type": "git",
                     "reference": "master",
-                    "url": "https://gitlab.com/creative-framework/creative.git"
+                    "url": "https://github.com/megacreativo/creative.git"
                 }
             }
         }],
