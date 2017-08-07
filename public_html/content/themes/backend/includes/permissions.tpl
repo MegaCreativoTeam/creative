@@ -58,27 +58,16 @@ function addrecord_callback(){
 }
 
 
-
-var modules = {Registry::get_registry_of_modules_json()};/*(function(){
-	var r = {Registry::get_registry_of_modules_json()};
-	$.each(modules, function(module_name, module_attr){
-		if( r.fields ){
-			$.each(module_attr.fields, function(field_name, field_attr){
-				r[module_name]['fields'][field_name] = {
-					text : field_attr,
-					access : 0
-				};
-			});
-		}
-	});
-	return r;
-})();*/
+var modules = {Registry::get_registry_of_modules_json()};
 var modules_intitialize = $.extend(true, {}, modules);
 
 
 
 /**
- * 
+ * ------------------------------------------------------------------
+ * Este procedimiento se encarga de creaar los campos de cada módulo 
+ * con su corespondiete nvel de acceso
+ * ------------------------------------------------------------------
  */
 function customize_handler( id ){
 	
@@ -104,7 +93,10 @@ function customize_handler( id ){
 		if( modules[id].fields_info ){
 		 	$.each(modules[id].fields_info, function(index, item){
 
-				var info = '', required = '';
+				var info 		= ''
+					, required 	= ''
+					, text 		= item['text']
+					, access 	= item['access'];
 
 				if( modules[id].fields_info ){
 					if( modules[id].fields_info[index] ){
@@ -118,10 +110,10 @@ function customize_handler( id ){
 				}
 				
 				var field = '<td align="left" style="padding-top: 8px !important;">:text :info :required</td>'
-					.replace(':text', item)
+					.replace(':text', text)
 					.replace(':info', info != '' ? '{Helper::get("html")->icon_help("'+info+'")}' : '')
-					.replace(':text', item)
-					.replace(':required', required != '' ? '{Helper::get("html")->icon_required("'+item+'")}' : '');
+					.replace(':text', text)
+					.replace(':required', required != '' ? '{Helper::get("html")->icon_required("'+text+'")}' : '');
 
 				var action = '<td align="center">'+
 								'<select id="access_'+index+'" data-field="'+index+'" data-module="'+id+'" class="form-control access_field" style="width: 100%;">'+
@@ -135,12 +127,11 @@ function customize_handler( id ){
 							'</td>';	
 				$('#table_permissions').append('<tr>'+field + action+'</tr>');
 				$('#access_' + index).on("change", save_access);
-				$('#access_' + index).val(item['access']).change();
+				$('#access_' + index).val(access).change();
 				$('[data-toggle="popover"]').popover(); 
 			});			
 		}
-	}
-	
+	}	
 };
 
 
@@ -152,12 +143,15 @@ function save_access(){
 	var val = base.val();
 	var color = '#dd4b39';
 
-	modules[module]['fields'][field]['access'] = val;
+	modules[module]['fields_info'][field]['access'] = val;
 	$('#read-'+module).prop('checked',1);
 
 	switch( val ){
-		case '0': color = '#dd4b39'; break;
-		case '1': color = '#00a65a'; break;
+		case '0':color = '#dd4b39'; break;
+		case '1': 
+			color = '#00a65a';
+			$('#created-'+module).prop('checked',true);
+		break;
 		case '2': color = '#f39c12'; break;
 	}
 	$('#label-'+field).css('color', color);
@@ -165,4 +159,3 @@ function save_access(){
 
 
 </script>
-

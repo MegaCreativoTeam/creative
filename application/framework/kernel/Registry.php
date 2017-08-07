@@ -142,7 +142,13 @@ class Registry
         $registry = array_reverse($arr, true);
         foreach (array_reverse($arr, true) as $mdule_name => $module_attr) 
         {
-            $registry[$mdule_name]['access'] = 0;
+            if( isset($module_attr['fields_info']) )
+            {
+                foreach ($module_attr['fields_info'] as $fields_info => $fields_info_attr)
+                {
+                    $registry[$mdule_name]['fields_info'][$fields_info]['access'] = 0;
+                }
+            }
         }
         $registry = json_encode($registry, JSON_PRETTY_PRINT);
 
