@@ -318,7 +318,7 @@ class managementController extends backendController {
 		
 		$source = $this->include_source_view( 'permissions', 'management', 'backend');
 		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>12),
+			'col'	=> array('sm'=>12, 'md'=>12),
 			'type'	=> 'source',
 			'source'=> $source,
 		));
@@ -363,7 +363,7 @@ class managementController extends backendController {
 					'text' => Lang::get('dashboard.attrs.status'),
 					'align' => 'center',
 					'type'	=> 'label',					
-					'class' => 'status_class',
+					'labelclass' => 'status_class',
 					'tooltips' => 'status_info'
 				),
 			), //Indica las columnas que se mostrarán

@@ -1,6 +1,6 @@
 
 <div class="row" style="padding-top:15px">
-	<div class="col-md-12">
+	<div class="col-sm-12">
 		<a class="selections" data-selection="check" href="#" role="button"><span class="fa fa-check-square-o"></span> {Lang::get('dashboard.info.selection_check')}</a> &nbsp &nbsp
 		<a class="selections" data-selection="inverse" href="#" role="button"><span class="fa fa-check-square"></span> {Lang::get('dashboard.info.selection_inverse')}</a> &nbsp &nbsp
 		<a class="selections" data-selection="uncheck" href="#" role="button"><span class="fa fa-times"></span> {Lang::get('dashboard.info.selection_uncheck')}</a>

@@ -9,7 +9,7 @@
             "source": {
                 "type": "git",
                 "reference": "master",
-                "url": "https://gitlab.com/megacreativo/creative.git"
+                "url": "https://github.com/megacreativo/creative.git"
             }
         }
     }],

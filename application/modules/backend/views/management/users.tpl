@@ -189,7 +189,7 @@ function loaddata_profile_handler( id ){
     if( id == -1 || id == null ) return false;
     
 	$.ajax({
-		url : "/api/v1/profiles.json/find/" + id + '?tokenurl='+ ex.guid(),
+		url : "/api/v1/profiles.json/find/" + id + '/?tokenurl='+Math.random(),
 		data : {
 			id 		: id,
 			token 	: _token,
@@ -210,32 +210,42 @@ function loaddata_profile_handler( id ){
 	    		//UnCheck todos los permisos
 	    		$('.permission').prop('checked', false);
 	    		
-	    		//Recorre los permisos
-	    		$.each(permissions, function( index_root, permission ){
-	    			
-	    			if( permission.attr == 'permission-module' ){
-	    				var access = permission.content.toArray(',');
-		    			$.each(access, function( index, item ){
-		    				item = item.toArray(':');
-		    				var field = '#' + item[0]+ '-'+permission.name;
-		    				var val = item[1]==1 ? true : false;
-		    				$(field).prop('checked',val);
-		    			});
-		    			
-	    			} else if( permission.attr == 'permission-field' ){
-	    				var access = permission.content.toArray(',');
-	    				$.each(access, function( index, item ){
-							item = item.toArray(':');
-
-							if( modules[permission.name] )				
-								if( modules[permission.name]['fields'] )
-									modules[permission.name]['fields'][item[0]].access = item[1];
-		    				
-		    			});
+	    		$.each(data.data, function( index, item ){	    			
+	    			if( $("#"+index).is("select") ){
+	    				$("#"+index).val(item).change();
+	    			} else {
+	    				$("#"+index).val(item);
 	    			}
-				});
-				
-	    		$('#read-dashboard').prop('checked',1).prop('disabled',1);
+	    		});
+	    		
+	    		//Recorre los permisos
+	    		$.each(permissions, function( module, access ){
+
+	    			var values = access.content.toArray(',');
+
+					$.each(values, function( index, item ){
+
+						content = item.toArray(':');
+
+						if( access.attr == 'permission-module' ){
+							var field = '#' + content[0]+ '-'+access.name;
+							var val = content[1]==1 ? true : false;
+							$(field).prop('checked',val);
+
+						} else if( access.attr == 'permission-field' ){
+							var field 	= content[0];
+							var val 	= content[1];
+							if( modules[access.name].fields_info ){
+								if( modules[access.name].fields_info[field] ){
+									modules[access.name].fields_info[field].access = val;
+								}					
+							}
+						}
+
+					});		    			
+	    				    			
+	    		});
+	    		
 				//_token = data.response.token;				
 			} else {					
 				ex.notify(data.statusText, data.icon);
