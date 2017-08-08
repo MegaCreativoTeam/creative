@@ -81,10 +81,10 @@ class Registry
                 'info' => isset($module_attr['info']) ? $module_attr['info'] : '',
             ];
 
-            if( isset($module_attr['modules']) AND count($module_attr['modules']) ){
-                $registry[$mdule_name]['modules'] = [];
-                foreach ($module_attr['modules'] as $key => $value){
-                    $registry[$mdule_name]['modules'][$value] = [
+            if( isset($module_attr['submodules']) AND count($module_attr['submodules']) ){
+                $registry[$mdule_name]['submodules'] = [];
+                foreach ($module_attr['submodules'] as $key => $value){
+                    $registry[$mdule_name]['submodules'][$value] = [
                         'text' => isset($registry[$value]['text']) ? $registry[$value]['text'] : '',
                         'icon' => isset($registry[$value]['icon']) ? $registry[$value]['icon'] : '',
                         'module' => isset($registry[$value]['module']) ? $registry[$value]['module'] : '',

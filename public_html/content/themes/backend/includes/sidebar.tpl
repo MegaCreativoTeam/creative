@@ -24,7 +24,7 @@
 		
 			{if $module_attr.module==$ambit}
 
-				{if isset($module_attr.modules) && count($module_attr.modules)}
+				{if isset($module_attr.submodules) && count($module_attr.submodules)}
 					<li id="{$module_name}" class="treeview{if $active_menu==$module_name} active{/if}">
 						<a href="#">
 							<i class="{$module_attr.icon|default:'fa fa-circle'}"></i>
@@ -34,7 +34,7 @@
 							</span>
 						</a>
 						<ul class="treeview-menu">
-							{foreach $module_attr.modules as $module_ix => $module}
+							{foreach $module_attr.submodules as $module_ix => $module}
 								<li id="{$module_ix}">
 									<a href="/{$module_attr.module}/{$module_name}/{$module_ix}/">
 										<i class="{$module['icon']}"></i> <span>{$module['text']}</span>

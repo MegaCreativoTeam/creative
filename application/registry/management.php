@@ -8,7 +8,7 @@ return
 
     'module' => 'backend',
 
-    'modules' => [
+    'submodules' => [
         'users',
         'profiles'
     ]

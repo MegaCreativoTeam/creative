@@ -183,7 +183,7 @@ class managementController extends backendController {
 		$config = Auth::get()->user_ambit[BACKEND];
 		$table = $config['table'];
 		$this->model_module = $this->load_model($table);
-		
+
 		$this->view->assign('data', $this->model->search(
 			array(
 				"user_decp" =>
@@ -215,7 +215,7 @@ class managementController extends backendController {
 		//$this->view->assign('fields'	, $fields);
 		
 		//Prepara la tabla
-		$this->view->assign('table', array(
+		$this->view->assign('table', [
 			'columns'		=> array(
 				'user_decp'	=> array(
 					'text' 	=> Lang::get('personal_attr.name'),
@@ -236,7 +236,7 @@ class managementController extends backendController {
 			'view'		=> TRUE, //Indica si se mostrará la columna de Visualizar
 			'edit'		=> TRUE, //Indica si se mostrará la columna de Editar
 			'delete'	=> TRUE  //Indica si se mostrará la columna de Eliminar
-		));
+		]);
 		
 		$this->view->assign('btn_add', TRUE);				//Indica si se mostrará el botón de Agregar
 		$this->view->assign('btn_add_text', TRUE);			//Indica si se mostrará el texto del botón Agregar
