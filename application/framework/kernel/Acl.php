@@ -9,16 +9,17 @@
 */
 abstract class Acl {
 	
-	private $_registry;
-	private $_db;
-	private $_id;
-	private $_profile;
-	private $_permissions;
-	private $_ambit;
-	private $_table = 'users';
-	private $_conex ;
-	private $_permissions_profile;
-	private $_permissions_user;
+	private 
+		  $_registry
+		, $_db
+		, $_id
+		, $_profile
+		, $_permissions
+		, $_ambit
+		, $_table = 'users'
+		, $_conex 
+		, $_permissions_profile
+		, $_permissions_user;
 	
 	
 	/**
@@ -28,7 +29,7 @@ abstract class Acl {
 	* 
 	* @return
 	*/
-    public function __construct( $ambit = NULL) {
+    public static function initialize( $ambit = NULL) {
     	
 		if( ! Creative::get( 'Session' )->get('auth') ){
 			return;

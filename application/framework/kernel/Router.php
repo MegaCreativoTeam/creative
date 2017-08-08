@@ -151,7 +151,7 @@ class Router {
 		//header("HTTP/1.0 {$status['status']} " . $status['statusText']);
 		//header("Status: {$status['status']} " . $status['statusText'] );
 		
-		$view = new View( $GLOBALS['CREATIVE']['request'] , new Acl() );
+		$view = new View( $GLOBALS['CREATIVE']['request'] );
 		$view->render( '_http_.'.$status['status']);
 		exit;
 	}

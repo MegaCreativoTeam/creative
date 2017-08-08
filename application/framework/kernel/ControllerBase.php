@@ -201,16 +201,9 @@ abstract class ControllerBase
      * 
      * @param string $route
      */
-	protected function location($route = FALSE, $external = FALSE){
-   		if( $external ){
-			header('Location: ' . $route);
-			exit;
-		}	
-
-        if($route){
-            header('Location: /' . $route);
-            exit;
-        }
+	protected function location($route){
+		header('Location: ' . $route);
+		exit;
     }
     
 

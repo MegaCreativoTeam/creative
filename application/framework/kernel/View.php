@@ -179,8 +179,10 @@ class View extends SmartyBC
 		}
 
 		if( $options AND count($options) ){
-			$active_menu= isset($options['active_menu']) ? $options['active_menu'] : '';
-		}		
+			$active_menu = isset($options['active_menu']) ? $options['active_menu'] : '';
+		} else {
+			$active_menu = '';
+		}
 
 		$this->template_dir = $route['theme']['path'];
 		$this->config_dir 	= PATH_TEMPORAL . 'configs';

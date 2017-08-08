@@ -75,13 +75,16 @@ class managementController extends backendController {
 			,'text'		=> Lang::get('dashboard.modules.users')
 		]);
 		
+
+		$info = Registry::get('users')['fields_info'];
+
 		//Nombre
 		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'name',
-			'type'	=> 'text',
-			'label'	=> l('personal_attr.name'),
-			'required'=> TRUE,
+			'id'		=> 'name',
+			'col'		=> $info['name']['col'],
+			'type'		=> $info['name']['type'],
+			'label'		=> $info['name']['text'],
+			'required'	=> $info['name']['required'],
 		));
 		
 		//Apellido

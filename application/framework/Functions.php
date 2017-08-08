@@ -412,8 +412,9 @@ function is_email($email){
 * 
 * @return String Token genereado
 */
-function hash_url( $lenght=10 ){
-	return strtoupper(substr(sha1(time().mt_rand(0, microtime())), 0, $lenght));
+function hash_url( $lenght = 10 ){
+	$hash = sha1(mt_rand(0, time()));
+	return strtoupper(substr($hash, 0, $lenght));
 }
   
 function url_backend( $url ){

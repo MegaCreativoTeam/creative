@@ -23,7 +23,9 @@ abstract class Lang
             $taken = $content[$patterns[1]]; //array|string
             
             if( is_array($taken) ){
-                $taken = $taken[$patterns[2]];
+                if( isset($taken[$patterns[2]]) )
+                    $taken = $taken[$patterns[2]];
+                else return '';
             }
 
         //array|string in default
@@ -32,10 +34,13 @@ abstract class Lang
             $content = include $path_lang . 'default.php';
             if( isset($content[$patterns[0]]) )
                 $taken = $content[$patterns[0]]; //array|string
-            else $taken = '';
+            else 
+                $taken = '';
             
             if( is_array($taken) ){
-                $taken = $taken[$patterns[1]];
+                if( isset($taken[$patterns[1]]) )
+                    $taken = $taken[$patterns[1]];
+                else return '';
             }
             
         } else {
