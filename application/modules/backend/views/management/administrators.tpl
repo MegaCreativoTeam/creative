@@ -43,14 +43,14 @@ function saverecord_handler( e ){
 			id 				: $("#id").val(),
 			email 			: $("#email").val(),
 			pass 			: $("#pass1").val(),
-			profile_id 	     : $("#profile_id").val(),
+			profile_id 	    : $("#profile_id").val(),
 			name 			: $("#name").val(),
 			last_name 		: $("#last_name").val(),
 			nicname 		: $("#nicname").val(),
 			status 			: $("#status").val()
 		},
 		action 			= "insert",
-		ajax_url 		= "/api/v1/users.json/?tokenurl=" + ex.guid();
+		ajax_url 		= "{$registry.administrators.api}?nocache=" + Math.random();
 	
 	//Nuevo Registro
 	if( data.id <= "-1" ){
@@ -85,7 +85,7 @@ function saverecord_handler( e ){
 	data.access_field  = access_field;
 	
 	$(".form-control").parent().removeClass("has-error");
-		
+	
 	$.ajax({
 		url : ajax_url,
 		data : data,
@@ -259,7 +259,7 @@ function loaddata_profile_handler( id ){
 function loaddata_handler( id ){
 	
 	$.ajax({
-		url : "/api/v1/users.json/find/" + id + '/{$ambit}/?tokenurl='+Math.random(),
+		url : "{$registry.administrators.api}find/" + id + '/?nocache='+Math.random(),
 		data : {
 			id 		: id,
 			token 	: _token,
@@ -344,7 +344,7 @@ function searchrecord_handler(){
 		value  = $("#search").val();
 	
 	$.ajax({
-		url : "/api/v1/users.json/search/{$ambit}/" + filter + "/" + value + '?tokenurl=' + Math.random(),
+		url : "{$registry.administrators.api}search/" + filter + "/" + value + '?nocache=' + Math.random(),
 	    beforeSend: function( e ) {
 			$.loading({ text: "{Lang::get('processing')}..." });
 		},

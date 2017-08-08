@@ -19,10 +19,10 @@
 
 	<ul class="sidebar-menu">
 		
-	{if isset($menu) && count($menu)}	
+	{if isset($menu) && count($menu)}
 		{foreach $menu as $module_name => $module_attr}
 		
-			{if $module_attr.module==$ambit}
+			{if $module_attr.module==BACKEND}
 
 				{if isset($module_attr.submodules) && count($module_attr.submodules)}
 					<li id="{$module_name}" class="treeview{if $active_menu==$module_name} active{/if}">

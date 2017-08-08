@@ -1,6 +1,6 @@
 <?php 
 
-return (object) [
+return [
 
     'name' => 'Creative',
     'company_name' => '',

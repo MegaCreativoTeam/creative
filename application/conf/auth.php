@@ -1,7 +1,7 @@
 <?php 
 
 
-return (object) [
+return [
 
     'auth_failed' => [
 

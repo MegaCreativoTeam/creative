@@ -5,7 +5,7 @@
     <div class="pull-right hidden-xs">
         <b>Version</b> 1.0
     </div>
-    <strong>Copyright &copy; {$smarty.now|date_format:"%Y"} {App::get()->company_name}.</strong> Todos los derechos reservados.
+    <strong>Copyright &copy; {$smarty.now|date_format:"%Y"} {App::get('company_name')}.</strong> Todos los derechos reservados.
 </footer>
 
 </div>

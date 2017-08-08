@@ -9,7 +9,7 @@ return
     'module' => 'backend',
 
     'submodules' => [
-        'users',
+        'administrators',
         'profiles'
     ]
 ];

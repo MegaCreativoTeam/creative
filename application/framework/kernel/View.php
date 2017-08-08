@@ -175,7 +175,7 @@ class View extends SmartyBC
 		if (is_readable($path_view)) {
 			$this->assign('view_html', $path_view);
 		} else {
-			ErrorHandler::run_exception( 'View Not Found: [' . $path_view. ']' );
+			ErrorHandler::exception( 'view', 'VW0001', 'View Not Found', $path_view );
 		}
 
 		if( $options AND count($options) ){
@@ -197,6 +197,7 @@ class View extends SmartyBC
 		$this->assign('uploads'		, $route['uploads']);
 		$this->assign('angular'		, $this->_use_angular);
 
+		$this->assign('registry'	, Registry::get_all());
 		$this->assign('modules'		, Registry::get_modules());
 		$this->assign('menu'		, Registry::get_menu());
 

@@ -8,6 +8,8 @@ return
 
     'module' => 'backend',
 
+    'api' => '/api/v1/administrators.json/',
+
     'info' => Lang::get('dashboard.info.users_module'),
     
     'fields' => [

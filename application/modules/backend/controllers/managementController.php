@@ -64,19 +64,19 @@ class managementController extends backendController {
 	 * @version     1.0.2
 	 * @author      Brayan Rincon <brayan262@gmail.com>
 	 */
-	public function users() {
+	public function administrators() {
 
-		$this->model = $this->load_model('administrators');
+		$this->model = $this->load_model( __FUNCTION__ );
 		$this->model_profiles = $this->load_model('profiles');
 		
 		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', [
-			'add_record' => TRUE,
-			 'size' 	=> 'lg'
-			,'text'		=> Lang::get('dashboard.modules.users')
+			  'add_record' 	=> TRUE
+			, 'size' 		=> 'lg'
+			, 'text'		=> Lang::get('dashboard.modules.users')
 		]);
 		
 
-		$info = Registry::get('users')['fields_info'];
+		$info = Registry::get(__FUNCTION__)['fields_info'];
 
 		//Nombre
 		$ModalRecord->add_field(array(
@@ -180,9 +180,8 @@ class managementController extends backendController {
 		//Escribe el componente
 		$ModalRecord->write();
 		
-		$config = Auth::get()->user_ambit[BACKEND];
-		$table = $config['table'];
-		$this->model_module = $this->load_model($table);
+		$config = Auth::get('user_ambit')[BACKEND];
+		$this->model_module = $this->load_model($config['table']);
 
 		$this->view->assign('data', $this->model->search(
 			array(

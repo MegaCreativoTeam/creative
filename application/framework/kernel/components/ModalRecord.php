@@ -203,10 +203,13 @@ class ModalRecord {
  			
  		$col = '';
  		
- 		//Formate las columnas
- 		foreach($attr->col as $key => $value){
-			$col .= 'col-' . $key .'-'. $value .' ';
+		if ( !empty($attr->col) ){
+			//Formate las columnas
+			foreach($attr->col as $key => $value){
+				$col .= 'col-' . $key .'-'. $value .' ';
+			}
 		}
+
 		
 		//Determina si el campo es requerido
 		if( $attr->required ){

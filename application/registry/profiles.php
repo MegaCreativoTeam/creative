@@ -8,6 +8,8 @@ return
 
     'module' => 'backend',
 
+    'api' => '/api/v1/profiles.json/',
+
     'info' => Lang::get('dashboard.info.profiles_module'),
     
     'fields' => [

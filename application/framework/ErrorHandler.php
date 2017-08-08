@@ -114,10 +114,20 @@ abstract class ErrorHandler{
 
 	private static
 		$exception_type = [
-			'database' => 'CreativeDataBaseException'
+			  'database' => 'CreativeDataBaseException'
+			, 'view' => 'CreativeVewException'
 			, 'SmartyCompilerException' => 'CreativeSmartyCompilerException'
 		];
 
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $type Type Exception [database,SmartyCompilerException]
+	 * @param [type] $number
+	 * @param [type] $title
+	 * @param string $message
+	 * @return void
+	 */
 	public static function exception( $type, $number, $title, $message = '' ){
 		
 		$template = Creative::default_template_html();	

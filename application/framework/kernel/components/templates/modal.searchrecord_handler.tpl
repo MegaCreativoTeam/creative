@@ -15,7 +15,7 @@ function searchrecord_handler(){
 		value  = $("#search").val();
 	
 	$.ajax({
-		url : ":controller_load/search/" + filter + "/" + value,
+		url : ":controller_load/search/" + filter + "/" + value + '/?nocache=' + Math.random(),
 	    beforeSend: function( e ) {
 			$.isLoading({ text: "Procesando..." });
 		},

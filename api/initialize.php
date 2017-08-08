@@ -29,7 +29,7 @@ abstract class Initialize
 		Creative::add( 'View' );
 
 		App::initialize();
-		Lang::set_locale( App::get()->locale );
+		Lang::set_locale( App::get('locale') );
 
 		Auth::initialize();
 		Registry::initialize();
