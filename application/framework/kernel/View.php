@@ -144,7 +144,7 @@ class View extends SmartyBC
 	 * como un método conveniente para separar la lógica del controlador y 
 	 * del dominio de la lógica de la presentación.
 	 * 
-	 * @param string $view
+	 * @param string $view 
 	 * @param array $options
 	 * 
 	 * @return void
