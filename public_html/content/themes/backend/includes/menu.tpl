@@ -1,3 +1,5 @@
+{assign var=sess value=Session::get($ambit)}
+
 <style>
 .user-panel > .info > a {
     text-decoration: none;
@@ -14,7 +16,7 @@
 			<img id="user_img_menu" src="{$theme.img|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
 		</div>
 		<div class="info">
-			<p style="margin-top: 4px;margin-bottom: 1px;">{$backend.profile_name}</p>
+			<p style="margin-top: 4px;margin-bottom: 1px;">{$sess.profile_name}</p>
 			<a href="#"><span class="fa fa-circle" style="color:#56b726"></span> En línea</a>
 		</div>
 	</div> 

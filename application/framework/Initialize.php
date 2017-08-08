@@ -42,12 +42,13 @@ abstract class Initialize
 		App::initialize();
 		Lang::set_locale( App::get()->locale );
 
+		Creative::get( 'Session' )->initialize();
+
 		Auth::initialize();
 
 		Registry::initialize();
-		Acl::initialize();
+		Acl::initialize();	
 		
-		Creative::get( 'Session' )->initialize();
 	}
 }
 

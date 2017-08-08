@@ -180,8 +180,10 @@ class View extends SmartyBC
 
 		if( $options AND count($options) ){
 			$active_menu = isset($options['active_menu']) ? $options['active_menu'] : '';
+			$ambit = isset($options['ambit']) ? $options['ambit'] : FRONTEND;
 		} else {
 			$active_menu = '';
+			$ambit = FRONTEND;
 		}
 
 		$this->template_dir = $route['theme']['path'];
@@ -201,7 +203,9 @@ class View extends SmartyBC
 		$this->assign('outerhtml'	, OuterHTML::get());
 
 		$this->assign('options'		, $options);
-		$this->assign('active_menu', $active_menu);
+		$this->assign('active_menu'	, $active_menu);		
+		$this->assign('ambit'		, $ambit);
+
 
 		//$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);
 

@@ -50,24 +50,12 @@
 </div>
 
 
-{if $ambit=='backend'}
-<script>
-    var backend = 1;
-</script>
-{else}
-<script>
-    var backend = 0;
-</script>
-{/if}
-
 <script>
     ExtendmeJS.path = '/assets/components/extendmejs/';
     npm('notify');
 </script>
 
 <script>
-
-
     var _token = '{$token|default:""}';
 
     $('#form-auth').submit(function(e) {
@@ -96,7 +84,7 @@
                 email: $('#email').val(),
                 pass: $('#pass').val(),
                 token: _token,
-                backend: backend,
+                ambit: '{$ambit}',
             },
             type: 'POST',
             dataType: 'json',

@@ -1,4 +1,4 @@
-{assign var=backend value=Session::get('backend')}
+{assign var=sess value=Session::get($ambit)}
 
 <body {if $angular}ng-app="{$ng_module}" {/if} class="skin-blue sidebar-mini">
     <div class="wrapper">
@@ -8,9 +8,9 @@
             <!-- Logo -->
             <a href="#" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini">{$app->company_name|default:'TIVE'}</span>
+                <span class="logo-mini">{App::get()->company_name|default:'TIVE'}</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">{$app->company_name|default:'CREATIVE'}</span>
+                <span class="logo-lg">{App::get()->company_name|default:'CREATIVE'}</span>
             </a>
 
             <!-- Header Navbar: style can be found in header.less -->
@@ -28,15 +28,15 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="{$theme.img|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
-                                <span class="hidden-xs">{$backend.description|upper}&ensp;</span>
+                                <span class="hidden-xs">{$sess.description|upper}&ensp;</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="{$theme.img|cat:'user.backend.png'}" class="img-circle" alt="" style="background-color: #fff">
                                     <p>
-                                        {$backend.description|upper}
-                                        <small>{if $backend.profile_name}{$backend.profile_name}{/if}</small>
+                                        {$sess.description|upper}
+                                        <small>{if $sess.profile_name}{$sess.profile_name}{/if}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->

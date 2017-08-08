@@ -43,7 +43,10 @@ class dashboardController extends backendController
      * @author name <name@email.com>
      */
     public function index(){
-        $this->view->render( __FUNCTION__ );
+        $this->view->render( __FUNCTION__ , [
+            'active_menu' => 'dashboard',
+            'ambit' => BACKEND
+        ]);
     }
 }
 

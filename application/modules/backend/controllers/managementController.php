@@ -66,7 +66,7 @@ class managementController extends backendController {
 	 */
 	public function users() {
 
-		$this->model = $this->load_model('users');
+		$this->model = $this->load_model('administrators');
 		$this->model_profiles = $this->load_model('profiles');
 		
 		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', [
@@ -180,8 +180,11 @@ class managementController extends backendController {
 		//Escribe el componente
 		$ModalRecord->write();
 		
+		$config = Auth::get()->user_ambit[BACKEND];
+		$table = $config['table'];
+		$this->model_module = $this->load_model($table);
 		
-		$this->view->assign('data', $this->model->all(
+		$this->view->assign('data', $this->model->search(
 			array(
 				"user_decp" =>
 					"CONCAT(name, ' ', last_name)",
@@ -245,7 +248,10 @@ class managementController extends backendController {
 		$this->view->template ( 'default' );        
         $this->view->theme( BACKEND );
 
-		$this->view->render(__FUNCTION__, array('active_menu'=>'management') );
+		$this->view->render(__FUNCTION__, [
+			'active_menu' => 'management',
+			'ambit '=> BACKEND
+		]);
 	}
 	
 	

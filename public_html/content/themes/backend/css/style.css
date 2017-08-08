@@ -12,7 +12,6 @@
  */
 
 @import url('https://fonts.googleapis.com/css?family=Raleway:300,400');
-
 html,
 body {
     min-height: 100%;
@@ -26,13 +25,14 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     background-color: #eeeeee;
-    font-size:13px
+    font-size: 13px
 }
 
 .layout-boxed html,
 .layout-boxed body {
     height: 100%;
 }
+
 
 /* Layout */
 
@@ -194,6 +194,7 @@ h6,
 
 
 /* General Links */
+
 a {
     color: #4e5254;
 }
@@ -225,13 +226,11 @@ a:focus {
  * Component: Main Header
  * ----------------------
  */
-.sidebar-menu > li.header {
-  color: #979898;
-  background: #4e5254;
+
+.sidebar-menu>li.header {
+    color: #979898;
+    background: #4e5254;
 }
-
-
-
 
 .main-header {
     position: relative;
@@ -242,7 +241,6 @@ a:focus {
 .sidebar-mini .main-header {
     background: #2c2e2f;
 }
-
 
 .main-header .navbar {
     background-color: #fff;
@@ -317,7 +315,7 @@ a:focus {
     background-image: none;
     padding: 15px 15px;
     font-family: fontAwesome;
-    color:#979898;
+    color: #979898;
     font-weight: 300;
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
@@ -342,13 +340,12 @@ a:focus {
     display: none;
 }
 
-.main-header .navbar .nav > li > a {
+.main-header .navbar .nav>li>a {
     -webkit-transition: all 0.3s ease-in-out;
     -moz-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-  color: #979898;
-
+    color: #979898;
 }
 
 .main-header .navbar .nav>li.user>a>.fa,
@@ -389,7 +386,7 @@ a:focus {
 }
 
 .main-header .logo:hover {
-  color: #fff;
+    color: #fff;
 }
 
 .main-header .logo .logo-lg {
@@ -525,9 +522,11 @@ a:focus {
     padding-left: 0;
     list-style: none;
 }
+
 .user-links li {
     display: table-cell;
 }
+
 .user-links li a {
     display: block;
     text-align: center;
@@ -535,10 +534,12 @@ a:focus {
     padding: 10px 3px;
     font-size: 13px;
 }
+
 .user-links li.logout-link {
     width: 40px;
 }
-.user-links li + li a {
+
+.user-links li+li a {
     border-left: 1px solid #323435;
 }
 
@@ -547,8 +548,7 @@ a:focus {
     color: #fff;
 }
 
-
-.sidebar-collapse .user-links{
+.sidebar-collapse .user-links {
     display: none;
 }
 
@@ -598,7 +598,6 @@ a:focus {
         -o-transform: translate(-250px, 0);
         transform: translate(-250px, 0);
     }
-
 }
 
 @media (max-width: 767px) {
@@ -608,12 +607,11 @@ a:focus {
         -ms-transform: translate(0, 0);
         -o-transform: translate(0, 0);
         transform: translate(0, 0);
-        padding-top: 140px;        
+        padding-top: 140px;
     }
     .main-header .logo {
         line-height: 70px;
     }
-
 }
 
 .sidebar {
@@ -672,7 +670,6 @@ a:focus {
     color: #979898;
 }
 
-
 .user-panel>.info>a>.fa,
 .user-panel>.info>a>.ion,
 .user-panel>.info>a>.glyphicon {
@@ -694,13 +691,12 @@ a:focus {
 .sidebar-menu>li>a {
     padding: 15px 5px 15px 15px;
     display: block;
-    font-size:13px;
+    font-size: 13px;
     border-bottom: 1px solid #313437;
-    -webkit-transition:  all 220ms ease-in-out;
+    -webkit-transition: all 220ms ease-in-out;
     -moz-transition: all 220ms ease-in-out;
     -o-transition: all 220ms ease-in-out;
     transition: all 220ms ease-in-out;
-
 }
 
 .sidebar-menu>li>a>.fa,
@@ -739,19 +735,17 @@ a:focus {
     transform: rotate(-90deg);
 }
 
-.treeview-menu > li > a{
+.treeview-menu>li>a {
     color: #979898;
     -webkit-transition: all 0.3s ease-in-out;
     -o-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out; 
+    transition: all 0.3s ease-in-out;
 }
 
-.treeview-menu > li.active > a,
-.treeview-menu > li > a:hover {
-  color: #ffffff;
+.treeview-menu>li.active>a,
+.treeview-menu>li>a:hover {
+    color: #ffffff;
 }
-
-
 
 .sidebar-menu li.active>.treeview-menu {
     display: block;
@@ -1373,10 +1367,13 @@ a:focus {
     margin: 0;
 }
 
-.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+.nav .open>a,
+.nav .open>a:hover,
+.nav .open>a:focus {
     background-color: #fff !important;
     border-color: #ddd;
 }
+
 .navbar-nav>.user-menu>.dropdown-menu {
     border-top-right-radius: 0;
     border-top-left-radius: 0;
@@ -1409,8 +1406,7 @@ a:focus {
 
 .navbar-nav>.user-menu>.dropdown-menu>li.user-header>p {
     z-index: 5;
-    color: #fff;
-    color: rgba(255, 255, 255, 0.8);
+    color: #222;
     font-size: 17px;
     margin-top: 10px;
 }
@@ -1954,7 +1950,7 @@ a:focus {
     position: relative;
     border-radius: 0px;
     background: #ffffff;
-    border: 1px solid #d2d6de;    
+    border: 1px solid #d2d6de;
     border-top: 3px solid #d2d6de;
     margin-bottom: 20px;
     width: 100%;
@@ -2208,7 +2204,7 @@ a:focus {
     font-size: 16px;
     margin: 0;
     line-height: 1;
-    color:#444;
+    color: #444;
 }
 
 .box-header>.fa,
@@ -2536,7 +2532,6 @@ a:focus {
 }
 
 
-
 /*
  * Component: Info Box
  * -------------------
@@ -2830,7 +2825,6 @@ a:focus {
     color: #333;
 }
 
-
 .btn-black {
     background-color: #2c2e2f;
     color: #f1f1f1;
@@ -2844,7 +2838,6 @@ a:focus {
     color: #222;
 }
 
-
 .btn-purple {
     background-color: #7c38bc;
     color: #f1f1f1;
@@ -2857,7 +2850,6 @@ a:focus {
     background-color: #6f32a8;
     color: #f1f1f1;
 }
-
 
 .btn-pink {
     background-color: #ff6264;
@@ -2884,7 +2876,6 @@ a:focus {
     background-color: #094288;
     color: #f1f1f1;
 }
-
 
 .btn-orange {
     background-color: #f98c00;
@@ -2924,8 +2915,6 @@ a:focus {
     background-color: #009886;
     color: #f1f1f1;
 }
-
-
 
 .btn-success {
     background-color: #5ca323;
@@ -3512,7 +3501,8 @@ label {
     margin-bottom: 3px;
     font-weight: 400;
 }
-  
+
+
 /*
  * Component: Direct Chat
  * ----------------------
@@ -3862,10 +3852,10 @@ label {
     background-color: #252729;
     color: #fff;
 }
-.modal-header .close {
-   color: #fff;
-}
 
+.modal-header .close {
+    color: #fff;
+}
 
 .modal-footer {
     border-top-color: #f4f4f4;
@@ -3900,6 +3890,7 @@ label {
 .modal .panel-body {
     color: #444;
 }
+
 
 /*
  * Component: Social Widgets
@@ -4151,7 +4142,6 @@ label {
 .lockscreen-footer {
     margin-top: 10px;
 }
-
 
 
 /*
@@ -6157,4 +6147,3 @@ label {
         white-space: normal !important;
     }
 }
-

@@ -259,7 +259,7 @@ function loaddata_profile_handler( id ){
 function loaddata_handler( id ){
 	
 	$.ajax({
-		url : "/api/v1/users.json/find/" + id,
+		url : "/api/v1/users.json/find/" + id + '/{$ambit}/?tokenurl='+Math.random(),
 		data : {
 			id 		: id,
 			token 	: _token,
@@ -344,7 +344,7 @@ function searchrecord_handler(){
 		value  = $("#search").val();
 	
 	$.ajax({
-		url : "/api/v1/users.json/search/" + filter + "/" + value + '?tokenurl=' + ex.guid(),
+		url : "/api/v1/users.json/search/{$ambit}/" + filter + "/" + value + '?tokenurl=' + Math.random(),
 	    beforeSend: function( e ) {
 			$.loading({ text: "{Lang::get('processing')}..." });
 		},

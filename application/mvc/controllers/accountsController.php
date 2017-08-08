@@ -29,7 +29,7 @@ class accountsController extends Controller {
 				
 		$this->view->theme( BACKEND );					
 		$this->view->template( 'auth' );		
-		$this->view->render( __FUNCTION__ );
+		$this->view->render( __FUNCTION__ , ['ambit'=>BACKEND]);
 	}
 
 

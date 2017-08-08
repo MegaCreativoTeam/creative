@@ -85,9 +85,21 @@ class Model {
 	* // Now we can use for each on $found_user_array.
 	* Other functionalities ex: Support for LIKE, >, <, >=, <= ... Are not yet supported.
 	*/
-	public function search($fields = array(), $sort = array(), $lower=true) {
-		$bindings = empty($fields) ? $this->variables : $fields;
-		$sql = "SELECT * FROM " . $this->table;
+	public function search($field_others = array(), $sort = array(), $lower=true) {
+
+		$bindings = $this->variables;
+		
+
+		$fields = '';
+		if( count($field_others)>0 ){
+			foreach($field_others as $key => $value){
+				$fields .= ', ' . $value .' AS '. $key;
+			}
+		}
+		$fields = ' '.$fields.' ';
+
+		$sql = "SELECT * ".$fields." FROM " . $this->table;
+
 		if (!empty($bindings)) {
 			$fieldsvals = array();
 			$columns = array_keys($bindings);
@@ -98,7 +110,9 @@ class Model {
 			}
 			$sql .= " WHERE " . implode(" AND ", $fieldsvals);
 		}
-		
+
+
+
 		if (!empty($sort)) {
 			$sortvals = array();
 			foreach ($sort as $key => $value) {
