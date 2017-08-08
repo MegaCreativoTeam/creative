@@ -17,25 +17,7 @@ Creative es un framework para la creación de Aplicaciones Web. Creative es senc
 La forma más fácil de instalar Creative es usar [Composer] (https://github.com/composer/composer)
 
 ```javascript
-    {
-        "name": "organizacion/proyecto",
-        "repositories": [{
-            "type": "package",
-            "package": {
-                "name": "creative-framework/creative",
-                "version": "dev-master",
-                "type": "package",
-                "source": {
-                    "type": "git",
-                    "reference": "master",
-                    "url": "https://github.com/megacreativo/creative.git"
-                }
-            }
-        }],
-        "require": {
-            "creative-framework/creative": "dev-master"
-        }
-    }
+    composer create-project megacreativo/creative
 ```
 
 ## Contribución
@@ -85,7 +67,7 @@ The Creative Framework is open-sourced software licensed under the [MIT license]
 
         // Lenguaje por defecto de la aplciación, 
         // esta es usada en la etiqueta <html lang="es_ve">.
-        "default_lang": "es_ve",
+        "default_lang": "es",
 
         // Driver por defecto para conexión con la bas de datos
         // [mysql (MySQL), mssql (MS SQL Server), pgsql (PostgreSQL)].
