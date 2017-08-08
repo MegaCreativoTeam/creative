@@ -78,12 +78,11 @@ class View extends SmartyBC
 	 * @param Request $request URL Request
 	 * @param Acl $acl Acl Access Control List
 	 */
-	public function __construct( Request $request, Acl $acl ) {	
+	public function __construct( Request $request ) {	
 		parent::__construct();
 		
 		$this->_request = $request;
-		$this->_acl = $acl;
-		
+			
 		$this->_route = array();		
 		$this->_css = array();
 		$this->_js = array();
@@ -96,7 +95,6 @@ class View extends SmartyBC
 	
 		
 		$this->_route['module']	= $this->_module;
-		$this->assign('acl'	, $acl);
 		$this->assign('token' , '');
 	}// END: __construct
 	

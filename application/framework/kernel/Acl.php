@@ -7,7 +7,7 @@
  * @version     1.0.0
  * @author      Brayan Rincon <brayan262@gmail.com>
 */
-class Acl {
+abstract class Acl {
 	
 	private $_registry;
 	private $_db;
