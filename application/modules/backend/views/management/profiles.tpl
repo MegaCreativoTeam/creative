@@ -175,12 +175,10 @@ $(document).ready(function(){
 
 
 <script>
-
 /**
 * Traer los datos mediante Ajax
 */
 function loaddata_handler( id ){
-	
 	$.ajax({
 		url : "/api/v1/profiles.json/find/" + id + '/?tokenurl='+Math.random(),
 		data : {

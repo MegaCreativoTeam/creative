@@ -62,17 +62,27 @@ function saverecord_handler( e ){
 		ajax_type = "PUT";
 	}
 	
-	var permissions = {};
-	$.each( $('.permission'), function(key,value){
-		var modulo = $(value).data("module");
-		var permission = $(value).data("permission");
-		var val = $(value).prop('checked') ? 1 : 0;
-		if( permissions[modulo] == undefined ) permissions[modulo] = [];
-		permissions[modulo].push( permission+':'+val );
-	});
-	
+    var permissions = {};
+    $.each($('.permission'), function(key, value) {
+        var modulo = $(value).data("module");
+        var permission = $(value).data("permission");
+        var val = $(value).prop('checked') ? 1 : 0;
+        if (permissions[modulo] == undefined) permissions[modulo] = [];
+        permissions[modulo].push(permission + ':' + val);
+    });
+
+	var access_field = {};
+    $.each(modules, function(module, attrs) {
+        if (typeof attrs.fields_info !== undefined) {
+			if (access_field[module] == undefined) access_field[module] = [];
+			$.each(attrs.fields_info, function(field, field_attrs) {
+				access_field[module].push(field +':'+ field_attrs['access']);
+			});
+        }
+    });
+
 	data.permissions = permissions;
-	data.access_field  = modules;
+	data.access_field  = access_field;
 	
 	$(".form-control").parent().removeClass("has-error");
 		
@@ -210,14 +220,6 @@ function loaddata_profile_handler( id ){
 	    		//UnCheck todos los permisos
 	    		$('.permission').prop('checked', false);
 	    		
-	    		$.each(data.data, function( index, item ){	    			
-	    			if( $("#"+index).is("select") ){
-	    				$("#"+index).val(item).change();
-	    			} else {
-	    				$("#"+index).val(item);
-	    			}
-	    		});
-	    		
 	    		//Recorre los permisos
 	    		$.each(permissions, function( module, access ){
 
@@ -289,29 +291,32 @@ function loaddata_handler( id ){
 	    		$("#profile_id").change(loaddata_profile_handler);
                 
 	    		//Recorre los permisos
-	    		$.each(permissions, function( index_root, permission ){
-	    			
-	    			if( permission.attr == 'permission-module' ){
-	    				var access = permission.content.toArray(',');
-		    			$.each(access, function( index, item ){
-		    				item = item.toArray(':');
-		    				var field = '#' + item[0]+ '-'+permission.name;
-		    				var val = item[1]==1 ? true : false;
-		    				$(field).prop('checked',val);
-		    			});
-		    			
-	    			} else if( permission.attr == 'permission-field' ){
-	    				var access = permission.content.toArray(',');
-	    				$.each(access, function( index, item ){
-							item = item.toArray(':');
+	    		$.each(permissions, function( module, access ){
 
-							if( modules[permission.name] )				
-								if( modules[permission.name]['fields'] )
-									modules[permission.name]['fields'][item[0]].access = item[1];
-		    				
-		    			});
-	    			}
-				});
+	    			var values = access.content.toArray(',');
+
+					$.each(values, function( index, item ){
+
+						content = item.toArray(':');
+
+						if( access.attr == 'permission-module' ){
+							var field = '#' + content[0]+ '-'+access.name;
+							var val = content[1]==1 ? true : false;
+							$(field).prop('checked',val);
+
+						} else if( access.attr == 'permission-field' ){
+							var field 	= content[0];
+							var val 	= content[1];
+							if( modules[access.name].fields_info ){
+								if( modules[access.name].fields_info[field] ){
+									modules[access.name].fields_info[field].access = val;
+								}					
+							}
+						}
+
+					});		    			
+	    				    			
+	    		});
 	    		
 				//_token = data.response.token;				
 			} else {					
