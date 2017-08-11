@@ -66,6 +66,8 @@ class managementController extends backendController {
 	 */
 	public function administrators() {
 
+		Acl::access_module( __FUNCTION__ );
+
 		$this->model = $this->load_model( __FUNCTION__ );
 		$this->model_profiles = $this->load_model('profiles');
 		
@@ -77,35 +79,63 @@ class managementController extends backendController {
 		
 
 		$info = Registry::get(__FUNCTION__)['fields_info'];
+		
+
+		//DNI
+		$ModalRecord->add_field(
+			[
+				'id'		=> 'dni',
+				'col'		=> $info['dni']['col'],
+				'type'		=> $info['dni']['type'],
+				'label'		=> $info['dni']['text'],
+				'required'	=> $info['dni']['required'],
+			],
+			__FUNCTION__
+		);
+		//}
+
 
 		//Nombre
-		$ModalRecord->add_field(array(
-			'id'		=> 'name',
-			'col'		=> $info['name']['col'],
-			'type'		=> $info['name']['type'],
-			'label'		=> $info['name']['text'],
-			'required'	=> $info['name']['required'],
-		));
+		$ModalRecord->add_field(
+			[
+				'id'		=> 'name',
+				'col'		=> $info['name']['col'],
+				'type'		=> $info['name']['type'],
+				'label'		=> $info['name']['text'],
+				'required'	=> $info['name']['required'],
+			],
+			__FUNCTION__
+		);
+		
 		
 		//Apellido
-		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'last_name',
-			'type'	=> 'text',
-			'label'	=> l('personal_attr.last_name'),
-			'required'=> TRUE,
-		));
+		$ModalRecord->add_field(
+			[
+				'id'		=> 'last_name',
+				'col'		=> $info['last_name']['col'],
+				'type'		=> $info['last_name']['type'],
+				'label'		=> $info['last_name']['text'],
+				'required'	=> $info['last_name']['required'],
+			],
+			__FUNCTION__
+		);			
 		
-		
+
+
 		//Email
-		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'email',
-			'type'	=> 'text',
-			'label'	=> l('personal_attr.email'),
-			'required'=> TRUE,
-		));
+		$ModalRecord->add_field(
+			[
+				'col'	=> array('sm'=>6,'md'=>3),
+				'id'	=> 'email',
+				'type'	=> 'text',
+				'label'	=> l('personal_attr.email'),
+				'required'=> TRUE,
+			],
+			__FUNCTION__
+		);
 		
+
+
 		$perfil = [];
 		$profiles = $this->model_profiles->all();
 
@@ -116,58 +146,72 @@ class managementController extends backendController {
 		}
 
 		//Perfil
-		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'profile_id',
-			'type'	=> 'select',
-			'label'	=> l('personal_attr.profile'),
-			'items'	=>  $perfil,
-			'required'=> TRUE,
-		));
+		$ModalRecord->add_field(
+			[
+				'col'	=> array('sm'=>6,'md'=>3),
+				'id'	=> 'profile_id',
+				'type'	=> 'select',
+				'label'	=> l('personal_attr.profile'),
+				'items'	=>  $perfil,
+				'required'=> TRUE,
+			],
+			__FUNCTION__
+		);
+		
+
+		//pass			
+		$ModalRecord->add_field(
+			[
+				'id'	=> 'pass',
+				'col'	=> array('sm'=>6,'md'=>3),
+				'type'	=> 'password',
+				'label'	=> l('personal_attr.pass'),
+			],
+			__FUNCTION__
+		);
 		
 		//pass
-		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'pass1',
-			'type'	=> 'password',
-			'label'	=> l('personal_attr.pass'),
-			//'required'=> TRUE,
-		));
+		$ModalRecord->add_field(
+			[
+				'col'	=> array('sm'=>6,'md'=>3),
+				'id'	=> 'pass2',
+				'alias_acl'	=> 'pass',
+				'type'	=> 'password',
+				'label'	=> l('personal_attr.repeat_pass'),
+			],
+			__FUNCTION__
+		);
 		
-		//pass
-		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'pass2',
-			'type'	=> 'password',
-			'label'	=> l('personal_attr.repeat_pass'),
-			//'required'=> TRUE,
-		));
-		
-		//Alias
-		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'nicname',
-			'type'	=> 'text',
-			'label'	=> l('personal_attr.alias'),
-		));
-		
-		
-		
+
+		//Alias	
+		$ModalRecord->add_field(
+			[
+				'col'	=> array('sm'=>6,'md'=>3),
+				'id'	=> 'nicname',
+				'type'	=> 'text',
+				'label'	=> l('personal_attr.alias'),
+			],
+			__FUNCTION__
+		);
+			
 		
 		//Estatus
-		$ModalRecord->add_field(array(
-			'col'	=> array('sm'=>6,'md'=>3),
-			'id'	=> 'status',
-			'type'	=> 'select',
-			'label'	=> l('personal_attr.status'),			
-			'required'=> TRUE,
-			'items'	=> array(
-				'-1' => l('selection'),
-				'1' => l('user_status.active'),
-				'0' => l('user_status.inactive'),
-			)
-		));
-		
+		$ModalRecord->add_field(
+			[
+				'col'	=> array('sm'=>6,'md'=>3),
+				'id'	=> 'status',
+				'type'	=> 'select',
+				'label'	=> l('personal_attr.status'),			
+				'required'=> TRUE,
+				'items'	=> array(
+					'-1' => l('selection'),
+					'1' => l('user_status.active'),
+					'0' => l('user_status.inactive'),
+				)
+			],
+			__FUNCTION__
+		);
+	
 		
 		$source = $this->include_source_view( 'permissions', 'management', 'backend' );
 		$ModalRecord->add_field(array(
@@ -233,23 +277,23 @@ class managementController extends backendController {
 			), //Indica las columnas que se mostrarán
 			
 			'view'		=> TRUE, //Indica si se mostrará la columna de Visualizar
-			'edit'		=> TRUE, //Indica si se mostrará la columna de Editar
-			'delete'	=> TRUE  //Indica si se mostrará la columna de Eliminar
+			'edit'		=> Acl::access_view_module( __FUNCTION__, 'update' ), //Indica si se mostrará la columna de Editar
+			'delete'	=> Acl::access_view_module( __FUNCTION__, 'delete' )  //Indica si se mostrará la columna de Eliminar
 		]);
 		
-		$this->view->assign('btn_add', TRUE);				//Indica si se mostrará el botón de Agregar
+		$this->view->assign('btn_add', Acl::access_view_module( __FUNCTION__, 'created' ));				//Indica si se mostrará el botón de Agregar
 		$this->view->assign('btn_add_text', TRUE);			//Indica si se mostrará el texto del botón Agregar
-		$this->view->assign('btn_print', TRUE);				//Indica si se mostrará el botón de Imprimir
+		$this->view->assign('btn_print', Acl::access_view_module( __FUNCTION__, 'print' ));				//Indica si se mostrará el botón de Imprimir
 		$this->view->assign('btn_shared', FALSE);			//Indica si se mostrará el botón de Compartir
 		$this->view->assign('btn_search_avanced', TRUE);	//Indica si se mostrará el botón de Busqueda Avanzada
 		$this->view->assign('search', TRUE);				//Indica si se mostrará las Opciones de busqueda
 				
 		$this->view->template ( 'default' );        
         $this->view->theme( BACKEND );
+		$this->view->ambit( BACKEND );
 
 		$this->view->render(__FUNCTION__, [
 			'active_menu' => 'management',
-			'ambit '=> BACKEND
 		]);
 	}
 	
@@ -275,13 +319,16 @@ class managementController extends backendController {
 		$info = Registry::get('profiles')['fields_info'];
 	
 		//Nombre
-		$ModalRecord->add_field([
-			'id'		=> 'name',
-			'col'		=> $info['name']['col'],
-			'type'		=> $info['name']['type'],
-			'label'		=> $info['name']['text'],
-			'required'	=> $info['name']['required'],
-		]);		
+		$ModalRecord->add_field(
+			[
+				'id'		=> 'name',
+				'col'		=> $info['name']['col'],
+				'type'		=> $info['name']['type'],
+				'label'		=> $info['name']['text'],
+				'required'	=> $info['name']['required'],
+			],
+			__FUNCTION__
+		);		
 		
 
 		//Modulo por defecto
@@ -289,39 +336,48 @@ class managementController extends backendController {
 		{
 			$menu[$key] = $value['text'];
 		}		
-		$ModalRecord->add_field([
-			'id'		=> 'default_module',
-			'col'		=> $info['default_module']['col'],			
-			'type'		=> $info['default_module']['type'],
-			'default'	=> $info['default_module']['default'],
-			'label'		=> $info['default_module']['text'],
-			'items'		=> $menu,
-			'required'	=> $info['default_module']['required'],
-		]);
+		$ModalRecord->add_field(
+			[
+				'id'		=> 'default_module',
+				'col'		=> $info['default_module']['col'],			
+				'type'		=> $info['default_module']['type'],
+				'default'	=> $info['default_module']['default'],
+				'label'		=> $info['default_module']['text'],
+				'items'		=> $menu,
+				'required'	=> $info['default_module']['required'],
+			],
+			__FUNCTION__
+		);
 		
 				
 		//Descripción
-		$ModalRecord->add_field(array(
-			'id'	=> 'description',
-			'col'	=> $info['description']['col'],			
-			'type'	=> $info['description']['type'],
-			'label'	=> $info['description']['text'],
-		));
+		$ModalRecord->add_field(
+			[
+				'id'	=> 'description',
+				'col'	=> $info['description']['col'],			
+				'type'	=> $info['description']['type'],
+				'label'	=> $info['description']['text'],
+			],
+			__FUNCTION__
+		);
 		
 
 		//Estatus
-		$ModalRecord->add_field([
-			'id'		=> 'status',
-			'col'		=> $info['status']['col'],
-			'type'		=> $info['status']['type'],
-			'label'		=> $info['status']['text'],			
-			'required'	=> $info['status']['required'],
-			'items'		=> [
-				'-1' 	=> Lang::get('selection'),
-				'1' 	=> Lang::get('user_status.active'),
-				'0' 	=> Lang::get('user_status.inactive'),
-			]
-		]);
+		$ModalRecord->add_field(
+			[
+				'id'		=> 'status',
+				'col'		=> $info['status']['col'],
+				'type'		=> $info['status']['type'],
+				'label'		=> $info['status']['text'],			
+				'required'	=> $info['status']['required'],
+				'items'		=> [
+					'-1' 	=> Lang::get('selection'),
+					'1' 	=> Lang::get('user_status.active'),
+					'0' 	=> Lang::get('user_status.inactive'),
+				]
+			],
+			__FUNCTION__
+		);
 		
 		
 		$source = $this->include_source_view( 'permissions', 'management', 'backend');

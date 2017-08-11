@@ -335,7 +335,7 @@ class Model {
 	* 
 	* @return
 	*/
-	public function delete($id = array()) {
+	public function delete(  $id ) {
 		$id = (empty($this->variables[$this->pk])) ? $id : $this->variables[$this->pk];
 		if(!empty($id)) {
 			$sql = "DELETE FROM " . $this->table . " WHERE " . $this->pk . "= :" . $this->pk ;

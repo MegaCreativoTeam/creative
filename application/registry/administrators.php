@@ -48,12 +48,12 @@ return
             'type' => 'email'
         ],
         'pass' => [
+            'alias' => 'pass2',
             'text' => Lang::get('dashboard.attrs.pass'),
             'required' => TRUE,
             'info' => Lang::get('dashboard.info.pass'),
             'col' => array('sm'=>6,'md'=>3),
             'type' => 'password',
-            
         ],
        'profile_id' => [
             'text' => Lang::get('dashboard.attrs.profile'),
@@ -62,14 +62,13 @@ return
             'col' => array('sm'=>6,'md'=>4),
             'type' => 'select'
         ],
-          'nicname' => [
+        'nicname' => [
             'text' => Lang::get('dashboard.attrs.nicname'),
             'required' => TRUE,
             'info' => Lang::get('dashboard.info.nicname'),
             'col' => array('sm'=>6,'md'=>4),
             'type' => 'text'
-        ],
-    
+        ],    
         'status' => [
             'text' => Lang::get('dashboard.attrs.status'),
             'required' => TRUE,

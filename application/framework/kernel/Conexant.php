@@ -53,7 +53,12 @@ class Conexant
 			$this->open($DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_HOST, $DB_PORT, $DB_COLLATE);
 		}			
     }
-    
+
+
+	public function change_driver( $driver )
+	{
+		$this->DRIVER = $driver;
+	}   
 
     
     /**

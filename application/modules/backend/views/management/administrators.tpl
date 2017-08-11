@@ -41,6 +41,7 @@ function saverecord_handler( e ){
 	
 	var data = {
 			id 				: $("#id").val(),
+			dni 			: $("#dni").val(),
 			email 			: $("#email").val(),
 			pass 			: $("#pass1").val(),
 			profile_id 	    : $("#profile_id").val(),
@@ -73,8 +74,8 @@ function saverecord_handler( e ){
 
 	var access_field = {};
     $.each(modules, function(module, attrs) {
-        if (typeof attrs.fields_info !== undefined) {
-			if (access_field[module] == undefined) access_field[module] = [];
+        if (typeof attrs.fields_info != "undefined") {
+			if (typeof access_field[module] == "undefined") access_field[module] = [];
 			$.each(attrs.fields_info, function(field, field_attrs) {
 				access_field[module].push(field +':'+ field_attrs['access']);
 			});
@@ -284,6 +285,8 @@ function loaddata_handler( id ){
 	    		$.each(data.data, function( index, item ){	    			
 	    			if( $("#"+index).is("select") ){
 	    				$("#"+index).val(item).change();
+					} else if( $("#"+index).attr("type") == 'password' ){
+						
 	    			} else {
 	    				$("#"+index).val(item);
 	    			}

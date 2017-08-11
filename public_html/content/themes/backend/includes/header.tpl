@@ -1,5 +1,4 @@
-{assign var=sess value=Session::get($ambit)}
-
+{assign var=auth value=Session::auth()}
 <body {if $angular}ng-app="{$ng_module}" {/if} class="skin-blue sidebar-mini">
     <div class="wrapper">
 
@@ -28,15 +27,15 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="{$theme.img|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
-                                <span class="hidden-xs">{$sess.description|upper}&ensp;</span>
+                                <span class="hidden-xs">{$auth.description|upper}&ensp;</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="{$theme.img|cat:'user.backend.png'}" class="img-circle" alt="" style="background-color: #fff">
                                     <p>
-                                        {$sess.description|upper}
-                                        <small>{if $sess.profile_name}{$sess.profile_name}{/if}</small>
+                                        {$auth.description|upper}
+                                        <small>{if $auth.profile_name}{$auth.profile_name}{/if}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->

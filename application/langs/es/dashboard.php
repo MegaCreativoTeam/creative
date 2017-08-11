@@ -36,6 +36,7 @@ return [
 
     'info' => [
         'search' => 'Buscar',
+        'search_here' => 'Ingrese su busqueda aquí',
         'filter' => 'Filtros de busqueda',
         'module' => 'Módulo o entidad|Módulos o entidades',
         'view' => 'Lectura',

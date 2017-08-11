@@ -1,4 +1,5 @@
-{assign var=sess value=Session::get($ambit)}
+{assign var=auth value=Session::auth()}
+
 <aside class="main-sidebar">
 <section class="sidebar">
 	<div class="user-panel" style="min-height: 60px">
@@ -6,8 +7,8 @@
 			<img id="user_img_menu" src="{$theme.img|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
 		</div>
 		<div class="info">
-			<p>{$sess.description|upper}</p>
-			<a href="#"><span class="fa fa-circle" style="color:#56b726"></span>{if $sess.profile_name}{$sess.profile_name}{/if}</a>
+			<p>{$auth.description|upper}</p>
+			<a href="#"><span class="fa fa-circle" style="color:#56b726"></span>{if $auth.profile_name}{$auth.profile_name}{/if}</a>
 		</div>
 	</div> 
 
@@ -22,33 +23,45 @@
 	{if isset($menu) && count($menu)}
 		{foreach $menu as $module_name => $module_attr}
 		
-			{if $module_attr.module==BACKEND}
+			{if $module_attr.module==$auth.ambit}
 
 				{if isset($module_attr.submodules) && count($module_attr.submodules)}
-					<li id="{$module_name}" class="treeview{if $active_menu==$module_name} active{/if}">
-						<a href="#">
-							<i class="{$module_attr.icon|default:'fa fa-circle'}"></i>
-							<span>{$module_attr.text}</span>
-							<span class="pull-right-container">
-								<span class="fa fa-angle-right pull-right"></span>
-							</span>
-						</a>
-						<ul class="treeview-menu">
-							{foreach $module_attr.submodules as $module_ix => $module}
-								<li id="{$module_ix}">
-									<a href="/{$module_attr.module}/{$module_name}/{$module_ix}/">
-										<i class="{$module['icon']}"></i> <span>{$module['text']}</span>
-									</a>
-								</li>
-							{/foreach}							
-						</ul>
-					</li>
+
+					{if Acl::access_view_module($module_name)==true}
+
+						<li id="{$module_name}" class="treeview{if isset($options.active_menu) AND $options.active_menu==$module_name} active{/if}">
+							<a href="#">
+								<i class="{$module_attr.icon|default:'fa fa-circle'}"></i>
+								<span>{$module_attr.text}</span>
+								<span class="pull-right-container">
+									<span class="fa fa-angle-right pull-right"></span>
+								</span>
+							</a>
+							<ul class="treeview-menu">
+								{foreach $module_attr.submodules as $module_ix => $module}
+									{if Acl::access_view_module($module_ix)==true}
+										<li id="{$module_ix}">
+											<a href="/{$module_attr.module}/{$module_name}/{$module_ix}/">
+												<i class="{$module['icon']}"></i> <span>{$module['text']}</span>
+											</a>
+										</li>
+									{/if}
+								{/foreach}							
+							</ul>
+						</li>
+
+					{/if}
+
 				{else}
-					<li id="{$method_ix}">
-						<a href="/{$module_attr.module}/{$module_name}/">
-							<i class="{$module_attr.icon}"></i> <span>{$module_attr.text}</span>
-						</a>
-					</li>
+
+					{if Acl::access_view_module($module_name)==true}
+						<li id="{$module_name}">
+							<a href="/{$module_attr.module}/{$module_name}/">
+								<i class="{$module_attr.icon}"></i> <span>{$module_attr.text}</span>
+							</a>
+						</li>
+					{/if}
+
 				{/if}
 
 			{/if}

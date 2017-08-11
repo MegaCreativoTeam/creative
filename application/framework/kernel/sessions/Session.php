@@ -14,7 +14,8 @@ require_once PATH_FRAMEWORK .DS. 'libs' .DS. 'Net.php';
  * @version    2.0.0 (Ultima revisión el 24 de julio de 2017)
  * @author     Brayan Rincon <brayan262@gmail.com>
 */
-class Session {
+class Session
+{
 
 	private static 
 		$key,
@@ -30,9 +31,11 @@ class Session {
      *
      *
     */
-	public function initialize(){
+	public static function initialize()
+	{
 		
-		if( self::$is_initialize == TRUE ){
+		if( self::$is_initialize == TRUE )
+		{
 			return TRUE;
 		}
         //Inicializar configuración de las sesiones
@@ -42,18 +45,20 @@ class Session {
 
 		self::prevent_hijacking();
 
-    	session_start();
+    	//if( ! $_SESSION ) 
+		session_start();
         
 		session_regenerate_id(false);
 
-		if( isset($_SESSION['CRERATIVE_MARK']) === FALSE ){
+		if( isset($_SESSION['CRERATIVE_MARK']) === FALSE )
+		{
 			$_SESSION['CRERATIVE_MARK'] = TRUE;
 			$_SESSION['CRERATIVE_TIME'] = time();
 		}
 		
-		if( isset($_SESSION['auth']) === FALSE ){
+		/*if( isset($_SESSION['auth']) === FALSE ){
 			$_SESSION['auth'] = FALSE;
-		}
+		}*/
 
 		self::$is_initialize = TRUE;
 
@@ -69,24 +74,24 @@ class Session {
      *
      *
     */
-	private static function setup(){
-
+	private static function setup()
+	{
 		self::$key = 'creativecookkey_';	
 
 		// Check if hash is available
-		if (in_array(self::$conf['hash_function'], hash_algos())) {
+		if (in_array(self::$conf['hash_function'], hash_algos()))
+		{
 			ini_set('session.hash_function', self::$conf['hash_function']);
 		}
 
 		session_cache_limiter('private');
-		
-		ini_set('session.save_path', self::$conf['save_path']);
+				
 		ini_set('session.use_cookies', self::$conf['use_cookies']);
 		ini_set('session.use_only_cookies', 1);
 		ini_set('session.cache_limiter', 'private');
 		ini_set('session.cookie_lifetime', self::$conf['lifetime'] * 60 ); 	
 		ini_set('session.cache_expire', self::$conf['cache_expire']);
-		ini_set('session.gc_maxlifetime', 60 * 60);
+		ini_set('session.gc_maxlifetime', self::$conf['lifetime'] * 60);
 
 		session_name(self::$conf['name']);	
 
@@ -108,10 +113,12 @@ class Session {
         );
 
 
-		switch ( self::$conf['driver'] ) {
+		switch ( self::$conf['driver'] )
+		{
 			case 'file':
 				include PATH_KERNEL .DS. 'sessions' .DS. 'SessionFileHandler.php';
 				$session_handler = new SessionFileHandler();
+				ini_set('session.save_path', self::$conf['save_path']);
 			break;
 			case 'cookie':
 				# code...
@@ -133,9 +140,10 @@ class Session {
 	/**
 	*
 	*/
-	private static function prevent_hijacking(){
-		
-		if( isset($_SESSION['ipv4']) === FALSE || isset($_SESSION['user_agent']) === FALSE ){
+	private static function prevent_hijacking()
+	{		
+		if( isset($_SESSION['ipv4']) === FALSE || isset($_SESSION['user_agent']) === FALSE )
+		{
 			$_SESSION['ipv4'] = Net::ipaddress_client();
 			$_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 			return false;
@@ -143,12 +151,14 @@ class Session {
 		
 		
 		//Valdiar navegador del Cliente
-		if( $_SESSION['user_agent'] != $_SERVER['HTTP_USER_AGENT'] ){
+		if( $_SESSION['user_agent'] != $_SERVER['HTTP_USER_AGENT'] )
+		{
 			return false;
 		}
 		
 		//Valdiar la IP del cleinte
-		if( $_SESSION['ipv4'] != Net::ipaddress_client() ){
+		if( $_SESSION['ipv4'] != Net::ipaddress_client() )
+		{
 			return false;
 		}
 		
@@ -160,21 +170,30 @@ class Session {
    * Destruye una o todas las variables de session
    * @param {String} nombre de la variable (Si no es especificado se tomara que desea eliminar todas las variables de session)
    */
-	public static function destroy( $name = NULL ){
-		if ($name != NULL) {
-			if(is_array($name)){
-                for($i = 0; $i < count($name); $i++){
-                    if(isset($_SESSION[$name[$i]])){
+	public static function destroy( $name = NULL )
+	{
+		if ($name != NULL)
+		{
+			if(is_array($name))
+			{
+                for($i = 0; $i < count($name); $i++)
+				{
+                    if(isset($_SESSION[$name[$i]]))
+					{
                         unset($_SESSION[$name[$i]]);
                     }
                 }
             }
-            else{
-                if(isset($_SESSION[$name])){
+            else
+			{
+                if(isset($_SESSION[$name]))
+				{
                     unset($_SESSION[$name]);
                 }
             }			
-	    } else {
+	    }
+		else
+		{
 			unset($_SESSION['CRERATIVE_MARK']);
 			@session_destroy();
 			@session_unset();
@@ -187,7 +206,8 @@ class Session {
 	* 
 	* @return
 	*/
-	public static function get_levels( $ambito = 'frontend' ){
+	public static function get_levels( $ambito = 'frontend' )
+	{
 		return Session::$niveles[$ambito];
 	}
 	
@@ -198,8 +218,10 @@ class Session {
 	 *
 	 * @return {object}
 	 */
-	public static function get( $value ){
-		if(isset($_SESSION[$value])){
+	public static function get( $value )
+	{
+		if(isset($_SESSION[$value]))
+		{
 			return $_SESSION[$value];
 		}
 	}
@@ -211,9 +233,20 @@ class Session {
 	 *
 	 * @return {object}
 	 */
-	public static function auth( $ambito ){
-		if(isset($_SESSION[$ambito]))
-			return $_SESSION[$ambito]['auth'];
+	public static function auth( $auth = NULL )
+	{
+		if( $auth !== NULL )
+		{
+			$_SESSION['auth'] = $auth;
+			return $auth;
+		} 
+		else
+		{
+			if(isset($_SESSION['auth']))
+			{
+				return $_SESSION['auth'];
+			}
+		}
 	}
 	
 	
@@ -222,53 +255,59 @@ class Session {
 	 * @param {String} $name nombre de la variable
 	 * @param {object} $value valor de la variable
 	 */
-	public static function set( $name, $value ){
-		if(!empty($name))
-			$_SESSION[$name] = $value;
+	public static function set( $key, $value )
+	{
+		if(!empty($key))
+		{
+			$_SESSION[$key] = $value;
+		}			
 	}
 
 
 	/**
 	 * Undocumented function
 	 *
-	 * @param string $ambit
+	 * @param boolean $asyn
 	 * @return void
 	 */
-    public static function time_now( $ambit = 'backend' ){
-        
-		if( !Session::get($ambit)['session_time'] or !self::$session_lifetime ){
-			Session::destroy();
-            header('location: ' . '/accounts/auth/');
-            exit();
+    public static function time_now( $asyn = FALSE )
+	{
+		if( ! Session::auth()['session_time'] OR ! self::$conf['lifetime'] )
+		{
+			if( $async === FALSE )
+			{
+				Session::destroy();
+				header('Location: ' . '/accounts/auth/');
+				exit;
+			}
+			else
+			{
+				return FALSE;
+			}
         }
-        
-        if( self::$session_lifetime == 0){
-            return;
-        }
-        
+                
         $time = time();
-        $session_time = $_SESSION[$ambit]['session_time'];
+        $session_time = Session::auth()['session_time'];
         
-        if( ($time - $session_time) > self::$session_lifetime ){
-            Session::destroy($ambit);
-            header('location :' . '/accounts/auth/');
-            exit;
-        } else{
-        	ini_set("session.cookie_lifetime", self::$session_lifetime );
-            $_SESSION[$ambit]['session_time'] = $time;
+        if( ($time - $session_time) > (self::$conf['lifetime']*60) )
+		{
+			if( $async === FALSE )
+			{
+				Session::destroy();
+				header('Location: ' . '/accounts/auth/');
+				exit;
+			}
+			else
+			{
+				return FALSE;
+			}
         }
-        
+		else
+		{
+        	ini_set('session.cookie_lifetime', self::$conf['lifetime'] * 60 );
+            $_SESSION['auth']['session_time'] = $time;
+        }        
     }
-    
-    
-    
-	static function exist(){
-		if( sizeof($_SESSION) > 0 ){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	
+
+
 }

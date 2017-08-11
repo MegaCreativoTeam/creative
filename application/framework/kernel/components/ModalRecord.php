@@ -136,11 +136,26 @@ class ModalRecord {
 	* 
 	* @return
 	*/
- 	public function add_field( $attr ){
- 		
+ 	public function add_field( $attr, $module = NULL )
+	 { 		
  		$attr = $this->attrs_default($attr);
+
+		if( $module )
+		{
+			$id = isset($attr->alias_acl) ? $attr->alias_acl : $attr->id;
+			$acl = Acl::access_field( $module, $id );
+			if( $acl == 0 )
+			{
+				return $this;
+			}
+			if( $acl == 2 )
+			{
+				$attr->readonly = true;
+			}
+		}
  		 
- 		switch( TRUE ){
+ 		switch( TRUE )
+		 {
 		 	case $attr->type === 'text' or $attr->type === 'email' or $attr->type === 'tel':
 		 		$field = $this->_tpl_input;
 		 	break;
@@ -242,6 +257,7 @@ class ModalRecord {
 			$multiple = '';
 		}
 		
+
 		
 		
  		$field = str_ireplace(':col'			,$col			,$field);

@@ -123,6 +123,18 @@ class View extends SmartyBC
 	}
 	
 
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $template
+	 * @return void
+	 */
+	public function ambit( $ambit ){
+		$this->assign('ambit', $ambit);
+		return $this;
+	}
+
+
 /**
 	 * Renderiza una vista (página)
 	 * 
@@ -203,9 +215,7 @@ class View extends SmartyBC
 
 		$this->assign('outerhtml'	, OuterHTML::get());
 
-		$this->assign('options'		, $options);
-		$this->assign('active_menu'	, $active_menu);		
-		$this->assign('ambit'		, $ambit);
+		$this->assign('options'		, $options);		
 
 
 		//$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);

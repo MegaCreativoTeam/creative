@@ -12,6 +12,9 @@
 		   	<div class="input-group">
 		   	
 				{if $search}
+					<span class="input-group-addon">
+						{Lang::get('dashboard.info.search')}
+					</span>
 					<select id="filter" class="form-control select2" style="width: 30%; float:left">
 					{if isset($filters) && count($filters)}
 						{foreach $filters as $key => $value}
@@ -19,7 +22,7 @@
 						{/foreach}
 					{/if}
 					</select>
-					<input id="search" type="text" class="form-control" style="width: 70%; display: inline-block !important;float:right" placeholder="{Lang::get('dashboard.info.search')}" maxlength="50">
+					<input id="search" type="text" class="form-control" style="width: 70%; display: inline-block !important;float:right" placeholder="{Lang::get('dashboard.info.search_here')}" maxlength="50">
 					<span class="input-group-btn" {Helper::get('html')->tooltip(Lang::get('dashboard.info.search'))}>
 						<button id="btn_search" class="btn btn-default" type="button"><span class="fa fa-search"></span></button>
 					</span>

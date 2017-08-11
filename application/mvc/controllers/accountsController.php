@@ -25,11 +25,11 @@ class accountsController extends Controller {
 	 * @return void
 	 */
 	public function auth( $ambit = NULL) {
-		$this->view->assign( 'ambit', $ambit );
+		$this->view->assign( 'ambit', $ambit == BACKEND ? BACKEND : FRONTEND );
 				
 		$this->view->theme( BACKEND );					
 		$this->view->template( 'auth' );		
-		$this->view->render( __FUNCTION__ , ['ambit'=>BACKEND]);
+		$this->view->render( __FUNCTION__ );
 	}
 
 
@@ -64,13 +64,7 @@ class accountsController extends Controller {
 		$this->view->render( __FUNCTION__, 'index' );
 	}
 	
-	/**
-	* 
-	* 
-	* @return
-	*/
 
-	
 	
 	/**
 	* 
