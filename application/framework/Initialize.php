@@ -27,7 +27,7 @@ require_once PATH_FRAMEWORK . 'Eviroment.php';
 require_once PATH_FRAMEWORK . 'LogsHandler.php';
 require_once PATH_FRAMEWORK . 'ErrorHandler.php';
 require_once PATH_FRAMEWORK . 'Creative.php';
-
+require_once PATH_FRAMEWORK . 'Functions.php';
 
 abstract class Initialize 
 {

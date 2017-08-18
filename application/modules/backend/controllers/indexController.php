@@ -43,7 +43,7 @@ class indexController extends backendController
      * @author name <name@email.com>
      */
     public function index(){
-        $this->view->render( __FUNCTION__ );
+        $this->view->render( 'dashboard.index' );
     }
 }
 

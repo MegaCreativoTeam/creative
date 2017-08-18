@@ -188,8 +188,7 @@ class ModalRecord {
 							$option .= '<option {if $key==-1}selected default{/if} value="' .$key. '">' .$value. '</option>';
 					}
 					$field = str_ireplace(':option',$option, $field);
-				} 
-				
+				}
 				
 		 	break;
 		 	
@@ -207,6 +206,24 @@ class ModalRecord {
 		 		$div = str_ireplace(':col',$col ,'<div class=":col"  style="margin-bottom:5px">');
 		 		$this->_fields[] = $div . $attr->source.'</div>';
 		 		return $this;
+		 	break;
+
+			
+			case $attr->type == 'groupbutton':
+		 		if( is_array($attr->items) )
+				{
+					$button = '';
+					foreach($attr->items as $key => $value)
+					{
+						$button .= '
+						
+							<div class="col-sm-6 col-md-6" style="margin-top:5px">
+								 <button type="button" class="btn btn-default">'.$value['value'].'</button>
+							</div>
+						';
+					}
+					$field = $button;
+				}
 		 	break;
 		 	
 		 	

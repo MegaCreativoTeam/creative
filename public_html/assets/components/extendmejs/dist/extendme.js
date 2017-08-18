@@ -28,7 +28,7 @@ var ExtendmeJS = (function() {
             return this;
         },
 
-        path : ''
+        path: ''
     };
 }(typeof window !== "undefined" ? window : this));
 
@@ -80,16 +80,16 @@ var _type_ = {
 
 
 //Windows
-(function (Global) {
-    
+(function(Global) {
+
     var extendme = function(source) {
         for (var property in source) {
             this[property] = source[property];
         }
         return this;
-    }    
+    }
     ExtendmeJS.extend(Global, { extend: extendme });
-        
+
     var object_proto = Object.prototype,
         array_proto = Array.prototype,
         number_proto = Number.prototype,
@@ -114,7 +114,7 @@ var _type_ = {
      *  @param {object} Type Cualquier clase de objeto definida.
      *  @return {boolean}
      **/
-    var typeOf = function (Pattern, Type) {
+    var typeOf = function(Pattern, Type) {
         return (typeof Pattern == Type);
     };
 
@@ -124,7 +124,7 @@ var _type_ = {
      *  @param {object} Pattern Obligatorio. Cualquier expresión de objeto. 
      *  @return {string}
      **/
-    var getType = function (Pattern) {
+    var getType = function(Pattern) {
         switch (Pattern) {
             case null:
                 return _type_.null;
@@ -154,7 +154,7 @@ var _type_ = {
      * Browser
      * @return {Object} Navegador
      */
-    var browser = (function () {
+    var browser = (function() {
         var user_agt = navigator.userAgent;
         return {
             ie: (user_agt.indexOf('IE') != -1),
@@ -206,7 +206,7 @@ var _type_ = {
     /**
      * Crear un Pop Up
      */
-    var popup = function (url, Arguments, WindowsName) {
+    var popup = function(url, Arguments, WindowsName) {
         if (!isset(url) || !isset(Arguments)) {
             return false;
         }
@@ -232,7 +232,7 @@ var _type_ = {
     /**
      * 
      */
-    var isString = function (Sender) {
+    var isString = function(Sender) {
         return (!isset(Sender) ? false : Object.IsString(Sender));
     };
 
@@ -240,9 +240,9 @@ var _type_ = {
      * Devuelve True si el argumento pasado es un Array, False en caso contrario
      */
     var isArray = function(Sender) {
-        return (!isset(Sender)) ? false : Object.is_array(Sender);
+        return (!isset(Sender)) ? false : Object.isArray(Sender);
     };
-       
+
 
     /**
      * 
@@ -251,16 +251,16 @@ var _type_ = {
      * @param {*} Attributes 
      * @param {*} parent 
      */
-    var include = function (path, attr, parent) {
-        
+    var include = function(path, attr, parent) {
+
         if (path.contains('.js') == true) {
-			type = 'script';
-			file = head.getElementsByTagName('script');
-		} else if(path.contains('.css') == true){
-			type = 'style';
-			file = head.getElementsByTagName('style');
-		} else {
-			return false;
+            type = 'script';
+            file = head.getElementsByTagName('script');
+        } else if (path.contains('.css') == true) {
+            type = 'style';
+            file = head.getElementsByTagName('style');
+        } else {
+            return false;
         };
 
         switch (type.toLowerCase()) {
@@ -298,16 +298,16 @@ var _type_ = {
      * @param {Object} (Opcional) attr Atributos de archivo. Por defecto "{}".
      * @param {String} (Opcional) parent Establece en que nodo se agregará el vinculo. Por defecto "head".
      */
-    var includeOnce = function (path, attr, parent) {
+    var includeOnce = function(path, attr, parent) {
 
         if (path.contains('.js') == true) {
-			type = 'script';
-			file = head.getElementsByTagName('script');
-		} else if(path.contains('.css') == true){
-			type = 'style';
-			file = head.getElementsByTagName('style');
-		} else {
-			return false;
+            type = 'script';
+            file = head.getElementsByTagName('script');
+        } else if (path.contains('.css') == true) {
+            type = 'style';
+            file = head.getElementsByTagName('style');
+        } else {
+            return false;
         };
 
         for (var i = 0; i < file.lenght; i++) {
@@ -329,35 +329,35 @@ var _type_ = {
     Global.extend({
         head: document.getElementsByTagName('head')[0],
         ex: ExtendmeJS,
-        isset:isset,
+        isset: isset,
         include: include,
         includeOnce: includeOnce
     });
-    
+
     ExtendmeJS.extend(ex, {
         getType: getType,
-        typeOf: typeOf,        
-        timeStamp:timeStamp,
+        typeOf: typeOf,
+        timeStamp: timeStamp,
         browser: browser,
         isset: isset,
-        random:random,
+        random: random,
         guid: guid,
-        popup:popup,
-        now:now,
-        isString:isString,
+        popup: popup,
+        now: now,
+        isString: isString,
         isArray: isArray,
         isInstance: isInstance,
         include: include,
         includeOnce: includeOnce
     });
-    
+
 })(this);
 
 
 
 //Object
-(function () {
-    
+(function() {
+
     if (!window.node) {
         var node = {
             ELEMENT_NODE: 1,
@@ -405,7 +405,7 @@ var _type_ = {
             if (Object.isFunction(source)) {
                 if (source.length == arguments.length) {
                     return source.apply(this, arguments);
-                } else if (Object.is_function(_name)) {
+                } else if (Object.isFunction(_name)) {
                     return _name.apply(this, arguments);
                 }
             }
@@ -418,7 +418,7 @@ var _type_ = {
         return clon;
     }
 
-    
+
     ExtendmeJS.extend(Object, {
         extend: ExtendmeJS.extend,
         isString: isString,
@@ -637,34 +637,34 @@ var _type_ = {
 })();
 
 
-var Element = function( name, attr, parent ){
-	if ( name == null) {
-		return null;
-	}
-    
+var Element = function(name, attr, parent) {
+    if (name == null) {
+        return null;
+    }
+
     parent = parent ? parent : null;
     element = document.createElement(name.toLowerCase());
-    
-	ExtendmeJS.extend(element, Element.Methods);
-		
-	try {
-		if(isset(attr) && attr != _abstract_){
-			if(isset(attr.style)){						
-				ExtendmeJS.extend(element.style, attr.style);
-				delete attr.style;
-			}
-			ExtendmeJS.extend(element, attr);					
-			if(parent!=null){				
-				if (!parent.extend) {				
-					ExtendmeJS.extend(parent, Element.Methods);
-				}
-				parent.add(element);
+
+    ExtendmeJS.extend(element, Element.Methods);
+
+    try {
+        if (isset(attr) && attr != _abstract_) {
+            if (isset(attr.style)) {
+                ExtendmeJS.extend(element.style, attr.style);
+                delete attr.style;
             }
-		}
-	} catch(ex){
-		trace('Error al crear el elemento "'+ name +'":\n'+ ex.message);
-	}
-	return element;
+            ExtendmeJS.extend(element, attr);
+            if (parent != null) {
+                if (!parent.extend) {
+                    ExtendmeJS.extend(parent, Element.Methods);
+                }
+                parent.add(element);
+            }
+        }
+    } catch (ex) {
+        trace('Error al crear el elemento "' + name + '":\n' + ex.message);
+    }
+    return element;
 };
 
 
@@ -680,27 +680,27 @@ Element.Methods = {
         return this;
     },
 
-    add: function(element, node){
-		try {
-			var base = this;
-            if( node ) base.insertBefore(element,node); 
+    add: function(element, node) {
+        try {
+            var base = this;
+            if (node) base.insertBefore(element, node);
             else base.appendChild(element);
-		} catch (ex) {
-			trace('Error en Element.Method.Append:\n' + ex.message);
-			return this;
-		}
-		return this;
+        } catch (ex) {
+            trace('Error en Element.Method.Append:\n' + ex.message);
+            return this;
+        }
+        return this;
     },
-    
-    enabled : function( value ){
-		this.enabled = value;
-		if(value){
-			$(this).prop('disabled', true).css('opacity','1');
- 		} else {
-			$(this).prop('disabled', false).css('opacity','0.85');
-		}
-		return (this);
-	},
+
+    enabled: function(value) {
+        this.enabled = value;
+        if (value) {
+            $(this).prop('disabled', true).css('opacity', '1');
+        } else {
+            $(this).prop('disabled', false).css('opacity', '0.85');
+        }
+        return (this);
+    },
 }
 
 
@@ -717,9 +717,9 @@ function npm(package) {
         ]
     }
     var path;
-    $.each(packages, function (pack, urls) {
+    $.each(packages, function(pack, urls) {
         if (package == pack) {
-            $.each(urls, function (ix, it) {
+            $.each(urls, function(ix, it) {
                 includeOnce(it);
             });
             return true;

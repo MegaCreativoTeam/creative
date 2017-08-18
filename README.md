@@ -14,10 +14,10 @@ Creative es un framework para la creación de Aplicaciones Web. Creative es senc
 
 
 ## Instalación
-La forma más fácil de instalar Creative es usar [Composer] (https://github.com/composer/composer)
+La forma más fácil de instalar Creative es usar [Composer](https://github.com/composer/composer)
 
 ```javascript
-    composer create-project megacreativo/creative
+composer create-project megacreativo/creative
 ```
 
 ## Contribución

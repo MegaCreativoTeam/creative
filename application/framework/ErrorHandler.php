@@ -14,11 +14,13 @@
 
 include_once __DIR__ . '/ExceptionHandler.php';
 
-abstract class ErrorHandler{
+abstract class ErrorHandler
+{
 
-	public static function error($code, $message, $file, $line){
-		
-		if (!(error_reporting() & $code)) {
+	public static function error($code, $message, $file, $line)
+	{
+		if (!(error_reporting() & $code))
+		{
 			return; // Este código de error no está incluido en error_reporting
 		}
 
@@ -26,7 +28,8 @@ abstract class ErrorHandler{
 		$file = str_replace(DS, '/', $file);
 		
 		$error = '<pre>';
-		switch ($code) {
+		switch ($code)
+		{
 			case E_ERROR:
 				$error .= "<pre><strong>FATAL ERROR  [{$code}]</strong> {$message}</pre><br/>\n";
 				
@@ -87,10 +90,13 @@ abstract class ErrorHandler{
 			break;	
 			
 			default:
-				if( ENVIRONMENT == 'development' ){
+				if( ENVIRONMENT == 'development' )
+				{
 					$error .= "<strong>UNDEFINED ERROR: </strong> {$message} [<strong>line:</strong> $line <strong>in</strong> {$file}]";
 					
-				} else {
+				}
+				else
+				{
 					logs::error( "UNDEFINED ERROR [{$code}]: {$message} </strong> Line: {$line} in {$file}" );
 				}
 			break;
@@ -104,9 +110,11 @@ abstract class ErrorHandler{
 	/**
 	* Checks for a fatal error, work around for set_error_handler not working on fatal errors.
 	*/
-	public static function  fatal_error(){
+	public static function  fatal_error()
+	{
 		$error = error_get_last();
-		if ( $error["type"] == E_ERROR  ){
+		if ( $error["type"] == E_ERROR  )
+		{
 			$message = "LINE " . $error["line"] ." IN ". $error["file"] . " | " . $error["message"] . "\n";
 			logs::error( $message );
 		}			
@@ -128,7 +136,8 @@ abstract class ErrorHandler{
 	 * @param string $message
 	 * @return void
 	 */
-	public static function exception( $type, $number, $title, $message = '' ){
+	public static function exception( $type, $number, $title, $message = '' )
+	{
 		
 		$template = Creative::default_template_html();	
 		$content_file =  file_get_contents( __DIR__ . '/tpl/exception.tpl');
@@ -142,7 +151,8 @@ abstract class ErrorHandler{
 		$content_file = str_ireplace(':exception_type', $type, $content_file);
 		$content_file = str_ireplace(':exception_title',$title, $content_file);			
 			
-		if( $message != '' ){
+		if( $message != '' )
+		{
 			$message = '<div class="error_info"><p>' . $message . '</p></div>';
 		}
 			
@@ -152,33 +162,47 @@ abstract class ErrorHandler{
 		$trace = debug_backtrace();
 		array_shift($trace);
 
-		foreach( $trace as $key => $value){
+		foreach( $trace as $key => $value)
+		{
 			
 			$out .= '<li>';
-			$line = $value['line'];
-			$file = $value['file'];
 
-			$file = substr($file, strpos($file, "application"));
-			$file = str_replace(DS, '/', $file);
+			if( isset($value['file']) )
+			{
+				$file = substr($value['file'], strpos($value['file'], "application"));
+				$file = str_replace(DS, '/', $file);
+			}
+			else
+			{
+				$file = '';
+			}
+						
 
-			if( isset($value['class']) ){
+			if( isset($value['class']) )
+			{
 
 				$out .= '<strong>'.$value['class'] .'</strong>';
 
-				if( isset($value['function']) ){
+				if( isset($value['function']) )
+				{
 					$out .= ' -> <strong>'.$value['function'].'</strong> ';
 				}
-				if( isset($value['line']) ){
+				if( isset($value['line']) )
+				{
 					$out .= "[line: {$value['line']} - ". $file . "] ";
 				}
-				if( isset($value['args']) ){
+				if( isset($value['args']) )
+				{
 					
 					$arguments = '';
-					foreach ($value['args'] as $args_ix => $arg) {
-						if (!empty($args)) {
+					foreach ($value['args'] as $args_ix => $arg)
+					{
+						if (!empty($args))
+						{
 							$arguments .= ', ';
 						}
-						switch (gettype($arg)) {
+						switch (gettype($arg))
+						{
 							case 'integer':
 							case 'double':
 								$a = $arg;
@@ -213,11 +237,15 @@ abstract class ErrorHandler{
 					$out .= ' - <a '.$popover.'>['.count($value['args']) .' Argument'. (count($value['args'])>0 ? 's': '') .']</a>';
 				}
 
-			} else {
-				if( isset($value['function']) ){
+			}
+			else
+			{
+				if( isset($value['function']) )
+				{
 					$out .= '<strong>'.$value['function'].'</strong> ';
 				}
-				if( isset($value['line']) ){
+				if( isset($value['line']) )
+				{
 					$out .= "[line: {$value['line']} - ". $file . "] ";
 				}
 			}			
@@ -226,19 +254,20 @@ abstract class ErrorHandler{
 
 
 
-		if( $out != '' ){
+		if( $out != '' )
+		{
 			$out = '<div class="error_info"><p>' . $out . '</ul></p></div>';
 		}
 			
 
-		$content_file = str_ireplace(':calleds',$out, $content_file);
-		
+		$content_file = str_ireplace(':calleds',$out, $content_file);		
 		echo($content_file);
 		exit;
 	}
 
 
-	public static function exception_ex( $type, $number, $ex ){
+	public static function exception_ex( $type, $number, $ex )
+	{
 	
 		$template = Creative::default_template_html();	
 		$content_file =  file_get_contents( __DIR__ . '/tpl/exception.tpl');
@@ -263,19 +292,22 @@ abstract class ErrorHandler{
 	}
 
 
-	public static function _run_exception_( $exception_title, $exception_message = '' ){
-		
+	public static function _run_exception_( $exception_title, $exception_message = '' )
+	{
 		$template = Creative::default_template_html();	
 		$file = __DIR__ . '/tpl/exception.tpl';
 		$content_file = '';
 
-		if (file_exists($file)){
+		if (file_exists($file))
+		{
 			$file = fopen($file, 'r');
 			while(!feof($file)) {
 				$content_file .= fgets($file);
 			}
 			fclose($file);
-		} else {
+		} 
+		else 
+		{
 			die( $error_title );
 		}
 
@@ -286,39 +318,45 @@ abstract class ErrorHandler{
 		
 		
 		if( $exception_message != '' )
+		{
 			$exception_message = '<div class="error_info"><p>' . $exception_message . '</p></div>';
+		}
+			
 			
 		$content_file = str_ireplace('@exception_message',$exception_message, $content_file);
 		
 		
 		$debug = debug_backtrace();
 		$out = '';
-		foreach( $debug as $key => $value){
-			
+		foreach( $debug as $key => $value)
+		{
 			if( isset($value['line']) )
+			{
 				$out .= '<strong>Line:</strong> '.$value['line'].' <strong>IN File:</strong> '.$value['file'].'<br/>';
+			}
 
-			/*if( isset($value['file']) )
-				$out .= '<strong>File:</strong> '.$value['file'].'<br/>';
-			*/
 			if( isset($value['class']) )
+			{
 				$out .= '<strong>Class:</strong> '.$value['class'].' -> ';
+			}				
 			
 			if( isset($value['function']) )
+			{
 				$out .= '<strong>Function:</strong> '.$value['function'].'<br/>';
-				
+			}
+			
 			$out .= '<br/>';
 		}
+
 		if( $out != '' )
+		{
 			$out = '<div class="error_info"><p>' . $out . '</p></div>';
+		}
 
 		$content_file = str_ireplace('@calleds',$out, $content_file);
 		
 		throw new Exception($content_file);
 	}
-	
-	
-
 
 }
 
@@ -326,11 +364,11 @@ abstract class ErrorHandler{
 set_error_handler("ErrorHandler::error");
 
 set_exception_handler( 	
-	function ($ex){
-
+	function ($ex)
+	{
 		$type = get_class($ex);
-
-		switch ( TRUE ) {
+		switch ( TRUE )
+		{
 			case $type == 'SmartyCompilerException':
 				ErrorHandler::exception_ex( 'SmartyCompilerException', 'SM0001', $ex );
 			break;
@@ -338,15 +376,10 @@ set_exception_handler(
 			default:
 				echo $ex->getMessage();
 			break;
-		}
-		
+		}		
 	}
 );
 
 register_shutdown_function( "ErrorHandler::fatal_error" );
-
-
-
-
 
 ?>

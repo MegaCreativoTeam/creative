@@ -51,7 +51,6 @@ class View extends SmartyBC
 		 * ----------------------------------------------------
 		 */
 		, $_template 	= 'default'
-		//, $_ambit 		= 'frontend'
 
 		/**
 		 * ---------------------------------------------------
@@ -78,7 +77,8 @@ class View extends SmartyBC
 	 * @param Request $request URL Request
 	 * @param Acl $acl Acl Access Control List
 	 */
-	public function __construct( Request $request ) {	
+	public function __construct ( Request $request )
+	{	
 		parent::__construct();
 		
 		$this->_request = $request;
@@ -87,13 +87,8 @@ class View extends SmartyBC
 		$this->_css = array();
 		$this->_js = array();
 
-		
-		#Crear rutina para determinar el Tema activo
 		$this->_theme = DEFAULT_THEME;
-		
-		//$this->_includes = PATH_THEMES . $theme_active .DS. 'includes' .DS;
-	
-		
+			
 		$this->_route['module']	= $this->_module;
 		$this->assign('token' , '');
 	}// END: __construct
@@ -105,7 +100,8 @@ class View extends SmartyBC
 	 * @param string $theme
 	 * @return void
 	 */
-	public function theme( $theme ){
+	public function theme ( $theme )
+	{
 		$this->_theme = strtolower($theme);
 		return $this;
 	}
@@ -117,7 +113,8 @@ class View extends SmartyBC
 	 * @param string $template
 	 * @return void
 	 */
-	public function template( $template ){
+	public function template ( $template )
+	{
 		$this->_template = strtolower($template);
 		return $this;
 	}
@@ -129,20 +126,13 @@ class View extends SmartyBC
 	 * @param string $template
 	 * @return void
 	 */
-	public function ambit( $ambit ){
+	public function ambit ( $ambit )
+	{
 		$this->assign('ambit', $ambit);
 		return $this;
 	}
 
 
-/**
-	 * Renderiza una vista (página)
-	 * 
-	 * @param {String} $vista Nombre de la vista (página) que se va a renderizar
-	 * @param {String} $group Grupo de la vista. Ej: Departamento al cual pertence la vista. Si no se especifica por defecto será DEFAULT_LAYOUT
-	 * @param {Boolean} $item Item del menú que está activo (selected)
-	 * @return
-	 */
 
 	/**
 	 * ----------------------------------------------------------------------------
@@ -162,41 +152,44 @@ class View extends SmartyBC
 	 * @return void
 	 */
 
-	public function render($view, $options = NULL) {
+	public function render ($view, $options = NULL)
+	{
 
 		$module		= $this->_request->get_module();
 		$controller = $this->_request->get_controller();
 		$route 		= ViewRoutes::get($this->_theme, $controller, $module);	
 
-		if( $module ){
+		if( $module )
+		{
 			$path_base_view = PATH_MODULES . $module .DS. 'views' .DS. $controller .DS;		
-		} else {
+		}
+		else
+		{
 			$path_base_view = PATH_VIEWS . $controller .DS;	
 		}
 
-		if( strpos($view, '.') !== FALSE ){
+		if( strpos($view, '.') !== FALSE )
+		{
 			$arr = explode('.', $view);
 			$path_view = PATH_VIEWS. $arr[0] .DS. $arr[1]. '.tpl';
-		} else {
+		}
+		else
+		{
 			$path_view 	= $path_base_view . $view . '.tpl';
 		}
 
 		
 		
 		#Verificar que el archivo exista y se pueda leer
-		if (is_readable($path_view)) {
+		if (is_readable($path_view))
+		{
 			$this->assign('view_html', $path_view);
-		} else {
+		}
+		else 
+		{
 			ErrorHandler::exception( 'view', 'VW0001', 'View Not Found', $path_view );
 		}
 
-		if( $options AND count($options) ){
-			$active_menu = isset($options['active_menu']) ? $options['active_menu'] : '';
-			$ambit = isset($options['ambit']) ? $options['ambit'] : FRONTEND;
-		} else {
-			$active_menu = '';
-			$ambit = FRONTEND;
-		}
 
 		$this->template_dir = $route['theme']['path'];
 		$this->config_dir 	= PATH_TEMPORAL . 'configs';
@@ -216,29 +209,23 @@ class View extends SmartyBC
 		$this->assign('outerhtml'	, OuterHTML::get());
 
 		$this->assign('options'		, $options);		
-
-
-		//$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);
-
-		//$this->assign('breadcrumbs'	, false);
-		/**$this->assign('menus'	, array(
-			'category' 	=> Creative::get( 'Menus' )->get_category(),
-			'menus'		=> Creative::get( 'Menus' )->get_menu()
-		));
-		*/
 		
-		if( $this->_compress ){
+		if( $this->_compress )
+		{
 			$this->init_compress();
 			$this->display($this->_template.'.tpl');
-			if( $this->_compress ) $this->end_compress();
-		} else {
+			$this->end_compress();
+		}
+		else
+		{
 			$this->display($this->_template.'.tpl');
 		}
 
     }
 
 
-	private function init_compress(){
+	private function init_compress ()
+	{
 		ob_start(function ($buffer){
 			$search = array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s');
 			$replace = array('>','<','\\1');					
@@ -246,7 +233,8 @@ class View extends SmartyBC
 		});
 	}
 	
-	private function end_compress(  ){
+	private function end_compress ()
+	{
 		ob_end_flush();
 	}
 	

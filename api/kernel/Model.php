@@ -1,30 +1,49 @@
 <?php
 
 
-class Model {
+
+/**
+ * Undocumented class
+ */
+class Model
+{
 	
-    protected $conex;
-	protected $table = '';
-	protected $pk = 'id';
-	protected $variables = NULL;
-	
-	protected $DB_USER ;
-	protected $DB_PASSWORD ;
-	protected $DB_HOST = 'localhost';
-	protected $DB_DATABASE ;
-	protected $DB_PORT ;	
-	protected $DB_COLLATE ;
+	protected 
+		  $table = ''
+		, $pk = 'id'
+		, $variables = []
 		
-    public function __construct( $DB_USER=NULL, $DB_PASSWORD=NULL, $DB_DATABASE=NULL , $DB_HOST='localhost', $DB_PORT = '3306', $DB_COLLATE = 'utf8'){   
-    
-    	if( $DB_USER == NULL) {
+		, $DB_USER 
+		, $DB_PASSWORD 
+		, $DB_HOST = 'localhost'
+		, $DB_DATABASE 
+		, $DB_PORT 
+		, $DB_COLLATE ;
+		
+	
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $DB_USER
+	 * @param [type] $DB_PASSWORD
+	 * @param [type] $DB_DATABASE
+	 * @param string $DB_HOST
+	 * @param string $DB_PORT
+	 * @param string $DB_COLLATE
+	 */
+    public function __construct ( $DB_USER=NULL, $DB_PASSWORD=NULL, $DB_DATABASE=NULL , $DB_HOST='localhost', $DB_PORT = '3306', $DB_COLLATE = 'utf8')
+	{
+    	if( $DB_USER == NULL)
+		{
 			$this->DB_USER 		= DB_USER;
 			$this->DB_PASSWORD 	= DB_PASSWORD;
 			$this->DB_HOST 		= DB_HOST;
 			$this->DB_DATABASE 	= DB_DATABASE;
 			$this->DB_PORT 		= DB_PORT;
 			$this->DB_COLLATE 	= DB_COLLATE;
-		} else {
+		}
+		else
+		{
 			$this->DB_USER 		= $DB_USER;
 			$this->DB_PASSWORD 	= $DB_PASSWORD;
 			$this->DB_HOST 		= $DB_HOST;
@@ -32,27 +51,40 @@ class Model {
 			$this->DB_PORT 		= $DB_PORT;
 			$this->DB_COLLATE 	= $DB_COLLATE;
 		}
-		
-			
-		$this->conex = new Conexant($DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_HOST);		
-
     }
     
 
-	
-	public function __set($name,$value){
-		if(strtolower($name) === $this->pk) {
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $name
+	 * @param [type] $value
+	 */
+	public function __set ($name,$value)
+	{
+		if(strtolower($name) === $this->pk)
+		{
 			$this->variables[$this->pk] = $value;
 		}
-		else {
+		else
+		{
 			$this->variables[$name] = $value;
 		}
 	}
 	
 	
-	public function __get($name){	
-		if(is_array($this->variables)) {
-			if(array_key_exists($name,$this->variables)) {
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $name
+	 * @return void
+	 */
+	public function __get ($name)
+	{	
+		if(is_array($this->variables))
+		{
+			if(array_key_exists($name,$this->variables))
+			{
 				return $this->variables[$name];
 			}
 		}
@@ -60,124 +92,203 @@ class Model {
 	}
 	
 	
-	public function change_pk( $pk ){
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $pk
+	 * @return void
+	 */
+	public function change_pk ( $pk )
+	{
 		$this->pk = $pk;
 		return $this;
 	}
 	
 	
-	public function begin()  {
-		$this->conex->begin();
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function begin ()
+	{
+		Creative::get( 'Conexant' )->begin();
 	}
 	
 	
-	public function commit()  {
-		$this->conex->commit();
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function commit ()
+	{
+		Creative::get( 'Conexant' )->commit();
 	}
 	
-	public function rollback()  {
-		$this->conex->rollback();
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function rollback ()
+	{
+		Creative::get( 'Conexant' )->rollback();
 	}
 	
 	
 	
-    /**
-	* @param array $fields.
-	* @param array $sort.
-	* @return array of Collection.
-	* Example: $user = new User;
-	* $found_user_array = $user->search(array('sex' => 'Male', 'age' => '18'), array('dob' => 'DESC'));
-	* // Will produce: SELECT * FROM {$this->table_name} WHERE sex = :sex AND age = :age ORDER BY dob DESC;
-	* // And rest is binding those params with the Query. Which will return an array.
-	* // Now we can use for each on $found_user_array.
-	* Other functionalities ex: Support for LIKE, >, <, >=, <= ... Are not yet supported.
-	*/
-	public function likeor($fields = array(), $field_others = array(), $sort = array()) {
-		
-		$bindings = empty($fields) ? $this->variables : $fields;
-		
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function affected()
+	{
+		$result = Creative::get( 'Conexant' )->row_count();
+		return $result;
+	}
+	
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param array $fields
+	 * @param array $sort
+	 * @return void
+	 */
+	public function likeor ( $fields = [], $sort = [] )
+	{		
+		$bindings = $this->variables;		
+
 		$_fields = '';
-		if( count($field_others)>0 ){
-			foreach($field_others as $key => $value){
+		if( count($fields) > 0 )
+		{
+			foreach($fields as $key => $value)
+			{
 				$_fields .= ', ' . $value .' AS '. $key;
 			}
 		}
 		$_fields = ' '.$_fields.' ';
 		
-		$sql = "SELECT *" .$_fields. " FROM " . $this->table;
+		$sql = "SELECT * {$_fields} FROM " . $this->table;
 		
-		if (!empty($bindings)) {
-			$fieldsvals = array();
+		if ( !empty($bindings) )
+		{
+			$fields_values = [];
 			$columns = array_keys($bindings);
-			foreach($columns as $column) {
-				$fieldsvals [] = $column . " LIKE :". $column;
+			foreach($columns as $column)
+			{
+				$fields_values[] = $column . " LIKE :". $column;
 				$this->variables[$column] = "%".$bindings[$column]."%";
 			}
-			$sql .= " WHERE " . implode(" OR ", $fieldsvals);
+			$sql .= " WHERE " . implode(" OR ", $fields_values);
 		}
 		
-		if (!empty($sort)) {
-			$sortvals = array();
-			foreach ($sort as $key => $value) {
-				$sortvals[] = $key . " " . $value;
+		if (!empty($sort))
+		{
+			$sort_values = [];
+			foreach ($sort as $key => $value)
+			{
+				$sort_values[] = $key . " " . $value;
 			}
-			$sql .= " ORDER BY " . implode(", ", $sortvals);
+			$sql .= " ORDER BY " . implode(", ", $sort_values);
 		}
+
 		return $this->exec($sql);
 	}
 	
 	
-	
-	
 	/**
-	* @param array $fields.
-	* @param array $sort.
-	* @return array of Collection.
-	* Example: $user = new User;
-	* $found_user_array = $user->search(array('sex' => 'Male', 'age' => '18'), array('dob' => 'DESC'));
-	* // Will produce: SELECT * FROM {$this->table_name} WHERE sex = :sex AND age = :age ORDER BY dob DESC;
-	* // And rest is binding those params with the Query. Which will return an array.
-	* // Now we can use for each on $found_user_array.
-	* Other functionalities ex: Support for LIKE, >, <, >=, <= ... Are not yet supported.
-	*/
-	public function search($fields = array(), $sort = array(), $lower=true) {
+	 * Undocumented function
+	 *
+	 * @param array $fields
+	 * @param array $sort
+	 * @param boolean $lower
+	 * 
+	 * @return array
+	 */
+	public function search ($fields = [], $sort = [])
+	{
 		$bindings = empty($fields) ? $this->variables : $fields;
 		$sql = "SELECT * FROM " . $this->table;
-		if (!empty($bindings)) {
-			$fieldsvals = array();
+
+		if (!empty($bindings))
+		{
+			$fieldsvals = [];
 			$columns = array_keys($bindings);
-			foreach($columns as $column) {
-				//$fieldsvals [] = ($lower ? "LOWER(" : "").$column . ($lower ? ")" : "") . " = :". $column;
+			foreach($columns as $column)
+			{
 				$fieldsvals [] = $column . " = :". $column;
 				$this->variables[$column] = $bindings[$column];
 			}
 			$sql .= " WHERE " . implode(" AND ", $fieldsvals);
 		}
 		
-		if (!empty($sort)) {
-			$sortvals = array();
-			foreach ($sort as $key => $value) {
+		if (!empty($sort))
+		{
+			$sortvals = [];
+			foreach ($sort as $key => $value)
+			{
 				$sortvals[] = $key . " " . $value;
 			}
 			$sql .= " ORDER BY " . implode(", ", $sortvals);
 		}
-		return $this->exec($sql);
+		return $this->execute($sql);
 	}
 	
 
-  	    /**
-     *  Devuelve el ultimo ID autonumerico insertado
-     *  @return string
-     */
-    public function last_id(){
-		return $this->conex->last_insert_id();
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param array $fields
+	 * @param array $sort
+	 * @return array
+	 */
+	public function row ( $fields = [], $sort = [] )
+	{		
+		$result = $this->search( $fields, $sort );
+		if ( !is_null($result) )
+		{
+            if ( !is_object($result) )
+			{
+            	return count($result) > 0 ? $result[0] : [];
+            } else {
+            	return $result[0];
+            }
+        }
+        return [];
+	}
+
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return int
+	 */
+    public function last_id ()
+	{
+		return Creative::get( 'Conexant' )->last_insert_id();
     }
     
     
     
-	public function filter( $fields, $filter, $value, $addon = '' ){
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $fields
+	 * @param [type] $filter
+	 * @param [type] $value
+	 * @param string $addon
+	 * @return void
+	 */
+	public function filter ( $fields, $filter, $value, $addon = '' )
+	{
 		
-		if( !in_array( $filter, $fields) or $value == ''){
+		if( !in_array( $filter, $fields) or $value == '')
+		{
 			array(
 				"status"=>300,
 				"response"=>array(
@@ -187,11 +298,14 @@ class Model {
 			);	
 		}
 		
-		if( $filter == 'all' ){
+		if( $filter == 'all' )
+		{
 			$columns = '';
 			$values = array($id);
-			foreach( $fields as $key => $val){
-				if( $val !== 'all' ){
+			foreach( $fields as $key => $val)
+			{
+				if( $val !== 'all' )
+				{
 					$columns .= $val . " LIKE ? OR ";
 					array_push($values, "%".$value."%");
 				}
@@ -201,7 +315,9 @@ class Model {
 			$data = $this->exec("
 				SELECT * FROM ".$this->table." WHERE {$addon} (".$columns.")
 			", $values);
-		} else {
+		}
+		else 
+		{
 			$data = $this->exec("
 				SELECT * FROM ".$this->table." WHERE {$addon} ".$filter." LIKE ?
 			", array($id, "%".$value."%"));
@@ -212,17 +328,39 @@ class Model {
 	}
 	
 	
-	public function exec($sql, $array = null) {
-		
-		if($array !== null) {
-			$result =  $this->conex->execute($sql, $array);	
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $sql
+	 * @param array $params
+	 * @return array
+	 */
+	public function exec ($sql, $params = [])
+	{
+		return $this->execute($sql, $params);
+	}
+
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $sql
+	 * @param array $params
+	 * @return array
+	 */
+	public function execute ($sql, $params = [])
+	{		
+		if( count($params) )
+		{
+			$result =  Creative::get( 'Conexant' )->execute($sql, $params);	
 		}
-		else {
-			$result =  $this->conex->execute($sql, $this->variables);	
-		}
-		
+		else 
+		{
+			$result =  Creative::get( 'Conexant' )->execute($sql, $this->variables);	
+		}		
 		// Empty bindings
-		$this->variables = array();
+		$this->variables = [];
 		return $result;
 	}
 	
@@ -233,196 +371,226 @@ class Model {
 	* 
 	* @return
 	*/
-    public function all( $field_others = array(), $sort = array() ){
+    public function all ( $field_others = array(), $sort = array() )
+	{
     	$sql_sort = '';
-    	if (!empty($sort)) {
+    	if (!empty($sort))
+		{
 			$sortvals = array();
-			foreach ($sort as $key => $value) {
+			foreach ($sort as $key => $value)
+			{
 				$sortvals[] = $key . " " . $value;
 			}
 			$sql_sort .= " ORDER BY " . implode(", ", $sortvals);
 		}
 		
 		$fields = '';
-		if( count($field_others)>0 ){
+		if( count($field_others)>0 )
+		{
 			foreach($field_others as $key => $value){
 				$fields .= ', ' . $value .' AS '. $key;
 			}
 		}
 		$fields = ' '.$fields.' ';
-		
 		return $this->exec("SELECT *" .$fields. " FROM {$this->table} " . $sql_sort ) ;
 	}
 
 
-
 	/**
-	* Agreag un nuevo resgistro a una tabla
-	* 
-	* @return
-	*/
-	public function create() { 
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function create ()
+	{ 
 		$bindings   	= $this->variables;
-		if(!empty($bindings)) {
+
+		if(!empty($bindings))
+		{
 			$fields     =  array_keys($bindings);
 			$fieldsvals =  array(implode(",",$fields),":" . implode(",:",$fields));
 			$sql 		= "INSERT INTO ".$this->table." (".$fieldsvals[0].") VALUES (".$fieldsvals[1].")";
 		}
-		else {
+		else
+		{
 			$sql 		= "INSERT INTO ".$this->table." () VALUES ()";
 		}
 		return $this->exec($sql);
 	}
-	
-	
-	public function exists( $value , $field = NULL) {
-		$field = $field ? trim($field) : $this->pk;
-		$sql = "SELECT count(1) existence FROM ".$this->table." WHERE ".$field." = :" .$field;
-		$row = $this->exec($sql, array($field=>$value));
 		
-		if( count($row)>0 )
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $value
+	 * @param [type] $field
+	 * @return void
+	 */
+	public function exists ( $value , $field = NULL)
+	{
+		$field = $field ? trim($field) : $this->pk;
+		$sql = "SELECT count(1) existence FROM {$this->table} WHERE {$field} = :{$field}";
+		$row = $this->execute($sql, [$field => $value]);
+		
+		if( count($row) > 0 )
+		{
 			return $row[0]['existence'] > 0 ? TRUE : FALSE;
+		}			
 		else 
+		{
 			return FALSE;
+		}			
 	}
 	
+		
 	/**
-	* Actualiza los datos de un registro
-	* @param undefined $id
-	* 
-	* @return
-	*/
-	public function update( $fields = 0 ) {
-	
-			$this->variables[$this->pk] = (empty($this->variables[$this->pk])) ? $fields : $this->variables[$this->pk];
-			$fieldsvals = '';
-			$columns = array_keys($this->variables);
-			foreach($columns as $column){
-				if($column !== $this->pk)
-				$fieldsvals .= $column . " = :". $column . ",";
+	 * Undocumented function
+	 *
+	 * @param integer $fields
+	 * @return void
+	 */
+	public function update ( $fields = 0 )
+	{	
+		$this->variables[$this->pk] = (empty($this->variables[$this->pk])) ? $fields : $this->variables[$this->pk];
+		$fieldsvals = '';
+		$columns = array_keys($this->variables);
+
+		foreach($columns as $column)
+		{
+			if($column !== $this->pk)
+			$fieldsvals .= $column . " = :". $column . ",";
+		}
+		$fieldsvals = substr_replace($fieldsvals , '', -1);
+		
+		if(count($columns) > 1 )
+		{
+			$sql = "UPDATE {$this->table} SET {$fieldsvals} WHERE {$this->pk} = :{$this->pk}";
+			if($fields === "0" && $this->variables[$this->pk] === "0")
+			{ 
+				unset($this->variables[$this->pk]);
+				$sql = "UPDATE {$this->table} SET {$fieldsvals}";
 			}
-			$fieldsvals = substr_replace($fieldsvals , '', -1);
-			
-			if(count($columns) > 1 ) {
-				$sql = "UPDATE " . $this->table .  " SET " . $fieldsvals . " WHERE " . $this->pk . "= :" . $this->pk;
-				if($fields === "0" && $this->variables[$this->pk] === "0") { 
-					unset($this->variables[$this->pk]);
-					$sql = "UPDATE " . $this->table .  " SET " . $fieldsvals;
-				}
-				return $this->exec($sql);
-			}
+			return $this->execute($sql);
+		}
 		
-		/*}*/
-		
-		
-	
 		return null;
 	}
-	
-	/**
-	* Devuelve el número de filas afectadas por una sentencia DELETE, INSERT, o UPDATE.
-	* 
-	* @return
-	*/
-	public function affected(){
-		$result = $this->conex->row_count();
-		return $result;
-	}
-	
+
+
 	/**
 	* Elimina un registro específico por su clave primaria
 	* @param undefined $id 
 	* 
 	* @return
 	*/
-	public function delete(  $id ) {
-		$id = (empty($this->variables[$this->pk])) ? $id : $this->variables[$this->pk];
-		if(!empty($id)) {
-			$sql = "DELETE FROM " . $this->table . " WHERE " . $this->pk . "= :" . $this->pk ;
+	public function delete ( $id )
+	{
+		if(!empty($id))
+		{
+			$sql = "DELETE FROM {$this->table} WHERE {$this->pk} = :{$this->pk}" ;
 		}
-		return $this->exec($sql, array($this->pk=>$id));
+		return $this->execute( $sql, [$this->pk => $id] );
 	}
-	
-	
+		
+
 	/**
 	* Busca un registro por su clave primaria
 	* @param undefined $id
 	* 
 	* @return
 	*/
-	public function find($field_others = array()) {
-		
+	public function find ($field_others = array())
+	{		
 		$id = $this->variables[$this->pk];
 		
 		$fields = '';
-		if( count($field_others)>0 ){
-			foreach($field_others as $key => $value){
+		if( count($field_others)>0 )
+		{
+			foreach($field_others as $key => $value)
+			{
 				$fields .= ', ' . $value .' AS '. $key;
 			}
 		}
 		$fields = ' '.$fields.' ';
 		
-		if(!empty($id)) {
+		if( !empty($id) )
+		{
 			$sql = "SELECT *" .$fields. " FROM " . $this->table ." WHERE " . $this->pk . "= :" . $this->pk ;	
 			
-			$result = $this->conex->row($sql, array($this->pk=>$id));
+			$result = Creative::get( 'Conexant' )->row($sql, array($this->pk=>$id));
 			return ($result != false) ? $result : null;
 		}
 	}
 	
+		
 	/**
-	* Minimo
-	* @param undefined $field
-	* 
-	* @return
-	*/
-	public function min($field)  {
+	 * Undocumented function
+	 *
+	 * @param [type] $field
+	 * @return void
+	 */
+	public function min ($field)
+	{
 		if($field)
-		return $this->single("SELECT min(" . $field . ") `min` FROM " . $this->table);
+		{
+			return $this->single("SELECT min({$field}) result FROM {$this->table}");
+		}		
 	}
 	
+
 	/**
-	* Maximo
-	* @param undefined $field
-	* 
-	* @return
-	*/
-	public function max($field)  {
+	 * Undocumented function
+	 *
+	 * @param [type] $field
+	 * @return void
+	 */
+	public function max ($field)
+	{
 		if($field)
-		return $this->single("SELECT max(" . $field . ") `max` FROM " . $this->table);
+		{
+			return $this->single("SELECT max({$field}) result FROM {$this->table}");
+		}		
 	}
 	
+
 	/**
-	* Promedio
-	* @param undefined $field
-	* 
-	* @return
-	*/
-	public function avg($field)  {
+	 * Undocumented function
+	 *
+	 * @param [type] $field
+	 * @return void
+	 */
+	public function avg($field)
+	{
 		if($field)
-		return $this->single("SELECT avg(" . $field . ") `avg` FROM " . $this->table);
+		{
+			return $this->single("SELECT avg({$field}) result FROM {$this->table}");
+		}		
 	}
 	
+
 	/**
-	* Sumatoria
-	* @param undefined $field
-	* 
-	* @return
-	*/
+	 * Undocumented function
+	 *
+	 * @param [type] $field
+	 * @return void
+	 */
 	public function sum($field)  {
 		if($field)
-		return $this->single("SELECT sum(" . $field . ") `sum` FROM " . $this->table);
+		{
+			return $this->single("SELECT sum({$field}) result FROM {$this->table}");
+		}		
 	}
 	
+
 	/**
-	* Cantidad
-	* @param undefined $field
-	* 
-	* @return
-	*/
+	 * Undocumented function
+	 *
+	 * @param [type] $field
+	 * @return void
+	 */
 	public function count($field)  {
 		if($field)
-			return $this->single("SELECT count(" . $field . ") `count` FROM " . $this->table);
+			return $this->single("SELECT count({$field}) result FROM {$this->table}");
 	}	
 	
 }

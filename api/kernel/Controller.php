@@ -9,6 +9,12 @@ abstract class Controller {
 		$headers,
 		$auth = '';
 	
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param boolean $controller
+	 */
 	public function __construct( $controller = FALSE ) {
 
 		$this->_controller = $controller;
@@ -45,12 +51,12 @@ abstract class Controller {
 
 
 	/**
-	* Cargar un Modelo
-	* @param undefined $modelo Nombre del Modelo
-	* @param undefined $modulo Indica si el Modelo pertenece a un Módulo
-	* 
-	* @return
-	*/
+	 * Cargar un Modelo
+	 * @param undefined $modelo Nombre del Modelo
+	 * @param undefined $modulo Indica si el Modelo pertenece a un Módulo
+	 * 
+	 * @return
+	 */
 	protected function load_model( $modelo ) {
 		
 		$version = $GLOBALS['CREATIVE']['request']->get_version();
@@ -84,17 +90,115 @@ abstract class Controller {
 		}
 	}
 	
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $filter_by
+	 * @param [type] $filters
+	 * @return void
+	 */
+	protected function validate_filters ($filter_by, $filters)
+	{
+		if( ! array_search( $filter_by, $filters ) === FALSE )
+		{
+			$this->view->response(
+				204, 
+				[
+					'statusText' => Lang::get( 'dashboard.not_content' ),
+					'method'	=> 'GET',
+					'data'		=> [],
+					'count' 	=> 0
+				]
+			);
+		}
+	}
+
 
 
 	/**
-	* 
-	* @param undefined $param
-	* 
-	* @return
-	*/
-	protected function run_method( $func, $param = NULL ){
+	 * Undocumented function
+	 *
+	 * @param [type] $filter_by
+	 * @param [type] $filters
+	 * @return void
+	 */
+	protected function search_with_status ( $filter_by, $filters, $value )
+	{
+		$this->validate_filters( $filter_by, $filters);
+
+		$data = [];
+
+		if( $filter_by == 'all' )
+		{
+			$values = $filters_values = [];
+			
+			foreach( $filters as $key => $val)
+			{
+				if( $val !== 'all' )
+				{
+					$filters_values[$val] = "%".$value."%";
+				}
+			}
+			
+			$this->model->$filter = $value;
+			$data = $this->model->likeor( 
+				[
+					"status_text" =>
+						"CASE 
+							WHEN status = 0 THEN 'Inactiva' 
+							WHEN status = 1 THEN 'Activa' 
+						END",
+					"status_class" =>
+						"CASE 
+							WHEN status = 0 THEN 'danger' 
+							WHEN status = 1 THEN 'success' 
+						END",
+					"status_info" => 
+						"CASEs 
+							WHEN status = 0 THEN 'Carrera inactiva' 
+							WHEN status = 1 THEN 'Carrera activa' 
+						END",
+				]
+			);
+		}
+		else
+		{	
+			$this->model->$filter_by = $value;
+			$data = $this->model->likeor( 
+				[
+					"status_text" =>
+						"CASE 
+							WHEN status = 0 THEN 'Inactiva' 
+							WHEN status = 1 THEN 'Activa' 
+						END",
+					"status_class" =>
+						"CASE 
+							WHEN status = 0 THEN 'danger' 
+							WHEN status = 1 THEN 'success' 
+						END",
+					"status_info" => 
+						"CASE 
+							WHEN status = 0 THEN 'Carrera inactiva' 
+							WHEN status = 1 THEN 'Carrera activa' 
+						END",
+				]
+			);
+		}
 		
-		switch( $func ){
+		return $data;
+	}
+	
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $func
+	 * @param [type] $param
+	 * @return void
+	 */
+	protected function run_method( $func, $param = NULL )
+	{		
+		switch( $func )
+		{
 			// FIND
 			case 'find':
 				if( $param == NULL ){
@@ -149,59 +253,185 @@ abstract class Controller {
 		}
 		
 	}
-	
-	/**
-	* Carga una vista
-	* @param undefined $request
-	* 
-	* @return
-	*/
-	protected function load_view( $request ) {
-      $this->request = $request;
-      
-      if (count($this->request->getArgs()) > 0) {
-         
-          $folder 	= strtolower($this->request->getController());
-          $class 	= strtolower($this->request->getMethod());
-          $args 	= $this->request->getArgs();
-          $dirControl = DNA_ROOT . "controllers" . DS . $folder . DS . $class . ".php";
-         
-          if (is_readable($dirControl)) {
-              include_once $dirControl;
-              $control = new $class;
-              $method = $args[0];
-              if (count($args) > 1) {
-                  call_user_func_array(array($control, $method), array_splice($args, 0, 1));
-              } else {
-                  call_user_func(array($control, $method));
-              }
-          } else {
-              throw new Exception("Error en carga del controlador");
-          }
-      } else {
-          $this->view->renderizar($this->request->getMethod());
-      }
-  }
 
-	
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $registry
+	 * @return void
+	 */
+	protected function process_post ( $module )
+	{
+		$registry = Registry::get( $module );
+
+		foreach ($registry['fields_info'] as $field => $attr)
+		{			
+			
+			if( Acl::access_field( $module, $field) != 1 )
+			{
+				continue;
+			}
+
+			if( isset($attr['intable']) AND ! $attr['intable'] )
+			{
+				continue;
+			}
+
+			//Verigficar si el campo es requerido
+			if( isset($attr['required']) AND $attr['required'] )
+			{
+				if( $this->get_post($field) == '' OR $this->get_post($field) == -1 )
+					$this->view->response(422, 
+						array(
+							'statusText' => Lang::get('dashboard.required_continue', ['required' => $attr['text'] ]),
+							'field' => '#'.$field,
+							'icon' => 'warning',
+							'data' => $_POST
+						)
+					);
+			}
+
+			if( isset($attr['validation']) AND ! preg_match($attr['validation'], $this->get_post($field)) )
+			{
+				$this->view->response(422, 
+					array(
+						'statusText' => $attr['failed'],
+						'field' => '#'.$field,
+						'icon' => 'warning',
+						'data' => $_POST
+					)
+				);
+			}
+			
+			$value = $this->pSQL($this->get_post($field));
+			if( isset($attr['uninique']) AND $attr['uninique'] )
+			{
+				if( $this->model->exists( $value, $field ) === TRUE )
+				{
+					$this->view->response(409, 
+						array(
+							'statusText' => l( 'dashboard.uninique', ['uninique'=>$attr['text']] ),
+							'field' => '#'.$field,
+							'icon' => 'error',
+							'data' => $_POST
+						)
+					);
+				}
+			}
+
+			$this->model->$field = $value;
+		}
+
+		$this->model->create();
+	}
+
+
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $registry
+	 * @return void
+	 */
+	protected function process_put ( $module, $id )
+	{
+		$registry = Registry::get( $module );
+
+		foreach ($registry['fields_info'] as $field => $attr)
+		{
+			if( Acl::access_field( $module, $field) != 1 )
+			{
+				continue;
+			}
+
+			if( isset($attr['intable']) AND ! $attr['intable'] )
+			{
+				continue;
+			}
+
+			//Verigficar si el campo es requerido
+			if( isset($attr['required']) AND $attr['required'] )
+			{
+				if( $this->get_put($field) == '' OR $this->get_put($field) == -1 )
+					$this->view->response(422, 
+						array(
+							'statusText' => Lang::get('dashboard.required_continue', ['required' => $attr['text'] ]),
+							'field' => '#'.$field,
+							'icon' => 'warning',
+							'data' => $this->get_all_put()
+						)
+					);
+			}
+
+			if( isset($attr['validation']) AND ! preg_match($attr['validation'], $this->get_put($field)) )
+			{
+				$this->view->response(422, 
+					array(
+						'statusText' => $attr['failed'],
+						'field' => '#'.$field,
+						'icon' => 'warning',
+						'data' => $this->get_all_put()
+					)
+				);
+			}
+			
+			$value = $this->pSQL($this->get_put($field));
+			if( isset($attr['uninique']) AND $attr['uninique'] )
+			{
+				$this->model->{$field} = $value;
+				$row = $this->model->row();
+				$pk = $this->model->getpk();
+				if( count($row) AND $row[$pk] != $id )
+				{
+					$this->view->response(409, 
+						array(
+							'statusText' => l( 'dashboard.uninique', ['uninique'=>$attr['text']] ),
+							'field' => '#'.$field,
+							'icon' => 'error',
+							'data' => $this->get_all_put()
+						)
+					);
+				}
+			}
+
+			$this->model->$field = $value;
+		}
+
+		$this->model->update($id);
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $text
+	 * @return void
+	 */
 	protected function response_text( $text ){
 		header('Content-type: text/plain; charset=utf-8');
 		echo json_encode( $text );
 		exit;
 	}
 	
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $xml
+	 * @return void
+	 */
 	protected function response_xml( $xml ){
 		header('Content-type: text/xml; charset=utf-8');
 		echo $xml;
 		exit;
 	}
 	
-	protected function response_html( $html ){
-		header('Content-type: text/html; charset=utf-8');
-		echo $html;
-		exit;
-	}
-	
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $json
+	 * @return void
+	 */
 	protected function response_json( $json ){
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode( $json );
@@ -210,12 +440,12 @@ abstract class Controller {
 	
 	
 	/**
-	* Si no existe la variable POST se devuelve una cadena vacía '', 
-	* y Convierte caracteres especiales en entidades HTML 
-	* @param undefined $clave
-	* 
-	* @return
-	*/
+	 * Si no existe la variable POST se devuelve una cadena vacía '', 
+	 * y Convierte caracteres especiales en entidades HTML 
+	 * @param undefined $clave
+	 * 
+	 * @return
+	 */
     protected function get_string($clave){
         if(isset($_POST[$clave]) && !empty($_POST[$clave])){
         	if( is_array($_POST[$clave]) ){
@@ -255,10 +485,11 @@ abstract class Controller {
     
      protected function get_all_put(){
      	$arr = array();
-     	foreach( $this->_put as $key => $value){
-		 	$arr[$key] = utf8_decode($this->_put[$value]);
+		$put = $this->_put;
+     	foreach( $put as $key => $value){
+		 	//$arr[$key] = utf8_decode($put[$key]);
 		}
-        return $arr;
+        return $put;
 	}
 	
     /**

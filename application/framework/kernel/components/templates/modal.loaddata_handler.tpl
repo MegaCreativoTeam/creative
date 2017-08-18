@@ -6,26 +6,26 @@
 function loaddata_handler( id ){
 	
 	$.ajax({
-		url : ":controller_load/find/" + id + '?tokenurl=' + Math.random(),
+		url : "{$registry.carreras.api}/find/" + id + '/?nocache=' + Math.random(),
 		data : {
 			id 		: id,
 			token 	: _token,
 	    },
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..."  });
 		},
 		type : "GET",		 
 		dataType : "json",		 
 		success : function(data) {
 			
-			$.isLoading( "hide" );			
+			$.loading( "hide" );			
 	    	if( data.status == 200 ){
 	    		$.each(data.data, function( index, item ){
 	    			
 	    			//Si es un Select se le agrega el target
 	    			if( $("#"+index).is("select") ){
 	    				
-	    				if( is_array(item) ){
+	    				if( ex.isArray(item) ){
 	    					var _items = [];
 	    					//Parsear los datos para obtener un array con los ID
 	    					$.each(item, function( index_item, item_item ){
@@ -34,7 +34,7 @@ function loaddata_handler( id ){
 							$("#"+index).val(_items).change();
 						} else {
 							if( new String(item).contains(",") ){
-								var it = item.to_array(",");
+								var it = item.toArray(",");
 								$("#"+index).val(it).change();
 							} else {
 								$("#"+index).val(item).change();
@@ -47,8 +47,9 @@ function loaddata_handler( id ){
 	    		});
 				//_token = data.response.token;				
 			} else {					
-				notify(data.statusText, data.icon);
-			}				
+				ex.notify(data.statusText, data.icon);
+			}	
+			$(".select2[readonly]").select2({ "disabled": true });			
 	    }
 	});
 }

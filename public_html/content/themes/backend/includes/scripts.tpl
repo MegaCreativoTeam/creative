@@ -9,7 +9,8 @@
 								' {if $table.delete}<button class="btn btn-danger" onclick="javascript:deleterecord_handler(:id)"  type="button"  {Helper::get("html")->tooltip(Lang::get("dashboard.info.delete"))}><span class="fa fa-trash"></span> </button>{/if} ' +
 							'</div>';
 	
-	var _template_action_search = '<div style="text-align:center">{if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler(:id);" title="" type="button"  {Helper::get("html")->tooltip(Lang::get("dashboard.info.details"))}><span class="fa fa-eye"></span> </button>{/if} ' +
+	var _template_action_search = '<div style="text-align:center">'+
+										' {if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler(:id);" title="" type="button"  {Helper::get("html")->tooltip(Lang::get("dashboard.info.details"))}><span class="fa fa-eye"></span> </button>{/if} ' +
 										' {if $table.edit}<button class="btn btn-info" onclick="javascript:editrecord_handler(:id)" title="" type="button"  {Helper::get("html")->tooltip(Lang::get("dashboard.info.edit"))}><span class="fa fa-edit"></span> </button>{/if} ' +
 									'</div>';
 			

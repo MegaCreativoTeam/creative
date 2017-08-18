@@ -66,7 +66,7 @@ class managementController extends backendController {
 	 */
 	public function administrators() {
 
-		Acl::access_module( __FUNCTION__ );
+		//Acl::access_module( __FUNCTION__ );
 
 		$this->model = $this->load_model( __FUNCTION__ );
 		$this->model_profiles = $this->load_model('profiles');

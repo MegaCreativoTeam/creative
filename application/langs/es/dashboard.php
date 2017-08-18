@@ -3,21 +3,25 @@
 return [
 
        
-    'success_save' => '¡Éxito! Registro guardado',
+    'success_save' => '¡Éxito! El registro ha sido guardado.',
+    'success_deleted' => '¡Éxito! El registro ha sido eliminado.',
     'users' => 'Usuario|Usuarios',
     'profile' => 'Perfil|Perfiles',
     'my_profile' => 'Mi Perfil',
     'customize' => 'Personalizar',
     'field' => 'Campo|Campos',
     'access' => 'Acceso',
+    'select' => 'Seleccione',
 
+    'not_content'=> 'No hay contenido para mostrar.',
 
     'required'=> 'El campo :required es requerido.',
     'email_required' => 'Ingresa un correo electrónico para continuar.',
     'pass_required' => 'Ingresa una contraseña para continuar.',
     'name_required' => 'Necesitas ingresar un nombre para continuar',
     'required_continue'=> 'El campo :required es requerido para continuar.',
-    'required_status'=> 'Seleccione un estatus.',
+    'uninique'=> 'El campo ":uninique" ingresado ya se encuentra registrado, este campo debe ser único.',
+    'required_status'=> 'Selecccione un estatus.',
     'required_profile'=> 'Seleccione un perfil.',
 
     'modules' => [
@@ -79,6 +83,12 @@ return [
         'repeat_pass' => 'Repita tu contraseña',
         'profile' => 'Perfil',
         'dni' => 'Cédula',
+
+        'tel_house' => 'Teléfono de Hab.',
+        'tel_contact' => 'Teléfono de contacto',
+        'tel_mobile' => 'Teléfono móvil',
+        'dni' => 'Cédula',
+
         'email' => 'Correo electrónico',
         'birthdate' => 'Fecha de nacimiento',
         'description' => 'Descripción',

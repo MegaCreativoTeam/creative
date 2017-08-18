@@ -16,7 +16,6 @@ require_once PATH_FRAMEWORK .DS. 'libs' .DS. 'Net.php';
 */
 class Session
 {
-
 	private static 
 		$key,
 		$cookie,
@@ -91,7 +90,7 @@ class Session
 		ini_set('session.cache_limiter', 'private');
 		ini_set('session.cookie_lifetime', self::$conf['lifetime'] * 60 ); 	
 		ini_set('session.cache_expire', self::$conf['cache_expire']);
-		ini_set('session.gc_maxlifetime', self::$conf['lifetime'] * 60);
+		ini_set('session.gc_maxlifetime', 3600);
 
 		session_name(self::$conf['name']);	
 
@@ -270,7 +269,7 @@ class Session
 	 * @param boolean $asyn
 	 * @return void
 	 */
-    public static function time_now( $asyn = FALSE )
+    public static function time_now( $async = FALSE )
 	{
 		if( ! Session::auth()['session_time'] OR ! self::$conf['lifetime'] )
 		{

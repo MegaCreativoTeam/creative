@@ -43,6 +43,7 @@ npm('loading');
         $(".select2").select2({
             placeholder: "Seleccione..."
         });
+        $(".select2[readonly]").select2({ "disabled": true });
         $('[data-toggle="popover"]').popover();
     });
 </script>

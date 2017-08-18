@@ -92,7 +92,7 @@ class Creative extends CreativeBase
 	 * @return object
 	 */
 	public static function get( $key ){
-		if( is_object(self::$objects[$key]) ){
+		if( isset(self::$objects[$key]) AND is_object(self::$objects[$key]) ){
 			return self::$objects[$key];
 		}
 	}

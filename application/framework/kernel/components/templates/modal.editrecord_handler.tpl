@@ -17,7 +17,7 @@ function editrecord_handler( id ){
 	clear_handler();
 	loaddata_handler( id );
 	bloquear_handler( false );
-	
+	$(".select2[readonly]").select2({ "disabled": true });
 	$("#modal_wiewrecord").modal("show");
 	
 	//edit_mode = true;

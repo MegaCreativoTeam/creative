@@ -197,7 +197,7 @@ function shutdown() {
     }
 
     if ($isError){
-		var_dump ($error);//do whatever you need with it
+		//var_dump ($error);//do whatever you need with it
     }
 }
 //register_shutdown_function('shutdown');

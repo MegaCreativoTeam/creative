@@ -15,7 +15,9 @@ require_once PATH_FRAMEWORK . 'eviroment.php';
 require_once PATH_FRAMEWORK . 'Creative.php';
 require_once PATH_FRAMEWORK . 'Autoload.php';
 require_once PATH_KERNEL . 'Conexant.php';
+require_once PATH_KERNEL . 'Model.php';
 require_once PATH_KERNEL . 'sessions/Session.php';
+require_once PATH_FRAMEWORK . 'Functions.php';
 
 require_once PATH_KERNEL . 'Lang.php';
 
@@ -27,7 +29,8 @@ abstract class Initialize
 		Creative::add( 'Hash' );
 		Creative::add( 'Session' );
 		Creative::add( 'View' );
-
+		Creative::add( 'Components' );
+		
 		App::initialize();
 		Lang::set_locale( App::get('locale') );
 

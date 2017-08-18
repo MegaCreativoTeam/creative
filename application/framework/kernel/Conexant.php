@@ -357,7 +357,8 @@ class Conexant
 	* 
 	* @return
 	*/
-    public function row_count(){
+    public function row_count()
+	{
 		$result = $this->statement->rowCount();
 		return $result;
 	}

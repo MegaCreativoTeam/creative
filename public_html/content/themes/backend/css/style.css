@@ -6147,3 +6147,30 @@ label {
         white-space: normal !important;
     }
 }
+
+
+/************************************ Select2 ********************************/
+
+.select2-container--default .select2-selection--multiple {
+    background-color: white;
+    border: 1px solid #d2d6de;
+    border-radius: 0px !important;
+    cursor: text;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border: solid #d2d6de 1px !important;
+    outline: 0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #f3f3f3 !important;
+    border: 1px solid #aaa !important;
+    border-radius: 0px !important;
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 0 5px;
+    color: #000 !important;
+}

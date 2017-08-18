@@ -4,7 +4,7 @@ var _dt_sresult;
 function searchrecord_handler(){
 	
 	if( $("#search").val() == "" ){
-		notify("Debe ingresar un parametro de busqueda", "info");
+		ex.notify("Debe ingresar un parametro de busqueda", "info");
 		$("#search").focus();
 		return ;
 	}
@@ -17,7 +17,7 @@ function searchrecord_handler(){
 	$.ajax({
 		url : ":controller_load/search/" + filter + "/" + value + '/?nocache=' + Math.random(),
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "Procesando..." });
 		},
 		type : "GET",
 		dataType : "json",		 
@@ -36,8 +36,7 @@ function searchrecord_handler(){
 						} else {
 							columns.push( item[val] );
 						}
-					});
-					
+					});					
 						
 					//Template de Estatus
 					columns[columns.length-1] = _template_status
@@ -45,7 +44,7 @@ function searchrecord_handler(){
 				        .replace("@status_info", item.status_info)
 				        .replace("@status_class", item.status_class)
 				    ;
-				    
+
 				    //Tempalte de Acciones
 				    columns.push(
 				        _template_action_search
@@ -53,21 +52,24 @@ function searchrecord_handler(){
 				        	.replace("@id", item.id) //Edit
 				        	.replace("@id", item.id) //Delete
 				    );
-				    
 			    		
 					_dt_sresult.row.add(columns).draw();
 					
 				});
 				$("#dlg_sresult").modal("show");
 				
-				
-			} else if( data.status == 404 ){
+			} else if( data.status == 204 ){
 				//_token = data.response.token;				
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
+			}
+
+			else if( data.status == 404 ){
+				//_token = data.response.token;				
+				ex.notify(data.statusText, data.icon);
 			}
 			
 			$("#btn_search").prop("disabled", false);
-			$.isLoading("hide");	
+			$.loading("hide");	
 	    }
 	});	
 }

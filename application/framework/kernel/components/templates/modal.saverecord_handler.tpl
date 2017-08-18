@@ -12,7 +12,7 @@ function saverecord_handler( e ){
 	
 	var data = {
 			id : $("#id").val(),
-			{data_fields}
+			:data_fields
 		},
 		action 			= "",
 		ajax_url 		= ":controller_save";
@@ -27,60 +27,38 @@ function saverecord_handler( e ){
 		action 	= "update";
 		ajax_type = "PUT";
 	}
-	
-	/*if( data.field.length < 3 ){			
-		$("#field").focus().parent().addClass("has-error");
-		return false;
-	}*/
 
-	$(".form-control").parent().removeClass("has-error");
+	if( $(data.field).is('select') ){
+		$(data.field).focus().parent().parent().addClass("has-error");
+	} else {
+		$(data.field).focus().parent().addClass("has-error");
+	}
 		
 	$.ajax({
 		url : ajax_url,
 		data : data,
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "{l("processing")}..." });
+			$.loading({ text: '{l("processing")}...' });
 		},
 		type : ajax_type,		 
 		dataType : "json",		 
 		success : function(data) {
 			
-			$.isLoading( "hide" );
+			$.loading( "hide" );
 			_token = data.token;
 			console.log(data.statusText);
 			
-			
-			//Unauthorized - Indica que el cliente debe estar autorizado primero antes de realizar operaciones con los recursos
-			if( data.status == 401 ){
-	    		notify(data.statusText, data.icon);
-	    		return false;
-	    	}
-	    	
-	    	//Unprocessable Entity - Parametros incorrectos
-			if( data.status == 422 ){
-	    		notify(data.statusText, data.icon);
-	    		$("#"+data.field).focus().parent().addClass("has-error");
-	    		return false;
-	    	}
-	    	
-	    	//Internal Server Error
-	    	if( data.status == 500 ){
-	    		notify(data.statusText, data.icon);
-	    		return false;
-	    	}
-	    	
-	    	//Created - Creado con exito
+			//Created - Creado con exito
 	    	if( data.status == 201 ){
 	    		
 				$("#modal_wiewrecord").modal("hide");
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 				edit_mode = false;
 				
 				if (action == "update"){
 					var row = $("#tr_" + data.data.id);
 					_dt_data.row(row).remove().draw();
 				}
-				
 				
 				var columns = [];
 				$.each(_datable_columns,function(index, item){
@@ -93,31 +71,45 @@ function saverecord_handler( e ){
 				
 				//Template de Estatus
 				columns[columns.length-1] = _template_status
-			        .replace("@status_text", data.data.status_text)
-			        .replace("@status_help", data.data.status_help)
-			        .replace("@status_class", data.data.status_class)
+			        .replace(":status_text", data.data.status_text)
+			        .replace(":status_help", data.data.status_help)
+			        .replace(":status_class", data.data.status_class)
 			    ;
 			    
 			    //Tempalte de Acciones
 			    columns.push(
 			        _template_action
-			        	.replace("@id", data.data.id) //View
-			        	.replace("@id", data.data.id) //Edit
-			        	.replace("@id", data.data.id) //Delete
+			        	.replace(":id", data.data.id) //View
+			        	.replace(":id", data.data.id) //Edit
+			        	.replace(":id", data.data.id) //Delete
 			    );
 				
 				var _row_node = _dt_data.row.add(columns).draw().node();
 					$(_row_node).attr("id", "tr_" + data.data.id);
 					
 				$(_row_node).addClass("save_success");
+
 				setTimeout(function(){
 					$(_row_node).removeClass("save_success");
 				}, 5500);
-				
 
+	    	} else if( data.status == 422 ){
+				//Unprocessable Entity - Parametros incorrectos				
+	    		ex.notify(data.statusText, data.icon);
+				if( $(data.field).is('select') ){
+					$(data.field).focus().parent().parent().addClass("has-error");
+				} else {
+					$(data.field).focus().parent().addClass("has-error");
+				}
+	    		
+
+	    		return false;
+				
+	    	} else {
+				ex.notify(data.statusText, data.icon);
+				console.log( data.status + ': '+ data.statusTex);
+	    		return false;
 			}
-			
-			
 	    }
 	});
 	
