@@ -1,6 +1,7 @@
 <?php
-/** -----------------------------------------------------------------------
- * Index Controller
+/** 
+ * ------------------------------------------------------------------------
+ * Controller dashboard
  * ------------------------------------------------------------------------
  * #
  * 
@@ -8,7 +9,7 @@
  * @version 1.0.0
  * @author name <name@email.com>
  */
-class indexController extends Controller 
+class inscripcionesController extends backendController 
 {
     function __construct() {
 		parent::__construct(__CLASS__);
@@ -17,6 +18,13 @@ class indexController extends Controller
 		* Default template in which views are rendered
 		*/
         $this->view->template ( 'default' );
+        
+        $this->view->theme( BACKEND );
+		/**
+		* This global variable saves an instance 
+		* in a table that matches the class name
+		*/
+		$this->model = $this->load_model('inscripciones');
 
 		/**
 		* Avoid caching
@@ -35,7 +43,17 @@ class indexController extends Controller
      * @author name <name@email.com>
      */
     public function index(){
-        $this->view->render( __FUNCTION__ );
+	
+
+      
+      $this->view->template ( 'default' );        
+      $this->view->theme( BACKEND );
+      $this->view->ambit( BACKEND );
+
+      $this->view->render(__FUNCTION__, [
+          'active_menu' => 'management',
+      ]);
+
     }
 }
 

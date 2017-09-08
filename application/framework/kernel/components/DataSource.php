@@ -109,6 +109,30 @@ class DataSource
 		}
 	}
 	
+
+
+	/**
+	 * Ejecuta una consulta en la base de datos 
+	 *
+	 * @return void
+	 */
+	public function query ( $param )
+	{
+		$table = $param['table'];
+		$key = $param['key'];
+		$value = $param['value'];
+
+		$data = Creative::add( 'Conexant' )
+				->execute("SELECT {$key}, {$value} FROM {$table} ORDER BY {$value} ASC" );
+
+		foreach( $data as $row => $values)
+		{
+			$result[$values[$key]] = $values[$value];
+		}
+		return $result;
+	}
+
+
 	
 	/**
 	 * 

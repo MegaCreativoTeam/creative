@@ -25,7 +25,7 @@ class carrerasController extends backendController
 			'controller_delete'	=> '/api/v1/'.$this->controller_name.'.json/',
 			'controller_save' 	=> '/api/v1/'.$this->controller_name.'.json/',
 			'controller_load'	=> '/api/v1/'.$this->controller_name.'.json/',
-			'size' 				=> 'lg'
+			'size' 				=> 'sm'
 			,'text' => $this->controller_name
 		));
 		

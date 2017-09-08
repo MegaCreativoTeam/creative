@@ -31,7 +31,7 @@ return [
      * 
      * @var bool
      */
-    'deleted_logic' => FALSE,
+    'deleted_logic' => true,
 
 
 
@@ -45,7 +45,23 @@ return [
      * 
      * @var bool
      */
-    'deleted_logic_indicator' => -100
+    'deleted_logic_indicator' => -100,
+
+
+
+    /**
+     * ------------------------------------------------------------------------------
+     * Recordps per Page
+     * ------------------------------------------------------------------------------
+     * Sets the number of records per page that will be displayed by default 
+     * in the pager of a query
+     * 
+     * Establece la cantidad de Registros por página que se mostraran
+     *  por defecto en el paginador de una consulta
+     * 
+     * @var int
+     */
+    'records_per_page' => 25,
 
 ];
 

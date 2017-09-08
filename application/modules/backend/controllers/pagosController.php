@@ -1,226 +1,150 @@
 <?php
 
-if( !defined('CREATIVE') ) die('Can not access from here');
-
-class pagosController extends backendController {
+class pagosController extends backendController
+{
 	
-	private $_filters = array( 
-		'Todos'		=> 'all',
-		'Código'	=> 'codigo',
-		'Nombre'	=> 'nombre',
-	);
-	
-	
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 		$this->no_cache();
-		$this->view->template = 'template.back';
 		$this->module = __CLASS__;
-		$this->module_name = str_ireplace('controller', '',  __CLASS__);		
-		$this->model_module = $this->load_model($this->module_name);
+		$this->module_name = str_ireplace('controller', '',  __CLASS__);
+		$this->model = $this->load_model( Registry::get('pagos_gestion')['table'] );
 	}
 	
-	
+
 	/**
 	* 
 	* 
 	* @return
 	*/
-	public function index() {
+	public function index()
+	{
+		$this->view->template ( 'default' );        
+        $this->view->theme( BACKEND );
+		$this->view->ambit( BACKEND );
+
+		$this->view->render(__FUNCTION__, [
+			'active_menu' => 'pagos',
+		]);
+	}
+	
+
+
+
+	public function listado( $page_settings = NULL )
+	{
 		
-			
-		//Crear Modal
-		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', array(
-			'allow_save'		=> TRUE,
-			'controller_delete'	=> '/api/v1/'.$this->module_name.'.json/',
-			'controller_save' 	=> '/api/v1/'.$this->module_name.'.json/',
-			'controller_load'	=> '/api/v1/'.$this->module_name.'.json/',
-			'size' 				=> 'md'
-			,'text' => $this->module_name
-		));
+		Acl::access_module( 'pagos_gestion' );		
+
+		$registry = Registry::get( 'pagos_gestion' );
+
+		$this->model = $this->load_model(Registry::get('pagos_gestion')['table']);
+		$data = $this->model->listar();
 		
-		//Estudiante ID
-		$ModalRecord->add_field(array(
-			'id'	=> 'estudiante_id',
-			'type'	=> 'hidden',
-			'required'=> TRUE,
-		));
-		
-		//Estudiante
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'estudiante_cedula',
-			'type'	=> 'text',
-			'label'	=> 'Estudiante',
-			'required'=> TRUE,
-		));
-		
-		//Cédula
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'estudiante_nombre',
-			'type'	=> 'text',
-			'label'	=> 'Cédula Estudiante',
-			'required'=> TRUE,
-		));
-		
-		
-		//Modo de pago
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'gateway',
-			'type'	=> 'select',
-			'label'	=> 'Modo de pago',
-			'required'=> TRUE,
-			'items'	=> array(
-				'-1' => 'Seleccione',
-				'1' => 'Efectivo',
-				'2' => 'Cheque',
-				'3' => 'Transferencia bancaria',
-				'4' => 'Depósito bancario',
-				'5' => 'Punto de Venta',
-				'6' => 'Punto de Venta OnLine',
-			)
-		));
-		
-		//Fecha
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'fecha',
-			'type'	=> 'text',
-			'label'	=> 'Fecha',
-			'required'=> TRUE,
-		));
-		
-		//N° de Control
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'control',
-			'type'	=> 'text',
-			'label'	=> 'N° de Control',
-		));
-		
-		//Monto
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'monto',
-			'type'	=> 'text',
-			'label'	=> 'Monto',
-			'required'=> TRUE,
-		));
-		
-		//Depositante
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'depositante',
-			'type'	=> 'text',
-			'label'	=> 'Depositante',
-		));
-		
-		
-		//Comprobante
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'voucher',
-			'type'	=> 'text',
-			'label'	=> 'Comprobante',
-		));
-		
-		//Verificado por
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'verificado_user_id',
-			'type'	=> 'text',
-			'label'	=> 'Verificado por',
-		));
-		
-		//Verificado e
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'fecha_verificado',
-			'type'	=> 'date',
-			'label'	=> 'Verificado el',
-		));
-		
-		
-		
-		//Estatus
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
-			'id'	=> 'status',
-			'type'	=> 'select',
-			'label'	=> 'Estatus',
-			'required'=> TRUE,
-			'items'	=> array(
-				'-1' => 'Seleccione',
-				'1' => 'Activo',
-				'0' => 'Inactiva',
-			)
-		));
-		
-		
-		
-		//Escribe el componente
-		$ModalRecord->write();
-		
-		
-		$this->view->assign('data'	, $this->model_module->all(array(
-			"status_text" =>
-				"CASE 
-					WHEN status = 0 THEN 'Inactiva' 
-					WHEN status = 1 THEN 'Activa' 
-				END",
-			"status_class" =>
-				"CASE 
-					WHEN status = 0 THEN 'danger' 
-					WHEN status = 1 THEN 'success' 
-				END",
-			"status_info" => 
-				"CASE 
-					WHEN status = 0 THEN 'Carrera inactiva' 
-					WHEN status = 1 THEN 'Carrera activa' 
-				END",
-			)
-		));
-		
-		$this->view->assign('title'		, ucfirst($this->module_name) ); //Título de la Vista
-		$this->view->assign('module'	, $this->module_name ); //Título de la Vista
-		$this->view->assign('filters'	, $this->_filters);
+		//Paginador
+		$paginator = $this->load_librery('paginator', true);
+		$page = 0;
+		$offset = App::get( 'records_per_page' );
+
+		//Verficar parametros del paginador
+		$page_offset = $this->page_offset( $page_settings );
+		$page = $page_offset['page'];
+		$offset = $page_offset['offset'];
+
+		//Preparar el paginador
+		$data_pages = $paginator->initialize( $data, $page, $offset );
+		$paginator_view = $paginator->render( 'default', "/backend/{$this->controller_name}/".__FUNCTION__."/", $offset);
+
+		$this->view->assign('data'	, $data_pages );
+		$this->view->assign( 'paginator', $paginator_view );
+
+		$this->view->assign('fields_info', $registry['fields_info'] ); //Título de la Vista
+		$this->view->assign('title'		, ucfirst($this->controller_name) ); //Título de la Vista
+		$this->view->assign('module'	, $this->controller_name ); //Título de la Vista
+		$this->view->assign('filters'	, Registry::get('pagos_gestion')['filters']);
+
+		$this->view->assign('bancos'	, Creative::get( 'Components' )
+											->render( 'DataSource' )
+											->query( [
+												'table' => 'bancos',
+												'key'	=> 'id',
+												'value'	=> 'nombre'
+											]));
+
+		$this->view->assign('gateways'	, Creative::get( 'Components' )
+											->render( 'DataSource' )
+											->query( [
+												'table' => 'gateways',
+												'key'	=> 'id',
+												'value'	=> 'nombre'
+											]));
+
+		$this->view->assign('semestres'	, Creative::get( 'Components' )
+											->render( 'DataSource' )
+											->query( [
+												'table' => 'semestres',
+												'key'	=> 'id',
+												'value'	=> 'nombre'
+											]));
 		
 		//Prepara la tabla
 		$this->view->assign('table', array(
 			'columns'		=> array(
-				'Código'		=> array(
-					'field' 	=> 'codigo',
+				'nrecibo'	=> array(
+					'text' 	=> 'Recibo',
 					'primary'	=> TRUE,
 				),
-				'Nombre'	=> array(
-					'field' 	=> 'nombre',
-					
-				),			
-				'Estatus'	=> array(
-					'field' => 'status_text',
-					'align' => 'center',
-					'type'	=> 'label',					
-					'class' => 'status_class',
-					'tooltips' => 'status_info'
+				'fecha_recibo'	=> array(
+					'text' => 'Fecha de recibo',
+					'type' => 'date',
+					'format' => '%d/%m/%Y'
+				),
+				'estudiante_cedula'	=> array(
+					'text' 	=> 'Cédula',
+				),
+				'estudiante'	=> array(
+					'text' 	=> 'Nombre',
+				),
+				'gateway'	=> array(
+					'text' => 'Forma de pago',
 				),
 			), //Indica las columnas que se mostrarán
 			
 			'view'		=> TRUE, //Indica si se mostrará la columna de Visualizar
-			'edit'		=> TRUE, //Indica si se mostrará la columna de Editar
-			'delete'	=> TRUE  //Indica si se mostrará la columna de Eliminar
+			'edit'		=> Acl::access_view_module( 'profesores', 'update' ), //Indica si se mostrará la columna de Editar
+			'delete'	=> FALSE  //Indica si se mostrará la columna de Eliminar
 		));
 		
-		$this->view->assign('btn_add', TRUE);				//Indica si se mostrará el botón de Agregar
-		$this->view->assign('btn_add_text', TRUE);			//Indica si se mostrará el texto del botón Agregar
-		$this->view->assign('btn_print', TRUE);				//Indica si se mostrará el botón de Imprimir
-		$this->view->assign('btn_shared', FALSE);			//Indica si se mostrará el botón de Compartir
-		$this->view->assign('btn_search_avanced', TRUE);	//Indica si se mostrará el botón de Busqueda Avanzada
-		$this->view->assign('search', TRUE);				//Indica si se mostrará las Opciones de busqueda
+
+
+		//Indica si se mostrará el botón de Agregar
+		$this->view->assign('btn_add', Acl::access_view_module( 'pagos_gestion', 'created' ));
+
+		//Indica si se mostrará el texto del botón Agregar
+		$this->view->assign('btn_add_text', TRUE);			
+
+		//Indica si se mostrará el botón de Imprimir
+		$this->view->assign('btn_print', Acl::access_view_module( 'pagos_gestion', 'print' ));
+
+		//Indica si se mostrará el botón de Compartir
+		$this->view->assign('btn_shared', FALSE);
+
+		//Indica si se mostrará el botón de Busqueda Avanzada
+		$this->view->assign('btn_search_avanced', TRUE);
+
+		//Indica si se mostrará las Opciones de busqueda
+		$this->view->assign('search', TRUE);
 				
+			
 		
-		$this->view->render('index', 'index');
+		$this->view->template ( 'default' );        
+        $this->view->theme( BACKEND );
+		$this->view->ambit( BACKEND );
+
+		$this->view->render(__FUNCTION__, [
+			'active_menu' => 'pagos',
+		]);
 	}
 	
 }

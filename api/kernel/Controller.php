@@ -62,7 +62,7 @@ abstract class Controller {
 		$version = $GLOBALS['CREATIVE']['request']->get_version();
 		
 		$modelo =  $modelo . 'Model';
-		$path_model = PATH_API . $version .DS. 'models' .DS. $modelo . '.php';
+		$path_model = PATH_APP . 'mvc' .DS. 'models' .DS. $modelo . '.php';
 		
 		if (is_readable($path_model)) {
 			
@@ -99,7 +99,7 @@ abstract class Controller {
 	 */
 	protected function validate_filters ($filter_by, $filters)
 	{
-		if( ! array_search( $filter_by, $filters ) === FALSE )
+		if( array_search( $filter_by, $filters ) === FALSE )
 		{
 			$this->view->response(
 				204, 
@@ -273,7 +273,7 @@ abstract class Controller {
 				continue;
 			}
 
-			if( isset($attr['intable']) AND ! $attr['intable'] )
+			if( isset($attr['outtable']) AND $attr['outtable'] )
 			{
 				continue;
 			}
@@ -281,7 +281,8 @@ abstract class Controller {
 			//Verigficar si el campo es requerido
 			if( isset($attr['required']) AND $attr['required'] )
 			{
-				if( $this->get_post($field) == '' OR $this->get_post($field) == -1 )
+				$val = $this->get_post($field);
+				if( $val === '' OR $val === "-1" )
 					$this->view->response(422, 
 						array(
 							'statusText' => Lang::get('dashboard.required_continue', ['required' => $attr['text'] ]),
@@ -345,7 +346,7 @@ abstract class Controller {
 				continue;
 			}
 
-			if( isset($attr['intable']) AND ! $attr['intable'] )
+			if( isset($attr['outtable']) AND $attr['outtable'] )
 			{
 				continue;
 			}
@@ -353,7 +354,8 @@ abstract class Controller {
 			//Verigficar si el campo es requerido
 			if( isset($attr['required']) AND $attr['required'] )
 			{
-				if( $this->get_put($field) == '' OR $this->get_put($field) == -1 )
+				$val = $this->get_put($field);
+				if( $val === '' OR $val === "-1" )
 					$this->view->response(422, 
 						array(
 							'statusText' => Lang::get('dashboard.required_continue', ['required' => $attr['text'] ]),
@@ -477,7 +479,7 @@ abstract class Controller {
     
     
     protected function get_put( $key ){
-		if(isset($this->_put[$key]) && !empty($this->_put[$key])){
+		if(isset($this->_put[$key]) ){
             return $this->_put[$key];
         }
         return '';
@@ -499,7 +501,7 @@ abstract class Controller {
 	* @return
 	*/
     protected function get_post($clave){
-        if(isset($_POST[$clave]) && !empty($_POST[$clave])){
+        if( isset($_POST[$clave]) /*AND empty($_POST[$clave]) != FALSE*/){
             return $_POST[$clave];
         }
         return '';

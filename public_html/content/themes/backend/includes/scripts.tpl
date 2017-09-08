@@ -44,8 +44,14 @@
 	}
 	
 	function clear_handler(){
-		$("#modal_wiewrecord .form-control").val("");		
+		$("#modal_wiewrecord .form-control").val("");	
 		$("#modal_wiewrecord .form-control.select2").val(-1).change();
+
+		var d = $('#modal_wiewrecord [data-default="2017"]');	
+		$.each( d, function(a,b){
+			$(b).val( $(b).data('default') );
+		});
+		
 	}
 	
 	

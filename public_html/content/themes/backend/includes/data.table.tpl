@@ -51,66 +51,75 @@
 
                 {if isset($data) && count($data)}
                     {foreach $data as $key => $record}
-                        {if $record.status > -10}
 
-                        <tr id="tr_{$record.id}">
-                            {if isset($table.columns) && count($table.columns)} 
+                        {if App::get( 'deleted_logic' ) AND 
+                            isset($record.status) AND 
+                            $record.status == App::get( 'deleted_logic_indicator' )}
 
-                                {foreach $table.columns as $field => $attr}
+                        {else}
 
-                                <td align="{$attr.align|default:'left'}">
-                                    {*Si la attra es de tipo "date"*}
-                                    {if array_key_exists('type',$attr)===TRUE}
-                                        {if $attr.type == 'date'}
-                                            {$record[$field]|date_format:$attr['format']}
-                                            {*Si la attra es de tipo "number"*}
-                                        {elseif $attr.type == 'number'}
-                                            {* 'format' => array( int Decimanles, string Separador de deciamles, string Separador de Miles ) *} 
-                                            {number_format($record[$field], $attr['format'][0], $attr['format'][1], $attr['format'][2])}
-                                            {*Si la attra es de tipo "label"*} 
-                                        {elseif $attr.type == 'label'}
-                                            <span class="label label-{$record[$attr['labelclass']]|default:'default'}" {if $attr[ 'tooltips']}{*html::tooltips($record[$attr[ 'tooltips']])*}{/if}>
-                                                {$record[$field]}
-                                            </span> 
-                                         {/if}
-                                   
-                                    {else}
-                                    {*Si no existe un tipo establecido, pero se tiene un formato*} 
-                                        {if isset($attr['format']) AND $attr['format']}
-                                            {$record[$field]|string_format:$attr['format']}
+                            <tr id="tr_{$record.id}">
+                                {if isset($table.columns) && count($table.columns)} 
+
+                                    {foreach $table.columns as $field => $attr}
+
+                                    <td align="{$attr.align|default:'left'}">
+                                        {*Si la attra es de tipo "date"*}
+                                        {if array_key_exists('type',$attr)===TRUE}
+                                            {if $attr.type == 'date'}
+                                                {$record[$field]|date_format:$attr['format']}
+                                                {*Si la attra es de tipo "number"*}
+                                            {elseif $attr.type == 'number'}
+                                                {* 'format' => array( int Decimales, string Separador de deciamles, string Separador de Miles ) *} 
+                                                {number_format($record[$field], $attr['format'][0], $attr['format'][1], $attr['format'][2])}
+                                                {*Si la attra es de tipo "label"*} 
+                                            {elseif $attr.type == 'label'}
+                                                <span class="label label-{$record[$attr.labelclass]|default:'default'}" {if $attr[ 'tooltips']}{Helper::get('html')->tooltip($record[$attr[ 'tooltips']])}{/if}>
+                                                    {$record[$field]}
+                                                </span> 
+                                            {/if}
+                                    
                                         {else}
-                                            {*Si no existe un tipo establecido, ni formato*}
-                                            {if isset($attr['primary']) AND $attr['primary'] == TRUE}
-                                                <a href="javascript:viewrecord_handler({$record.id})">{$record[$field]}</a>
+                                        {*Si no existe un tipo establecido, pero se tiene un formato*} 
+                                            {if isset($attr['format']) AND $attr['format']}
+                                                {$record[$field]|string_format:$attr['format']}
                                             {else}
-                                                {$record[$field]}
+                                                {*Si no existe un tipo establecido, ni formato*}
+                                                {if isset($attr['primary']) AND $attr['primary'] == TRUE}
+                                                    <a href="javascript:viewrecord_handler({$record.id})">{$record[$field]}</a>
+                                                {else}
+                                                    {$record[$field]}
+                                                {/if}
                                             {/if}
                                         {/if}
-                                    {/if}
 
-                                </td>
+                                    </td>
 
-                                {/foreach}
-                            {/if}
-
-                            <td align="center">
-                                {if isset($action_datatable_before) && count($action_datatable_before)}
-                                    {foreach $action_datatable_before as $k => $v}
-                                        <button class="btn btn-{$v['color']|default:'default'}" type="button" data-id="{$record.id}" onclick="javascript:{$v['onclick']}" 
-                                        {if $v[ 'tooltip']}
-                                            {*html::tooltips( "{$v['tooltip']}")*}
-                                        {/if}><span class="fa fa-{$v['icon']|default:'circle'}"></span></button>
                                     {/foreach}
                                 {/if}
-                                {if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler({$record.id})" title="" type="button" {*html::tooltips( "Visualizar los detalles de este registro")*}><span class="fa fa-eye"></span> </button>{/if}
-                                {if $table.edit}<button class="btn btn-info" onclick="javascript:editrecord_handler({$record.id})" title="" type="button" {*html::tooltips( "Haga click para editar este registro")*}><span class="fa fa-edit"></span> </button>{/if}
-                                {if $table.delete}<button class="btn btn-danger" onclick="javascript:deleterecord_handler({$record.id})" title="" type="button" {*html::tooltips( "Haga click para eliminar este registro")*}><span class="fa fa-trash"></span> </button>{/if}
-                                {if isset($action_datatable_after) && count($action_datatable_after)} {foreach $action_datatable_before as $k => $v}
-                                <button class="btn btn-{$v['color']|default:'default'}" type="button" data-id="{$record.id}" onclick="javascript:{$v['onclick']}" {if $v[ 'tooltip']}{*html::tooltips( "{$v['tooltip']}")*}{/if}><span class="fa fa-{$v['icon']|default:'circle'}"></span></button>                            {/foreach} {/if}
-                            </td>
-                        </tr>
 
-                        {/if} 
+                                <td align="center">
+                                    {if isset($action_btn_datatable_before) && count($action_btn_datatable_before)}
+                                        {foreach $action_btn_datatable_before as $k => $v}
+                                            <button class="btn btn-{$v.color}" type="button" data-id="{$record.id}" onclick="{if $v.onclick !=''} javascript:{$v.onclick} {/if}" {if $v[ 'tooltip']}{Helper::get('html')->tooltip(Lang::get($v['tooltip']))}{/if}><span class="fa fa-{$v.icon|default:'circle'}"></span></button>
+                                        {/foreach}
+                                    {/if}
+
+                                    {if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler({$record.id})" title="" type="button" {*html::tooltips( "Visualizar los detalles de este registro")*}><span class="fa fa-eye"></span> </button>{/if}
+                                    {if $table.edit}<button class="btn btn-info" onclick="javascript:editrecord_handler({$record.id})" title="" type="button" {*html::tooltips( "Haga click para editar este registro")*}><span class="fa fa-edit"></span> </button>{/if}
+                                    {if $table.delete}<button class="btn btn-danger" onclick="javascript:deleterecord_handler({$record.id})" title="" type="button" {*html::tooltips( "Haga click para eliminar este registro")*}><span class="fa fa-trash"></span> </button>{/if}
+                                
+                                    {if isset($action_btn_datatable_after) && count($action_btn_datatable_after)}
+                                        {foreach $action_btn_datatable_after as $k => $v}
+                                            <button class="btn btn-{$v.color}" type="button" data-id="{$record.id}" onclick="{if $v.onclick !=''} javascript:{$v.onclick} {/if}" {if $v[ 'tooltip']}{Helper::get('html')->tooltip(Lang::get($v['tooltip']))}{/if}><span class="fa fa-{$v.icon|default:'circle'}"></span></button>
+                                        {/foreach}
+                                    {/if}
+                                    
+                                </td>
+                            </tr>
+
+                        {/if}
+
                     {/foreach}
                 {/if}
 

@@ -23,15 +23,20 @@ return
     'fields_info' => [
         'cedula' => [
             'text' => Lang::get('dashboard.attrs.dni'),
-            'required' => TRUE,
+            'type' => 'text',
             'col' => col(3,3,6),
-            'type' => 'text'
+            'required' => TRUE,
+            'uninique' => TRUE,
+            'validation' => "/^[0-9]{4,8}$/",
+            'failed' => 'Ingrese un Número de Cédula válido para continuar, este debe tener entre 4 y 8 caracteres alfanuméricos.',
         ],
         'nombre' => [
             'text' => Lang::get('dashboard.attrs.name'),
             'required' => TRUE,
             'col' => col(3,3,6),
-            'type' => 'text'
+            'type' => 'text',
+            'validation' => "/^\w{4,50}/i", //Establece cualquier caractere alfanumerico  con una longitud entre 4 y 50
+            'failed' => 'Ingrese un Nombre válido para continuar, este debe tener entre 4 y 50 caracteres alfanuméricos.',
         ],
         'apellido' => [
             'text' => Lang::get('dashboard.attrs.last_name'),
@@ -90,7 +95,10 @@ return
             'text' => 'Área profesional',
             'required' => FALSE,
             'col' => col(3,3,6),
-            'type' => 'tel'
+            'type' => 'select',
+            'items' => Creative::get( 'Components' )
+                        ->render( 'DataSource' )
+                        ->get_stock( 'area_profesional' )
         ],
 
         'estado' => [
@@ -136,6 +144,7 @@ return
         'materias' => [
             'text' => 'Materias',
             'required' => FALSE,
+            'outtable' => TRUE,
             'col' => col(9,9,6),
             'type' => 'select',
             'multiple' => TRUE,
@@ -150,6 +159,7 @@ return
         ],
      ],
 
+    
     'filters' => [
         'cedula' => Lang::get('dashboard.attrs.dni'),
         'nombre' => Lang::get('dashboard.attrs.name'),

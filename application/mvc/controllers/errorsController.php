@@ -24,9 +24,18 @@ class errorsController extends Controller
         $this->no_cache();
     }
 
-    public function index(){
-        $this->view->render( '_http_.404');
+
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function index( $eeror = '404' ){
+
+        $this->view->render( '_http_.' . $eeror );
     }
+
 
     /** 
      * ------------------------------------------------------------------------
@@ -42,6 +51,13 @@ class errorsController extends Controller
         $this->render_error( __FUNCTION__, $error );
     }
 
+
+    /**
+     * Undocumented function
+     *
+     * @param boolean $error
+     * @return void
+     */
     public function frontend( $error = FALSE){
         $this->render_error( __FUNCTION__, $error );
     }

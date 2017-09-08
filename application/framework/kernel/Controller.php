@@ -104,6 +104,32 @@ abstract class Controller extends ControllerBase
 	}
 
 	
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $pages
+	 * @return void
+	 */
+	protected function page_offset( $page_settings ){
+
+		$page = 0;
+		$offset = App::get( 'records_per_page' );
+
+		if( $page_settings != NULL )
+		{
+			preg_match( "/(page-\d+)-(offset-\d+)/i", $page_settings, $matches );
+			if( count($matches) == 3 )
+			{
+				$page = str_ireplace('page-', '', $matches[1]);
+				$offset = str_ireplace('offset-', '', $matches[2]);
+			}
+		}
+
+		return [
+			'page' => $page,
+			'offset' => $offset
+		];
+	}
 
 
 	/**
@@ -113,13 +139,13 @@ abstract class Controller extends ControllerBase
 	* 
 	* @return
 	*/
-	protected function add_btn_action_datatable( $position , $params){
-		$this->view->assign('action_datatable_'.$position, array(
+	protected function add_action_btn_datatable( $position , $params){
+		$this->view->assign('action_btn_datatable_'.$position, array(
 			array(
-				'color'=> $params['color'],
-				'onclick' => $params['onclick'],
-				'tooltip' => $params['tooltip'],
-				'icon' => $params['icon'],
+				'color'=> isset($params['color']) ? $params['color'] : 'default',
+				'onclick' => isset($params['onclick']) ? $params['onclick'] : '',
+				'tooltip' => isset($params['tooltip']) ? $params['tooltip'] : '',
+				'icon' => isset($params['icon']) ? $params['icon'] : 'circle',
 			)
 		));
 	}

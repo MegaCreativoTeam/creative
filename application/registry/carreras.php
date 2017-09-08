@@ -26,7 +26,7 @@ return
             'text' => Lang::get('dashboard.attrs.code'),
             'required' => TRUE,
             'info' => 'Cédula',
-            'col' => col(3,3),
+            'col' => col(12),
             'type' => 'text',
             'uninique' => TRUE,
             'validation' => "/^[a-z 0-9]{4,10}$/i",
@@ -37,7 +37,7 @@ return
             'text' => 'Nombre',
             'required' => TRUE,
             'info' => 'Nombre de la carrera o especialidad',
-            'col' => col(6,6),
+            'col' => col(12),
             'type' => 'text',
             'validation' => "/^\w{4,50}/i", //Establece cualquier caractere alfanumerico  con una longitud entre 4 y 50
             'failed' => 'Ingrese un Nombre válido para continuar, este debe tener entre 4 y 50 caracteres alfanuméricos.'
@@ -47,7 +47,7 @@ return
             'text' => 'Estatus',
             'required' => TRUE,
             'info' => Lang::get('dashboard.info.status'),
-            'col' => col(3,3),
+            'col' => col(12),
             'type' => 'select',
             'items' => [
                 '-1' => Lang::get('dashboard.select'),
@@ -58,11 +58,11 @@ return
             'failed' => Lang::get('dashboard.required_status'),
         ],
 
-        'materias' => [
+       /* 'materias' => [
             'text' => 'Materias',
             'required' => FALSE,
             'col' => col(12,12),
-            'intable' => FALSE,
+            'outtable' => TRUE,
             'type' => 'select',
             'multiple' => TRUE,            
             'items' => Creative::get( 'Components' )
@@ -73,7 +73,7 @@ return
                             'value'	=> 'nombre'
                         ])
                         ->execute()
-        ],
+        ],*/
      ],
 
     'filters' => [

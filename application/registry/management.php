@@ -10,6 +10,10 @@ return
 
     'submodules' => [
         'administrators',
-        'profiles'
+        'profiles',
+        'matriculas',
+        'inscripciones',
+        'profesores',
+        'pensum'
     ]
 ];

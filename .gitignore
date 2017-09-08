@@ -1,5 +1,5 @@
 #-----------------------------------------------
-# Operating System
+# OPERATING SYSTEM
 #-----------------------------------------------
 Thumbs.db
 ehthumbs.db
@@ -10,9 +10,8 @@ $RECYCLE.BIN/
 .Trashes
 
 
-
 #-----------------------------------------------
-# Editor AND Git
+# EDITOR AND GIT
 #-----------------------------------------------
 .git/
 .vscode/
@@ -21,37 +20,59 @@ $RECYCLE.BIN/
 *.clpprj
 
 
-
 #-----------------------------------------------
-# Otros
+# OTHERS
 #-----------------------------------------------
 *.tasks
-
+composer.lock
 
 
 #-----------------------------------------------
-# Packages and libraries
+# PACKAGES AND LIBRARIES
 #-----------------------------------------------
 vendor/*
-
-
-
-#-----------------------------------------------
-# Packages and libraries
-#-----------------------------------------------
 application/settings.json
-
-# application
 application/libs/*
-application/logs/*
 !application/libs/paginator
 !application/libs/captcha
 
+#------------------------------------------------------------------------
+# APPLICATIONS
+#------------------------------------------------------------------------
+application/logs/*
+application/conf/*
+application/datasources/*
+application/handlers/*
+application/hooks/*
 application/helpers/
 application/triggers/
-application/middleware/
+application/registry/
+
+application/modules/controllers/*
+!application/modules/controllers/accountsController.php
+!application/modules/controllers/dashboardController.php
+!application/modules/controllers/indexController.php
+!application/modules/controllers/managementController.php
+
+application/modules/views/*
+!application/modules/views/dashboard
+!application/modules/views/management
+
+application/mvc/controllers/*
+!application/mvc/controllers/accountsController.php
+!application/mvc/controllers/errorsController.php
+!application/mvc/controllers/backendController.php
+!application/mvc/controllers/dashboardController.php
+
+application/mvc/views/*
+!application/mvc/controllers/_http_
+!application/mvc/controllers/_paginator_
+!application/mvc/controllers/accounts
+!application/mvc/controllers/dashboard
+!application/mvc/controllers/index
 
 # temporal
+application/temporal/configs/*
 application/temporal/cache/*
 application/temporal/session/*
 application/temporal/templates_c/*
@@ -69,9 +90,9 @@ public_html/assets/components/*
 !public_html/assets/components/jquery
 
 
-#-----------------------------------------------
+#------------------------------------------------------------------------
 # API
-#-----------------------------------------------
+#------------------------------------------------------------------------
 api/logs/*
 api/**/model/*
 api/**/views/*

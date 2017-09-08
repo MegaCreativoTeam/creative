@@ -1,32 +1,79 @@
 <?php
 
 
-abstract class ComponentBase {
+abstract class ComponentBase
+{
 	
 	protected 
 		$components = array(),
 		$containers = array(),
 		$class,
-		$default_parent = '';
+		$default_parent = '',
+		$template_default = array(
+			'container_name'=> '',
+            'col' 			=> ['xs'=>12, 'sm' => 12, 'md'=>12, 'lg'=>12],
+            'label'	 		=> '',
+            'id' 			=> '',
+            'type' 			=> '',
+            'guid'			=> NULL,
+            'items' 		=> NULL,
+            'default' 		=> NULL,
+            'multiple'		=> FALSE,
+            'readonly' 		=> '',
+            'icon_required'	=> '',
+            'required' 		=> '',
+            'class'			=> '',
+            
+            'autocomplete' 	=> '', 
+                       
+            'min' 			=> '', 
+            'max' 			=> '',
+			'row' 			=> '2',
+
+            'path'			=> NULL,
+            'source'		=> NULL,
+            'binding' 		=> NULL,
+            
+            'tooltip' 		=> '',
+            'maxlength' 	=> '', 
+            
+            'value' 		=> '', 
+            'title' 		=> '', 
+            'placeholder' 	=> '', 
+            'parent' 		=> NULL,
+            'is_container' 	=> FALSE,
+            'childs' 		=> [],
+		);
 		
-	protected function get_template( $template ){
-		$template = PATH_APP . 'components' .DS. 'templates' .DS. strtolower($this->class) .'.'. $template . '.tpl';
-		if( ! file_exists( $template  ) ){
+	protected function get_template( $template )
+	{
+		if( ! file_exists( PATH_KERNEL . 'components' .DS. 'templates' .DS. $template . '.tpl' ) ){
             return false;
         }
-        return file_get_contents( $template );
+        return file_get_contents(  PATH_KERNEL . 'components' .DS. 'templates' .DS. $template . '.tpl' );
 	}
 	
-	protected function tooltip_required(){
-		return '<span class="fa fa-circle" style="font-size: 6px; color: #ce0000"  data-toggle="tooltip" data-placement="top" title="Este campo es requerido"></span>';
-	}
-	
-	protected function tooltip_info( $title, $position = 'top' ){
-		$tooltips = '<span class="fa fa-info-circle" data-toggle="tooltip" data-placement="'.$position.'" title="'.$title.'"></span>';
-		return $tooltips;
-	}
-	
-	
+
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $attrs
+	 * @return void
+	 */
+	public function clean_attr( &$html )
+	{
+		foreach( $this->template_default as $key => $attr )
+        {
+            if( is_string($attr) )
+            {
+				$html = str_ireplace( ':'. $key, '', $html );
+            }
+		}
+		return $html;
+	} 
+
+
 	/**
 	* 
 	* @param undefined $attrs
@@ -34,56 +81,90 @@ abstract class ComponentBase {
 	* @return
 	*/
 	protected function default_attr( $attrs ){
-		
-		$id 	= substr(md5(time()), 0, 10);
-		
-		$label 	= $attrs['label'] 		? $attrs['label'] 	: $id;
-		$id 	= $attrs['id'] 			? $attrs['id'] 		: $id;
-		$_col	= isset($attrs['col']) 	? $attrs['col'] 	: array('md'=>12);
-		
-		
-		if( $_col ){
-			$col = '';
-			foreach($_col as $key => $value){
-				$col .= 'col-' . $key .'-'. $value .' ';
+
+		$id 	= substr(md5(rand(111,999)), 0, 10);
+
+		$default = $this->template_default;
+		$default['id'] = $id;
+		$default['label'] = $id;
+
+		$default = array_merge($default, $attrs) ;
+		$col = '';
+
+		//Formatear las columnas
+		if( count($default['col']) )
+		{
+			foreach( $default['col'] as $screem => $size)
+			{
+				$col .= 'col-' . $screem .'-'. $size .' ';
 			}
+			$default['col'] = trim($col);
+		}
+
+
+		//Formatear REQUIRED
+		if( $default['required'] == TRUE )
+		{
+			$default['icon_required'] = Helper::get('html')->icon_required();
+			$default['required'] = 'required';
 		}
 		
-		return (object) array(
-			'idname' 		=> '',
-            'col' 			=> $col,
-            'label'	 		=> $label,
-            'id' 			=> $id,
-            'type' 			=> $attrs['type'] 			? $attrs['type'] 			: 'text',
-            'guid'			=> $attrs['guid'] 			? $attrs['guid'] 			: NULL,
-            'items' 		=> $attrs['type']			? $attrs['items'] 			: NULL,
-            'default' 		=> $attrs['default']		? $attrs['default'] 		: NULL,
-            'multiple'		=> $attrs['multiple']==TRUE ? TRUE 						: FALSE,
-            'readonly' 		=> $attrs['readonly']==TRUE ? 'readonly' 				: '',
-            'required_info'	=> $attrs['required']==TRUE ? $this->tooltip_required() : '',
-            'required' 		=> $attrs['required']==TRUE ? 'required' 				: '',
-            'class'			=> $attrs['class'] 			? $attrs['class'] 			: '',
-            
-            'autocomplete' 	=> $attrs['autocomplete']==TRUE ? 'autocomplete' 		: '', 
-                       
-            'min' 			=> $attrs['min'] 			? 'min="'.$attrs['min'].'"' : '', 
-            'max' 			=> $attrs['max'] 			? 'max="'.$attrs['max'].'"' : '',
-                        
-            'path'			=> $attrs['path'] 		 	? $attrs['path'] 			: NULL,
-            'source'		=> $attrs['source'] 		? $attrs['source'] 			: NULL,
-            'binding' 		=> $attrs['binding'] 		? $attrs['binding'] 		: NULL,
-            
-            'tooltip' 		=> $attrs['tooltip']		? $this->tooltip_info($attrs['tooltip'])		: '',
-            'maxlength' 	=> $attrs['maxlength'] 		? 'maxlength="'.$attrs['maxlength'].'"' 		: '', 
-            
-            'value' 		=> $attrs['value'] 			? 'value="'.$attrs['value'].'"' 				: '', 
-            'title' 		=> $attrs['title'] 			? 'title="'.$attrs['title'].'"' 				: '', 
-            'placeholder' 	=> $attrs['placeholder'] 	? 'placeholder="'.$attrs['placeholder'].'"' 	: '', 
-            'parent' 		=> $attrs['parent']			? $attrs['parent']								: NULL,
-            'iscontainer' 	=> FALSE,
-            'childs' 		=> $attrs['childs'] 		? $attrs['childs'] 		: NULL, 
-           
-        );
+
+		//Fomatear READONLY
+		if( $default['readonly'] == TRUE )
+		{
+			$default['readonly'] = 'readonly'; 
+		}
+
+		//Fomatear AUTOCOMPLETE
+		if( $default['autocomplete'] == TRUE )
+		{
+			$default['autocomplete'] = 'autocomplete'; 
+		}
+
+		//Fomatear MIN
+		if( $default['min'] )
+		{
+			$default['min'] = 'min="'.$default['min'].'"'; 
+		}
+
+		//Fomatear MAX
+		if( $default['max'] )
+		{
+			$default['max'] = 'max="'.$default['max'].'"'; 
+		}
+
+		//Fomatear MAX
+		if( $default['maxlength'] )
+		{
+			$default['maxlength'] = 'maxlength="'.$default['maxlength'].'"'; 
+		}
+
+		//Fomatear PLACEHOLDER
+		if( $default['placeholder'] )
+		{
+			$default['placeholder'] = 'placeholder="'.$default['placeholder'].'"'; 
+		}
+
+		//Fomatear TITLE
+		if( $default['title'] )
+		{
+			$default['title'] = 'title="'.$default['title'].'"'; 
+		}
+
+		//Fomatear VALUE
+		if( $default['value'] )
+		{
+			$default['value'] = $default['value']; 
+		}
+
+		//Fomatear PLACEHOLDER
+		if( $default['placeholder'] )
+		{
+			$default['placeholder'] = 'placeholder="'.$default['placeholder'].'"'; 
+		}
+		
+		return (object) $default;
 	}
 	
 	

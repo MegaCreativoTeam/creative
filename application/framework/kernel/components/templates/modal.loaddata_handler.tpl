@@ -6,7 +6,7 @@
 function loaddata_handler( id ){
 	
 	$.ajax({
-		url : "{$registry.carreras.api}/find/" + id + '/?nocache=' + Math.random(),
+		url : "{$registry.$module.api}/find/" + id + '/?nocache=' + Math.random(),
 		data : {
 			id 		: id,
 			token 	: _token,
@@ -41,7 +41,11 @@ function loaddata_handler( id ){
 							}
 						}
 						
-	    			} else {
+	    			} else if( $("#"+index).is("[typE='date']") || $("#"+index).is("[typE='datetime-local']") ){
+						var date = item;
+						$("#"+index).val(date);
+						
+					} else {
 	    				$("#"+index).val(item);
 	    			}
 	    		});

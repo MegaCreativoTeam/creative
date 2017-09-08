@@ -9,11 +9,18 @@
 			<!-- body modal -->
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-sm-12">
+						<a class="selections" data-selection="check" href="#" role="button"><span class="fa fa-check-square-o"></span> {Lang::get('dashboard.info.selection_check')}</a> &nbsp &nbsp
+						<a class="selections" data-selection="inverse" href="#" role="button"><span class="fa fa-check-square"></span> {Lang::get('dashboard.info.selection_inverse')}</a> &nbsp &nbsp
+						<a class="selections" data-selection="uncheck" href="#" role="button"><span class="fa fa-times"></span> {Lang::get('dashboard.info.selection_uncheck')}</a>
+					</div>
+				</div>
+				<div class="row">
+					<!--<div class="col-md-12">
 						<span class='fa fa-circle' style='margin-top:10px;color:#dd4b39'></span> {Lang::get('dashboard.info.permission_access_hidden')}<br/>
 						<span class='fa fa-circle' style='margin-top:10px;color:#f39c12'></span> {Lang::get('dashboard.info.permission_access_readonly')}<br/>
 						<span class='fa fa-circle' style='margin-top:10px;color:#00a65a'></span> {Lang::get('dashboard.info.permission_access_yes')}
-					</div>
+					</div>-->
 					<div class="col-md-12">
 						<table id="table_permissions" class="table display" cellspacing="0" width="100%">
 							<thead>

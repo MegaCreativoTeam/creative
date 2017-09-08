@@ -22,7 +22,43 @@ class ModalRecord {
  		, $_property = []
 	 	, $controller_load
 		, $controller_save
-		, $controller_delete;
+		, $controller_delete,
+		
+		$template_default = array(
+			'container_name'=> '',
+            'col' 			=> ['xs'=>12, 'sm' => 12, 'md'=>12, 'lg'=>12],
+            'label'	 		=> '',
+            'id' 			=> '',
+            'type' 			=> '',
+            'guid'			=> NULL,
+            'items' 		=> NULL,
+            'default' 		=> NULL,
+            'multiple'		=> FALSE,
+            'readonly' 		=> '',
+            'icon_required'	=> '',
+            'required' 		=> '',
+            'class'			=> '',
+            
+            'autocomplete' 	=> '', 
+            'maxlength' 	=> '',            
+            'min' 			=> '', 
+            'max' 			=> '',
+			'row' 			=> '2',
+
+            'path'			=> NULL,
+            'source'		=> NULL,
+            'binding' 		=> NULL,
+            
+            'tooltip' 		=> '',
+            
+            
+            'value' 		=> '', 
+            'title' 		=> '', 
+            'placeholder' 	=> '', 
+            'parent' 		=> NULL,
+            'is_container' 	=> FALSE,
+            'childs' 		=> [],
+		);
  	
  	function __construct() {}
 	
@@ -75,43 +111,7 @@ class ModalRecord {
 	*/
 	private function attrs_default( $attrs ){
 		$id = substr(md5(time()), 0, 6);
-
-
-		$default = array(
-            'col' 		=> array('md'=>12),
-            'label'	 	=> $id,
-            'id' 		=> $id,
-            'type' 		=> 'text',
-            'required' 	=> '',
-            'guid'		=> '',
-            'readonly' 	=> '',
-            'items' 	=> array(),
-            'default' 	=> '',
-            'multiple'	=> FALSE,
-            'path'		=> '',
-            'source'	=> NULL,
-        );
-
-		return (object) array_merge($default, $attrs) ;
-
-
-
-
-		return (object) array(
-            'col' 		=> isset($attrs['col'])			? $attrs['col'] 		: array('md'=>12),
-            'label'	 	=> isset($attrs['label']) 		? $attrs['label'] 		: $id,
-            'id' 		=> isset($attrs['id']) 			? $attrs['id'] 			: $id,
-            'type' 		=> isset($attrs['type']) 		? $attrs['type'] 		: 'text',
-            'required' 	=> isset($attrs['required']) 	? $attrs['required'] 	: '',
-            'guid'		=> isset($attrs['guid'])		? $attrs['guid'] 		: NULL,
-            'readonly' 	=> isset($attrs['readonly']) 	? $attrs['readonly'] 	: '',
-            'items' 	=> isset($attrs['type']) AND isset($attrs['items'])		? $attrs['items'] 		: '',
-            'default' 	=> isset($attrs['default'])		? $attrs['default'] 	: NULL,
-            'multiple'	=> isset($attrs['multiple']) 	? TRUE 					: FALSE,
-            'path'		=> isset($attrs['path']) 		? $attrs['path'] 		: NULL,
-            'source'	=> isset($attrs['source']) 		? $attrs['source'] 		: NULL,
-            'data'		=> isset($attrs['data']) 		? $attrs['data'] 		: NULL,
-        );
+		return (object) array_merge($this->template_default, $attrs) ;
 	}
 	
 	
@@ -129,20 +129,39 @@ class ModalRecord {
         return file_get_contents(  PATH_KERNEL . 'components' .DS. 'templates' .DS. $template . '.tpl' );
 	}
 	
-	
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $html
+	 * @return void
+	 */
+	public function clean_attr( &$html )
+	{
+		foreach( $this->template_default as $key => $attr )
+        {
+            if( is_string($attr) )
+            {
+				$html = str_ireplace( ':'. $key, '', $html );
+            }
+		}
+		return $html;
+	} 
+
+
 	/**
 	* Agrega un nuevo campo de texto
 	* @param undefined $attr
 	* 
 	* @return
 	*/
- 	public function add_field( $attr, $module = NULL )
-	 { 		
- 		$attr = $this->attrs_default($attr);
+ 	public function add_field( $attrs, $module = NULL )
+	{ 		
+ 		$attrs = $this->attrs_default($attrs);
 
 		if( $module )
 		{
-			$id = isset($attr->alias_acl) ? $attr->alias_acl : $attr->id;
+			$id = isset($attrs->alias_acl) ? $attrs->alias_acl : $attrs->id;
 			$acl = Acl::access_field( $module, $id );
 			if( $acl == 0 )
 			{
@@ -150,39 +169,56 @@ class ModalRecord {
 			}
 			if( $acl == 2 )
 			{
-				$attr->readonly = true;
+				$attrs->readonly = true;
 			}
 		}
  		 
  		switch( TRUE )
 		 {
-		 	case $attr->type === 'text' or $attr->type === 'email' or $attr->type === 'tel':
-		 		$field = $this->_tpl_input;
+		 	case $attrs->type === 'text' or $attrs->type === 'email' or $attrs->type === 'tel':
+				 $field = $this->_tpl_input;
+				 if( $attrs->default )
+				 {
+					$field = str_ireplace(':placeholder', $attrs->default, $field);
+					if( ! $attrs->value )
+					{
+						$field = str_ireplace(':value', $attrs->default, $field);
+					}					
+				 }
 		 	break;
 		 	
-		 	case $attr->type === 'hidden':
+		 	case $attrs->type === 'hidden':
 		 		$field = '<input id="@id" type="hidden" value="">';
 		 	break;
 		 	
-		 	case $attr->type === 'date':
+		 	case $attrs->type === 'date':
 		 		$field = $this->_tpl_input;
 		 	break;
 		 	
-		 	case $attr->type == 'number':
+		 	case $attrs->type == 'number':
 		 		$field = $this->_tpl_input;
 		 		$field = str_ireplace('class="','class="numeric ',$field);
-		 		$field = str_ireplace('input','input style="text-align:right"',$field);
+				$field = str_ireplace('input','input style="text-align:right"',$field);
+				if( $attrs->default )
+				{
+					$field = str_ireplace(':placeholder', $attrs->default, $field);
+					if( ! $attrs->value )
+					{
+						$field = str_ireplace(':value', $attrs->default, $field);
+						$field = str_ireplace(':default', $attrs->default, $field);
+					}					
+				}
 		 	break;
 		 	
-		 	case $attr->type == 'select':
+		 	case $attrs->type == 'select':
 		 	
 		 		$field = $this->_tpl_select;
 		 		$option = '';
 		 		
 		 		//Si hay DataSources
-				if( is_array($attr->items) ){
-					foreach($attr->items as $key => $value){
-						if( $attr->default == $key )
+				if( is_array($attrs->items) ){
+					foreach($attrs->items as $key => $value){
+						if( $attrs->default == $key )
 							$option .= '<option selected default value="' .$key. '">' .$value. '</option>';
 						else 
 							$option .= '<option {if $key==-1}selected default{/if} value="' .$key. '">' .$value. '</option>';
@@ -192,28 +228,28 @@ class ModalRecord {
 				
 		 	break;
 		 	
-		 	case $attr->type == 'include':
-		 		/*$field = '{include file="'.$attr->path.'"}';
+		 	case $attrs->type == 'include':
+		 		/*$field = '{include file="'.$attrs->path.'"}';
 		 		$this->_fields[] = $field;
 		 		return $this;*/
 		 	break;
 		 	
-		 	case $attr->type == 'source':
+		 	case $attrs->type == 'source':
 		 		$col = '';
-			 	foreach($attr->col as $key => $value){
+			 	foreach($attrs->col as $key => $value){
 					$col .= 'col-' . $key .'-'. $value .' ';
 				}
 		 		$div = str_ireplace(':col',$col ,'<div class=":col"  style="margin-bottom:5px">');
-		 		$this->_fields[] = $div . $attr->source.'</div>';
+		 		$this->_fields[] = $div . $attrs->source.'</div>';
 		 		return $this;
 		 	break;
 
 			
-			case $attr->type == 'groupbutton':
-		 		if( is_array($attr->items) )
+			case $attrs->type == 'groupbutton':
+		 		if( is_array($attrs->items) )
 				{
 					$button = '';
-					foreach($attr->items as $key => $value)
+					foreach($attrs->items as $key => $value)
 					{
 						$button .= '
 						
@@ -235,16 +271,72 @@ class ModalRecord {
  			
  		$col = '';
  		
-		if ( !empty($attr->col) ){
+		if ( !empty($attrs->col) ){
 			//Formate las columnas
-			foreach($attr->col as $key => $value){
+			foreach($attrs->col as $key => $value){
 				$col .= 'col-' . $key .'-'. $value .' ';
 			}
+			$attrs->col = $col;
 		}
 
+		//Formatear REQUIRED
+		if( $attrs->required == TRUE )
+		{
+			$attrs->icon_required = Helper::get('html')->icon_required();
+			$attrs->required = 'required';
+		}
 		
+
+		//Fomatear READONLY
+		if( $attrs->readonly == TRUE )
+		{
+			$attrs->readonly = 'readonly'; 
+		}
+
+		//Fomatear AUTOCOMPLETE
+		if( $attrs->autocomplete == TRUE )
+		{
+			$attrs->autocomplete = 'autocomplete'; 
+		}
+
+		//Fomatear MIN
+		if( $attrs->min )
+		{
+			$attrs->min = 'min="'.$attrs->min.'"'; 
+		}
+
+		//Fomatear MAX
+		if( $attrs->max )
+		{
+			$attrs->max = 'max="'.$attrs->max.'"'; 
+		}
+
+		//Fomatear MAX
+		if( $attrs->maxlength )
+		{
+			$attrs->maxlength = 'maxlength="'.$attrs->maxlength.'"'; 
+		}
+
+		//Fomatear TITLE
+		if( $attrs->title )
+		{
+			$attrs->title = 'title="'.$attrs->title.'"'; 
+		}
+
+		//Fomatear VALUE
+		if( $attrs->value )
+		{
+			$attrs->value = $attrs->value; 
+		}
+
+		//Fomatear PLACEHOLDER
+		if( $attrs->placeholder )
+		{
+			$attrs->placeholder = $attrs->placeholder; 
+		}
+
 		//Determina si el campo es requerido
-		if( $attr->required ){
+		if( $attrs->required ){
 			$required = 'required';
 			$required_info = '<span class="fa fa-circle" style="font-size: 6px; color: #ce0000"  data-toggle="tooltip" data-placement="top" title="Este campo es requerido"></span>';
 		} else {
@@ -254,29 +346,36 @@ class ModalRecord {
 		
 		
 		//Determina si el campo es requerido
-		if( $attr->guid ){
-			$guid = 'value="' . substr(md5(time()-100).md5(time()+100), 0, $attr->guid) . '" text-guid';
+		if( $attrs->guid ){
+			$guid = 'value="' . substr(md5(time()-100).md5(time()+100), 0, $attrs->guid) . '" text-guid';
 		} else {
 			$guid = '';
 		}
 		
 		
 		//Determina si el campo es requerido
-		if( $attr->readonly ){
+		if( $attrs->readonly ){
 			$readonly = 'readonly';
 		} else {
 			$readonly = '';
 		}
 		
-		if( $attr->multiple ){
-			$multiple = 'multiple="multiple"';
+		if( $attrs->multiple ){
+			$attrs->multipl = 'multiple="multiple"';
 		} else {
-			$multiple = '';
+			$attrs->multipl= '';
+		}
+		
+		foreach( $attrs as $key => $attr )
+        {
+            if( is_string($attr) )
+            {
+                $field = str_ireplace( ':'. $key, $attr, $field);
+            }
 		}
 		
 
-		
-		
+		/*$field = str_ireplace(':placeholder', $attr->placeholder, $field);		
  		$field = str_ireplace(':col'			,$col			,$field);
  		$field = str_ireplace(':id'				,$attr->id		,$field);
  		$field = str_ireplace(':label'			,$attr->label	,$field);
@@ -285,14 +384,15 @@ class ModalRecord {
  		$field = str_ireplace(':icon_required'	,$required_info	,$field);
  		$field = str_ireplace(':readonly'		,$readonly		,$field);
  		$field = str_ireplace(':guid'			,$guid			,$field); 	
- 		$field = str_ireplace(':multiple'		,$multiple		,$field); 
+ 		$field = str_ireplace(':multiple'		,$multiple		,$field); */
  		
- 			
+		$this->clean_attr($field);
+
  		$field = trim($field);
  		
- 		$this->_data_fields .= $attr->id . ' : $("#'.$attr->id.'").val(), ';
+ 		$this->_data_fields .= $attrs->id . ' : $("#'.$attrs->id.'").val(), ';
  		$this->_fields[] = $field;
- 		$this->_attrs[] = $attr;
+ 		$this->_attrs[] = $attrs;
  		
  		return $this;
 	}

@@ -39,7 +39,6 @@ npm('loading');
 
 <script>
     $(function() {
-        $('.numeric').numeric();
         $(".select2").select2({
             placeholder: "Seleccione..."
         });

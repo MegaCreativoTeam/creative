@@ -1,6 +1,6 @@
 <?php
 
-define( 'PATH_COMPS', 'components' . DS );
+define( 'PATH_COMPS', __DIR__ .DS. 'components' . DS );
 define( 'COMPS_METHOD', 'initialize' );
 
 include_once PATH_COMPS . 'ComponentBase.php';

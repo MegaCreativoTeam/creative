@@ -1,68 +1,95 @@
 <?php
 
-class HtmlBasic extends ComponentBase implements IComponent {
-	
 
+
+class HtmlBasic extends ComponentBase implements IComponent
+{
+
+	const DEFAULT_PARENT = 'body';
 	
-	public function initialize( $property = array() ){
+	public function initialize( $attrs = array() )
+	{
 		$this->class = __CLASS__;
 		
-		$default_parent = $property['default_parent'] ? $property['default_parent'] : 'body';
-		$property['id'] = $default_parent;
-		$this->default_parent = $default_parent;
+		if( ! isset($attrs['parent']) )
+		{
+			$attrs['parent'] =self::DEFAULT_PARENT;
+		} 
+		$attrs = $this->default_attr($attrs);
+		$attrs->is_container = TRUE;
 		
-		$attr = $this->default_attr($property);
-		$attr->iscontainer = TRUE;
-		
-		$this->_components[$this->default_parent] = array( 'attr' => $attr, 'html'=> '{*content*}');
+		//$this->_components[$attrs->parent] = array( 'attrs' => $attrs, 'html'=> ':content');
 		return $this;
 	}
 	
-	
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $component
+	 * @param [type] $property
+	 * @return void
+	 */
+	public function component( $component, $property ){
+
+		if( $component == 'text' OR $component == 'tel' OR $component == 'email' OR $component == 'date' )
+		{
+			$component = 'input';
+		}
+		elseif( $component == 'textarea' )
+		{
+			$component = 'textarea';
+		}
+
+		include_once PATH_COMPS . $this->class .DS. $component .'.php';
+		$component = new $component;
+		$component->create($property);
+		$this->_components[$component->getid()] = array( 'attrs' => $component->get_attrs(), 'html'=> $component->get_html());
+		return $component;
+	}
+
+
 	/**
 	* 
 	* @param undefined $property
 	* 
 	* @return
 	*/
-	public function panelbox( $property = array() ){
-		
-		$attr = $this->default_attr($property);
-		$attr->iscontainer = TRUE;
-		$attr->idname = 'panelbox';
-		
-		$panel = $this->get_template( 'panelbox' );
-		
-		foreach( $attr as $key => $value ){
-			$panel = str_ireplace( '{*'.$key.'*}' , $value ,$panel);
-		}
-		
-		$this->_components[$attr->id] = array( 'attr' => $attr, 'html'=> $panel);
-		return $this;
+	public function panelbox( $property = [] )
+	{
+		include_once PATH_COMPS . $this->class .DS. 'PanelBox.php';
+		$component = new PanelBox();
+		$component->create($property);
+		$this->_components[$component->getid()] = array( 'attrs' => $component->get_attrs(), 'html'=> $component->get_html());
+		return $component;
 	}
 	
 	
+	public function source_tpl( $file )
+	{		
+		if( ! file_exists( PATH_APP . $file . '.tpl' ) )
+		{
+			return $this;
+		}
+
+		$file =  file_get_contents( PATH_APP . $file . '.tpl' );
+		OuterHTML::add( $file );
+		return $this;
+	}
 	
+
+
 	/**
 	* Crea un nuevo Input
 	* @param undefined $property
 	* 
 	* @return
 	*/
-	public function input( $property = array() ){
-		
-		$attr = $this->default_attr($property);	
-		$attr->idname = 'input';
-			
-		$input = $this->get_template( 'input' );
-		
-		foreach( $attr as $key => $value ){
-			$input = str_ireplace( '{*'.$key.'*}' , $value ,$input);
-		}
-		
-		$this->_components[$attr->id] = array( 'attr' => $attr, 'html'=> $input);
-		
-		return $this;
+	public function input( $property = array() ){		
+		include_once PATH_COMPS . $this->class .DS. 'input.php';
+		$component = new input();
+		$component->create($property);
+		$this->_components[$component->getid()] = array( 'attrs' => $component->get_attrs(), 'html'=> $component->get_html());
+		return $component;
 	}
 	
 
@@ -202,28 +229,55 @@ class HtmlBasic extends ComponentBase implements IComponent {
 	public function write( $property = array() ){
 		
 		$html = '';
+		$comp  = $this->_components;
+		/*foreach( $comp as $id => $component)
+		{
+			//Si tiene hijos
+			if ( isset($component['attrs']->childs) AND count($component['attrs']->childs) )
+			{
+				foreach( $component['attrs']->childs as $child_key => $childs)
+				{
+					$component['html'] = str_ireplace( 
+						':content' /*. $childs['attrs']->container_name*, 
+						$childs['html'] . ':content' /*. $childs['attrs']->container_name*, 
+						$component['html']
+					);
+					unset( $component['attrs']->childs[$child_key] );
+				}
+			}
+		}*/
+
+		foreach( $this->_components as $parent_id => $component){
+			OuterHTML::add( str_ireplace(':content','',$component['html']) );
+		}
+
+		
+		return $this;
+
+		$html = '';
 		$parents = array();
 		$childs = array();
 				
 		
 		//recorrer cada componente
 		foreach( $this->_components as $id => $component){
-			if ( $component['attr']->iscontainer === TRUE ){
-				$parents[$component['attr']->id] = $component;
+			if ( $component['attrs']->is_container === TRUE ){
+				$parents[$component['attrs']->id] = $component;
 			} else {
-				$childs[$component['attr']->id] = $component;
+				$childs[$component['attrs']->id] = $component;
 			}
 		}
+
 		foreach( $childs as $id => $component){
 			
-			$parent_id = $component['attr']->parent;
+			$parent_id = $component['attrs']->parent;
 			
 			if( $parent_id != NULL ){
 				
 				$parent 		= $this->_components[$parent_id];
-				$parent_attr	= $parent['attr'];
+				$parent_attrs	= $parent['attrs'];
 				$parent_html	= $parent['html'];
-				$parent_content	= '{*content_'.$parent_attr->idname.'*}';
+				$parent_content	= '{*content_'.$parent_attrs->idname.'*}';
 				
 				$parent_html = str_ireplace( $parent_content, $component['html'] . $parent_content, $parent_html);
 				$this->_components[$parent_id]['html'] = $parent_html;
@@ -235,12 +289,12 @@ class HtmlBasic extends ComponentBase implements IComponent {
 		
 		foreach( $this->_components as $id => $component){
 			
-			$parent_id = $component['attr']->parent;
+			$parent_id = $component['attrs']->parent;
 			
 			if( $parent_id != NULL ){
 				
 				$parent 		= $this->_components[$parent_id];
-				$parent_attr	= $parent['attr'];
+				$parent_attrs	= $parent['attr'];
 				$parent_html	= $parent['html'];
 				$parent_content	= '{*content_'.$parent_attr->idname.'*}';
 				

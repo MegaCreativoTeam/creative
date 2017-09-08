@@ -69,7 +69,7 @@ define('E_PDO', -1001);
 	/**
 	* Directorio de librerías AddOn
 	*/
-	define('PATH_LIBS', PATH_FRAMEWORK . 'libs' .DS);
+	define('PATH_LIBS', PATH_APP . 'libs' .DS);
 	
 	
 	/**

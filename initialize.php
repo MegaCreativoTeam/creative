@@ -21,7 +21,7 @@ define('PATH_ROOT', realpath(dirname(__FILE__)) . DS);
         
         define('PATH_FRAMEWORK', PATH_APP . 'framework' .DS);
             
-            define('PATH_KERNEL', PATH_FRAMEWORK .DS. 'kernel' .DS);
+            define('PATH_KERNEL', PATH_FRAMEWORK .'kernel' .DS);
 
             define('PATH_CONF', PATH_APP .DS. 'conf' .DS);
 

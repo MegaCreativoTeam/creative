@@ -25,8 +25,7 @@ class Router {
 	* @return
 	*/
 	public static function execute( Request $request )
-	{
-		
+	{		
     	$module    			= $request->get_module();
 		$controller    		= $request->get_controller();
 		$controller_format	= str_ireplace("-","_", str_ireplace(".","__", $controller));
@@ -41,35 +40,26 @@ class Router {
 		#Verificar si existe un módulo
 		if( $module )
 		{
+			$module = str_ireplace("-","_", $module);
+			$module = str_ireplace(".","__", $module);			
 			
-			/*if( $module===DEFAULT_MANAGER ){
-				
-				$path_controller = PATH_MANAGER_CONTROLLERS . $controller_format .'Controller.php';
-			} else {*/
+			#revisa si hay un controlador base del modulo
+			#El proposito del controlador base es que proporcione codigo para el modulo completo
+			$dir_module =  PATH_CONTROLLERS . $module .'Controller.php';
 			
-				$module = str_ireplace("-","_", $module);
-				$module = str_ireplace(".","__", $module);
-				
-				
-				#revisa si hay un controlador base del modulo
-				#El proposito del controlador base es que proporcione codigo para el modulo completo
-				$dir_module =  PATH_CONTROLLERS . $module .'Controller.php';
-				
-				#se carga el controlador base
-				if ( is_readable($dir_module) )
-				{									
-					require_once $dir_module;
-					$controller = str_ireplace("-","_", str_ireplace(".","__", $controller));
-					#si trabajamos en base a un modulo, tiene que adquirir los controladores dentro de la carpeta del modulo
-					$path_controller = PATH_APP.'modules' .DS. $module .DS. 'controllers' .DS. $controller .'Controller.php';
-				}
-				else
-				{
-					$out = '<strong>Directory Module: </strong>'. $dir_module ;
-					ErrorHandler::run_exception('Module not found', $out);
-				}
-			
-			/*}*/
+			#se carga el controlador base
+			if ( is_readable($dir_module) )
+			{									
+				require_once $dir_module;
+				$controller = str_ireplace("-","_", str_ireplace(".","__", $controller));
+				#si trabajamos en base a un modulo, tiene que adquirir los controladores dentro de la carpeta del modulo
+				$path_controller = PATH_APP.'modules' .DS. $module .DS. 'controllers' .DS. $controller .'Controller.php';
+			}
+			else
+			{
+				$out = '<strong>Directory Module: </strong>'. $dir_module ;
+				ErrorHandler::run_exception('Module not found', $out);
+			}
 			
 		}
 		else
@@ -98,13 +88,7 @@ class Router {
 
 			$method = str_ireplace("-","_", str_ireplace(".","__", $method));
 
-			/*$class = get_class($controller);
-			if( get_class($controller) == 'errorsController')
-			{
-				$method = 'index';
-			}
-*/
-
+			
 			if ( is_callable(array($controller,$method)) )
 			{
 				//$method = $request->get_method();

@@ -78,6 +78,7 @@ class Registry
                 'text' => isset($module_attr['text']) ? $module_attr['text'] : '',
                 'icon' => isset($module_attr['icon']) ? $module_attr['icon'] : '',
                 'module' => isset($module_attr['module']) ? $module_attr['module'] : '',
+                'alias_url' => isset($module_attr['alias_url']) ? $module_attr['alias_url'] : NULL,
                 'info' => isset($module_attr['info']) ? $module_attr['info'] : '',
             ];
 
@@ -88,6 +89,7 @@ class Registry
                         'text' => isset($registry[$value]['text']) ? $registry[$value]['text'] : '',
                         'icon' => isset($registry[$value]['icon']) ? $registry[$value]['icon'] : '',
                         'module' => isset($registry[$value]['module']) ? $registry[$value]['module'] : '',
+                        'alias_url' => isset($registry[$value]['alias_url']) ? $registry[$value]['alias_url'] : NULL,
                         'info' => isset($registry[$value]['info']) ? $registry[$value]['info'] : '',
                     ];    
                     unset($registry[$value]);

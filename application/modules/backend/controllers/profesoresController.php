@@ -8,6 +8,7 @@ class profesoresController extends backendController
 		parent::__construct();
 		$this->no_cache();
 		$this->module = __CLASS__;
+		$this->module_name = str_ireplace('controller', '',  __CLASS__);
 		$this->model = $this->load_model( Registry::get('profesores')['table'] );
 	}
 	
@@ -29,7 +30,7 @@ class profesoresController extends backendController
 			, 'controller_save' 	=> '/api/v1/'.$this->controller_name.'.json/'
 			, 'controller_load'		=> '/api/v1/'.$this->controller_name.'.json/'
 			, 'size' 				=> 'lg'
-			, 'text' 			=> $this->controller_name
+			, 'text' 				=> $this->controller_name
 		));
 		
 		foreach ($registry['fields_info'] as $key => $attr) {

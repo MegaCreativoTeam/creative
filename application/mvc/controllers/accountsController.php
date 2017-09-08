@@ -1,7 +1,7 @@
 <?php
 
-class accountsController extends Controller {
-	
+class accountsController extends Controller
+{	
 	/**
 	 * Construct
 	 */

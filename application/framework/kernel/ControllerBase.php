@@ -117,9 +117,9 @@ abstract class ControllerBase
 	* @return
 	**/
     protected function load_librery($lib, $instance = FALSE) {
-        $dir_lib = PATH_LIBS . $lib .DS. $lib .'.php';
-        if (is_readable($dir_lib)) {
-            require_once $dir_lib;
+        $path_lib = PATH_LIBS . $lib .DS. $lib .'.php';
+        if (is_readable($path_lib)) {
+            require_once $path_lib;
             if($instance){
             	$lib = new $lib;
             	return $lib;

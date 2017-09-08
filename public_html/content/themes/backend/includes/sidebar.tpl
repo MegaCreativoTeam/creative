@@ -41,8 +41,8 @@
 								{foreach $module_attr.submodules as $module_ix => $module}
 									{if Acl::access_view_module($module_ix)==true}
 										<li id="{$module_ix}">
-											<a href="/{$module_attr.module}/{$module_name}/{$module_ix}/">
-												<i class="{$module['icon']}"></i> <span>{$module['text']}</span>
+											<a href="/{$module_attr.module}/{if isset($module.alias_url)}{$module.alias_url}{else}{$module_name}/{$module_ix}{/if}/?tokenurl={hash_url()}">
+												<i class="{$module.icon|default:'fa fa-caret-right'}"></i> <span>{$module.text}</span>
 											</a>
 										</li>
 									{/if}
@@ -56,7 +56,7 @@
 
 					{if Acl::access_view_module($module_name)==true}
 						<li id="{$module_name}">
-							<a href="/{$module_attr.module}/{$module_name}/">
+							<a href="/{$module_attr.module}/{$module_name}/?tokenurl={hash_url()}">
 								<i class="{$module_attr.icon}"></i> <span>{$module_attr.text}</span>
 							</a>
 						</li>

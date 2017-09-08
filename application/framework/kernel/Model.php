@@ -365,6 +365,14 @@ class Model
 		return $result;
 	}
 	
+
+	protected function pSQL($val, $default = NULL){
+    	if( $val === NULL OR $val === '' ) return $default;
+    	$val = trim($val); 
+		$val = stripslashes($val); 
+		$val = filter_var($val, FILTER_SANITIZE_STRING);
+		return $val;
+    }
     
 	/**
 	* Obtiene todos los registro de una tabla

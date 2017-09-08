@@ -1,24 +1,18 @@
 <?php
 
-if( !defined('CREATIVE') ) die('Can not access from here');
+class materiasController extends backendController
+{
 
-class materiasController extends backendController {
 	
-	private $_filters = array( 
-		'Todos'		=> 'all',
-		'Código'	=> 'codigo',
-		'Nombre'	=> 'nombre',
-	);
-	
-	
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 		$this->no_cache();
-		$this->view->template = 'template.back';
 		$this->module = __CLASS__;
-		$this->module_name = str_ireplace('controller', '',  __CLASS__);		
-		$this->model_module = $this->load_model($this->module_name);
+		$this->module_name = str_ireplace('controller', '',  __CLASS__);
+		$this->model = $this->load_model( Registry::get('materias')['table'] );
 	}
+	
 	
 	
 	/**
@@ -28,98 +22,42 @@ class materiasController extends backendController {
 	*/
 	public function index() {
 		
-		$ds_carreras = Creative::get( 'Components' )
-			->render('DataSource')
-			->create('carreras_simplelist', array(
-				'source'=> 'carreras',
-				'key'	=> 'id',
-				'value'	=>'nombre'
-			));
-			
 			
 		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', array(
-			'allow_save'		=> TRUE,
-			'controller_delete'	=> '/api/v1/'.$this->module_name.'.json/',
-			'controller_save' 	=> '/api/v1/'.$this->module_name.'.json/',
-			'controller_load'	=> '/api/v1/'.$this->module_name.'.json/',
-			'size' 				=> 'md'
-			,'text' => $this->module_name
+			  'add_record'			=> TRUE
+			, 'controller_delete'	=> '/api/v1/'.$this->controller_name.'.json/'
+			, 'controller_save' 	=> '/api/v1/'.$this->controller_name.'.json/'
+			, 'controller_load'		=> '/api/v1/'.$this->controller_name.'.json/'
+			, 'size' 				=> 'sm'
+			, 'text' 			=> $this->controller_name
 		));
 		
-		
+		$registry = Registry::get( 'materias' );
 
-		
-		//Código
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'codigo',
-			'type'	=> 'text',
-			'label'	=> 'Código',
-			'required'=> TRUE,
-		));
-		
-		//Estatus
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'status',
-			'type'	=> 'select',
-			'label'	=> 'Estatus',
-			'required'=> TRUE,
-			'items'	=> array(
-				'-1' => 'Seleccione',
-				'1' => 'Activo',
-				'0' => 'Inactiva',
-			)
-		));
-		
-		//Nombre
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>9),
-			'id'	=> 'nombre',
-			'type'	=> 'text',
-			'label'	=> 'Nombre',
-			'required'=> TRUE,
-		));
-		
-		//Costo
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'costo',
-			'type'	=> 'number',
-			'label'	=> 'Costo actual',
-			'readonly' => TRUE
-		));
-		
-		/*Descripción
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>9),
-			'id'	=> 'descripcion',
-			'type'	=> 'text',
-			'label'	=> 'Descripción',
-		));
-		*/
-		
-		//Carreras
-		/*$ModalRecord->add_field(array(
-			'col'	=> array('md'=>12),
-			'id'	=> 'carreras',
-			'type'	=> 'select',
-			'label'	=> 'Carreras',
-			'multiple' => TRUE,
-			'readonly'=> TRUE,
-			'datasource' => $ds_carreras
-		));
-		*/
+		foreach ($registry['fields_info'] as $key => $attr) {
+			$ModalRecord->add_field(
+				[
+					'id'	=> $key,
+					'col'	=> $attr['col'],
+					'type'	=> $attr['type'],
+					'label'	=> $attr['text'],
+					'required'=> isset($attr['required']) ? $attr['required'] : FALSE,
+					'items'	=> isset($attr['items']) ? $attr['items'] : NULL,
+					'multiple'=> isset($attr['multiple']) ? $attr['multiple'] : NULL,
+				],
+				'materias'
+			);
+		}
 		
 		//Escribe el componente
 		$ModalRecord->write();
 		
 		
-		$this->view->assign('data'	, $this->model_module->all(array(
+		$this->view->assign('data'	, $this->model->all(array(
 			"status_text" =>
 				"CASE 
-					WHEN status = 0 THEN 'Inactiva' 
-					WHEN status = 1 THEN 'Activa' 
+					WHEN status = 0 THEN '".Lang::get('dashboard.status.active')."' 
+					WHEN status = 1 THEN '".Lang::get('dashboard.status.inactive')."' 
 				END",
 			"status_class" =>
 				"CASE 
@@ -128,50 +66,69 @@ class materiasController extends backendController {
 				END",
 			"status_info" => 
 				"CASE 
-					WHEN status = 0 THEN 'Carrera inactiva' 
-					WHEN status = 1 THEN 'Carrera activa' 
+					WHEN status = 0 THEN '".Lang::get('dashboard.status.active')."' 
+					WHEN status = 1 THEN '".Lang::get('dashboard.status.inactive')."' 
 				END",
 			)
 		));
 		
-		$this->view->assign('title'		, ucfirst($this->module_name) ); //Título de la Vista
-		$this->view->assign('module'	, $this->module_name ); //Título de la Vista
-		$this->view->assign('filters'	, $this->_filters);
+		$this->view->assign('title'		, ucfirst($this->controller_name) ); //Título de la Vista
+		$this->view->assign('module'	, $this->controller_name ); //Título de la Vista
+		$this->view->assign('filters'	, Registry::get('materias')['filters']);
 		
 		//Prepara la tabla
 		$this->view->assign('table', array(
 			'columns'		=> array(
-				'Código'		=> array(
-					'field' 	=> 'codigo',
+				'codigo'		=> array(
+					'text' 	=> 'Cédula',
 					'primary'	=> TRUE,
 				),
-				'Nombre'	=> array(
-					'field' 	=> 'nombre',
-					
-				),			
-				'Estatus'	=> array(
-					'field' => 'status_text',
+				'nombre'	=> array(
+					'text' 	=> 'Nombre',
+				),
+				'status_text'	=> array(
+					'text' => 'Estatus',
 					'align' => 'center',
-					'type'	=> 'label',					
-					'class' => 'status_class',
+					'type'	=> 'label',
+					'labelclass' => 'status_class',
 					'tooltips' => 'status_info'
 				),
 			), //Indica las columnas que se mostrarán
 			
 			'view'		=> TRUE, //Indica si se mostrará la columna de Visualizar
-			'edit'		=> TRUE, //Indica si se mostrará la columna de Editar
-			'delete'	=> TRUE  //Indica si se mostrará la columna de Eliminar
+			'edit'		=> Acl::access_view_module( 'profesores', 'update' ), //Indica si se mostrará la columna de Editar
+			'delete'	=> Acl::access_view_module( 'profesores', 'delete' )  //Indica si se mostrará la columna de Eliminar
 		));
 		
-		$this->view->assign('btn_add', TRUE);				//Indica si se mostrará el botón de Agregar
-		$this->view->assign('btn_add_text', TRUE);			//Indica si se mostrará el texto del botón Agregar
-		$this->view->assign('btn_print', TRUE);				//Indica si se mostrará el botón de Imprimir
-		$this->view->assign('btn_shared', FALSE);			//Indica si se mostrará el botón de Compartir
-		$this->view->assign('btn_search_avanced', TRUE);	//Indica si se mostrará el botón de Busqueda Avanzada
-		$this->view->assign('search', TRUE);				//Indica si se mostrará las Opciones de busqueda
+
+
+		//Indica si se mostrará el botón de Agregar
+		$this->view->assign('btn_add', Acl::access_view_module( 'profesores', 'created' ));
+
+		//Indica si se mostrará el texto del botón Agregar
+		$this->view->assign('btn_add_text', TRUE);			
+
+		//Indica si se mostrará el botón de Imprimir
+		$this->view->assign('btn_print', Acl::access_view_module( 'profesores', 'print' ));
+
+		//Indica si se mostrará el botón de Compartir
+		$this->view->assign('btn_shared', FALSE);
+
+		//Indica si se mostrará el botón de Busqueda Avanzada
+		$this->view->assign('btn_search_avanced', TRUE);
+
+		//Indica si se mostrará las Opciones de busqueda
+		$this->view->assign('search', TRUE);
 				
+			
 		
-		$this->view->render('index', 'index');
+		$this->view->template ( 'default' );        
+        $this->view->theme( BACKEND );
+		$this->view->ambit( BACKEND );
+
+		$this->view->render(__FUNCTION__, [
+			'active_menu' => 'materias',
+		]);
 	}
 	
 }

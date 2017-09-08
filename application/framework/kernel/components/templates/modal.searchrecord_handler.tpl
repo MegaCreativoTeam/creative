@@ -17,7 +17,7 @@ function searchrecord_handler(){
 	$.ajax({
 		url : ":controller_load/search/" + filter + "/" + value + '/?nocache=' + Math.random(),
 	    beforeSend: function( e ) {
-			$.loading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		},
 		type : "GET",
 		dataType : "json",		 
@@ -40,17 +40,17 @@ function searchrecord_handler(){
 						
 					//Template de Estatus
 					columns[columns.length-1] = _template_status
-				        .replace("@status_text", item.status_text)
-				        .replace("@status_info", item.status_info)
-				        .replace("@status_class", item.status_class)
+				        .replace(":status_text", item.status_text)
+				        .replace(":status_info", item.status_info)
+				        .replace(":status_class", item.status_class)
 				    ;
 
 				    //Tempalte de Acciones
 				    columns.push(
 				        _template_action_search
-				        	.replace("@id", item.id) //View
-				        	.replace("@id", item.id) //Edit
-				        	.replace("@id", item.id) //Delete
+				        	.replace(":id", item.id) //View
+				        	.replace(":id", item.id) //Edit
+				        	.replace(":id", item.id) //Delete
 				    );
 			    		
 					_dt_sresult.row.add(columns).draw();

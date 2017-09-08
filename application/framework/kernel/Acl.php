@@ -31,12 +31,26 @@ abstract class Acl {
 	 */
     public static function initialize( $async = FALSE  )
 	{
-
+		self::$_async = $async;
+		
 		if( ! isset( Session::auth()['auth']) OR ! Session::auth()['auth'] )
 		{
-			return;
+			/*if( self::$_async )
+			{
+				$response = [
+					'status'=> 401,
+					'statusText' => Lang::get('http_error.401'),
+					'time' => date('d/m/Y H:m:s'),
+					'icon' => 'error',
+				];		
+				
+		        header('Content-Type: application/json; charset=utf8');
+		        echo json_encode($response, JSON_PRETTY_PRINT);
+				exit;
+			}*/
+			return FALSE;
 		}
-		self::$_async = $async;
+		
 		self::$_user_id = Session::auth()['id'];
 		self::$profile_id = Session::auth()['profile_id'];
 		self::$_ambit = Session::auth()['ambit'];

@@ -21,7 +21,6 @@
 		</div>
 	</div> 
 	<ul class="sidebar-menu">
-		
     {if isset($menus.category.backend) && count($menus.category.backend)}
 		{foreach $menus.category.backend as $key => $value}
 			<li class="header">{$value|upper}</li>

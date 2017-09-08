@@ -289,7 +289,7 @@ class Conexant
 	{
 		$result = NULL;
 
-		if ( !empty($params) )
+		/*if ( !empty($params) )
 		{
 			foreach ($params as $key => $value)
 			{
@@ -313,7 +313,7 @@ class Conexant
 					break;
 				}
 			}
-		}
+		}*/
 		
 	  	if ( !$this->conected )
 		{
@@ -326,12 +326,12 @@ class Conexant
 		{    		
 			if ( $statement = $this->connection->prepare($query_formated) )
 			{
-				foreach ($params as $key => $value)
+				/*foreach ($params as $key => $value)
 				{
-					$statement->bindValue($key, $value[ 0 ], $value[ 1 ]);
-				}
+					$statement->bindValue($key, $value );
+				}*/
 
-				if ( $statement->execute() )
+				if ( $statement->execute($params) )
 				{
 					$result = $statement->fetchAll( PDO::FETCH_ASSOC );
 					$this->statement = $statement;

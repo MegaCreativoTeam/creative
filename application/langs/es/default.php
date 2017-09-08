@@ -18,12 +18,17 @@ return [
     'my_profile'=> 'Mi perfil',
     'messages'=> 'Mensajes',
 
+    'first'=> 'Primero',
+    'previous'=> 'Anterior',
+    'next'=> 'Próximo',
+    'last'=> 'último',
+
 
     'required'=> 'El campo :required es requerido.',
     'required_continue'=> 'El campo :required es requerido para continuar.',
 
     'http_error' =>[
-        '401' => 'Lo sentimos, pero el acceso está restringido.',
+        '401' => 'Lo sentimos, pero el acceso está restringido. Debe inciar sesión',
         '404' => 'Lo sentimos, pero la página que busca no existe',
         '403' => 'Lo sentimos, pero el acceso a esta pagina está restringido',
     ],

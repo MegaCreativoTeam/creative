@@ -1,282 +1,228 @@
 <?php
 
-if( !defined('CREATIVE') ) die('Can not access from here');
 
-class estudiantesController extends backendController {
-	
-	private $_filters = array( 
-		'Todos'		=> 'all',
-		'Cédula'	=> 'cedula',
-		'Nombre'	=> 'name',
-		'Apellido'	=> 'last_name',
-		'Matrícula'	=> 'matricula_id',
-		'Carrera'	=> 'carrera_id',
-	);
-	
-	public function __construct() {
+class estudiantesController extends backendController
+{	
+	public function __construct()
+	{
 		parent::__construct();
 		$this->no_cache();
-		$this->view->template = 'template.back';
 		$this->module = __CLASS__;
 		$this->module_name = str_ireplace('controller', '',  __CLASS__);
-		$this->model_module = $this->load_model($this->module_name);
-		$this->model_carrera = $this->load_model('carreras');
 	}
 	
 	
+	public function index( )
+	{
+
+	}
 	/**
 	* 
 	* 
 	* @return
 	*/
-	public function index() {
-		
-		$ds_carreras = Creative::get( 'Components' )
-			->render('DataSource')
-			->create('carreras_simplelist', array(
-				'source'=> $this->model_carrera,
-				'key'	=> 'id',
-				'value'	=>'nombre'
-			));
+	public function listado( $page_settings = NULL )
+	{
+		Acl::access_module( 'estudiantes_listado' );
+
+		$registry = Registry::get( 'estudiantes_listado' );
 			
-			
+		//Crear Modal
 		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', array(
-			'allow_save'		=> TRUE,
-			'controller_delete'	=> '/api/v1/'.$this->module_name.'.json/',
-			'controller_save' 	=> '/api/v1/'.$this->module_name.'.json/',
-			'controller_load'	=> '/api/v1/'.$this->module_name.'.json/',
-			'size' 				=> 'lg'
-			,'text' => $this->module_name
+			  'add_record'			=> TRUE
+			, 'controller_delete'	=> '/api/v1/'.$this->controller_name.'.json/'
+			, 'controller_save' 	=> '/api/v1/'.$this->controller_name.'.json/'
+			, 'controller_load'		=> '/api/v1/'.$this->controller_name.'.json/'
+			, 'size' 				=> 'lg'
+			, 'text' 				=> $this->controller_name
 		));
 		
-		
-		//Cédula
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'cedula',
-			'type'	=> 'text',
-			'label'	=> 'Cédula',
-			'required'=> TRUE,
-		));
-		
-		//Matrícula
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'sexo',
-			'type'	=> 'select',
-			'label'	=> 'Matrícula',
-			'items'	=> array(
-				
-			)
-		));
-		
-		//Carrera
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'carrera_id',
-			'type'	=> 'select',
-			'label'	=> 'Carrera',
-			'datasource'=> $ds_carreras
-		));
-		
-		//Estatus
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'status',
-			'type'	=> 'select',
-			'label'	=> 'Estatus',
-			'required'=> TRUE,
-			'items'	=> array(
-				'-1' => 'Seleccione',
-				'1' => 'Activo',
-				'0' => 'Inactiva',
-			)
-		));
-		
-		
-		//Nombre
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'nombre',
-			'type'	=> 'text',
-			'label'	=> 'Nombre',
-			'required'=> TRUE,
-		));
-		
-		//Apellido
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'last_name',
-			'type'	=> 'text',
-			'label'	=> 'Apellido',
-			'required'=> TRUE,
-		));
-		
-		//Sexo
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'sexo',
-			'type'	=> 'select',
-			'label'	=> 'Sexo',
-			'items'	=> array(
-				'-1' => 'Seleccione',
-				'm' => 'Masculino',
-				'f' => 'Femenido',
-			)
-		));
-		
-		
-		
-		
-		//Fecha de Nac
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'fecha_nac',
-			'type'	=> 'date',
-			'label'	=> 'Fecha de Nac.',
-		));
-		
-		
-		//E-mail
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'email',
-			'type'	=> 'email',
-			'label'	=> 'E-mail',
-		));
-		
-		
-		//País
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'pais',
-			'type'	=> 'select',
-			'label'	=> 'País',
-			'items'	=> array(
-				'-1' => 'Seleccione',
-				'm' => 'Masculino',
-				'f' => 'Femenido',
-			)
-		));
-		
-		//Estado
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'estado',
-			'type'	=> 'select',
-			'label'	=> 'Estado',
-			'items'	=> array()
-		));
-		
-		//Ciudad
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'ciudad',
-			'type'	=> 'select',
-			'label'	=> 'Ciudad',
-			'items'	=> array()
-		));
-		
-		//Ciudad
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'municipio',
-			'type'	=> 'text',
-			'label'	=> 'Municipio',
-			'items'	=> array()
-		));
-		
-		//Parroquia
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>3),
-			'id'	=> 'parroquia',
-			'type'	=> 'text',
-			'label'	=> 'Parroquia',
-			'items'	=> array()
-		));
-		
-		//Dirección
-		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>6),
-			'id'	=> 'direccion',
-			'type'	=> 'text',
-			'label'	=> 'Dirección',
-		));
-		
-		
-		
+		foreach ($registry['fields_info'] as $key => $attr) {
+			$ModalRecord->add_field(
+				[
+					'id'	=> $key,
+					'col'	=> $attr['col'],
+					'type'	=> $attr['type'],
+					'label'	=> $attr['text'],
+					'required'=> isset($attr['required']) ? $attr['required'] : FALSE,
+					'items'	=> isset($attr['items']) ? $attr['items'] : NULL,
+					'multiple'=> isset($attr['multiple']) ? $attr['multiple'] : NULL,
+				],
+				'estudiantes_listado'
+			);
+		}
 		
 		//Escribe el componente
 		$ModalRecord->write();
+	
+		
+		$this->model = $this->load_model(Registry::get('estudiantes_listado')['table']);
+		$data = $this->model->all(
+			[
+				"carrera" =>
+					"(SELECT nombre FROM carreras WHERE id = carrera_id)",
+				"status_text" =>
+					"CASE 
+						WHEN status = 0 THEN '".Lang::get('dashboard.status.active')."' 
+						WHEN status = 1 THEN '".Lang::get('dashboard.status.inactive')."' 
+					END",
+				"status_class" =>
+					"CASE 
+						WHEN status = 0 THEN 'danger' 
+						WHEN status = 1 THEN 'success' 
+					END",
+				"status_info" => 
+					"CASE 
+						WHEN status = 0 THEN '".Lang::get('dashboard.status.active')."' 
+						WHEN status = 1 THEN '".Lang::get('dashboard.status.inactive')."' 
+					END",
+			]
+		);
+		
+		//Paginador
+		$paginator = $this->load_librery('paginator', true);
+		$page = 0;
+		$offset = App::get( 'records_per_page' );
+
+		//Verficar parametros del paginador
+		$page_offset = $this->page_offset( $page_settings );
+		$page = $page_offset['page'];
+		$offset = $page_offset['offset'];
+
+		//Preparar el paginador
+		$data_pages = $paginator->initialize( $data, $page, $offset );
+		$paginator_view = $paginator->render( 'default', "/backend/{$this->controller_name}/", $offset);
+
+		$this->view->assign('data'	, $data_pages );
+		$this->view->assign( 'paginator', $paginator_view );
+
+
 		
 		
-		$this->view->assign('data'	, $this->model_module->all(array(
-			"status_text" =>
-				"CASE 
-					WHEN status = 0 THEN 'Inactiva' 
-					WHEN status = 1 THEN 'Activa' 
-				END",
-			"status_class" =>
-				"CASE 
-					WHEN status = 0 THEN 'danger' 
-					WHEN status = 1 THEN 'success' 
-				END",
-			"status_info" => 
-				"CASE 
-					WHEN status = 0 THEN 'Carrera inactiva' 
-					WHEN status = 1 THEN 'Carrera activa' 
-				END",
-			)
-		));
-		
-		$this->view->assign('title'		, ucfirst($this->module_name) ); //Título de la Vista
-		$this->view->assign('module'	, $this->module_name ); //Título de la Vista
-		$this->view->assign('filters'	, $this->_filters);
+		$this->view->assign('title'		, ucfirst($this->controller_name) ); //Título de la Vista
+		$this->view->assign('module'	, $this->controller_name ); //Título de la Vista
+		$this->view->assign('filters'	, Registry::get('estudiantes_listado')['filters']);
 		
 		//Prepara la tabla
 		$this->view->assign('table', array(
 			'columns'		=> array(
-				'Cédula'		=> array(
-					'field' 	=> 'cedula',
+				'cedula'		=> array(
+					'text' 	=> 'Cédula',
 					'primary'	=> TRUE,
 				),
-				'Nombre'	=> array(
-					'field' 	=> 'name',
-					
+				'nombre'	=> array(
+					'text' 	=> 'Nombre',
+				),	
+				'apellido'	=> array(
+					'text' 	=> 'Apellido',
 				),
-				'Estatus'	=> array(
-					'field' => 'status_text',
+				'carrera'	=> array(
+					'text' 	=> 'Carrera',
+				),		
+				'status_text'	=> array(
+					'text' => 'Estatus',
 					'align' => 'center',
 					'type'	=> 'label',					
-					'class' => 'status_class',
+					'labelclass' => 'status_class',
 					'tooltips' => 'status_info'
 				),
 			), //Indica las columnas que se mostrarán
 			
 			'view'		=> TRUE, //Indica si se mostrará la columna de Visualizar
-			'edit'		=> TRUE, //Indica si se mostrará la columna de Editar
-			'delete'	=> TRUE  //Indica si se mostrará la columna de Eliminar
+			'edit'		=> Acl::access_view_module( 'estudiantes', 'update' ), //Indica si se mostrará la columna de Editar
+			'delete'	=> Acl::access_view_module( 'estudiantes', 'delete' )  //Indica si se mostrará la columna de Eliminar
 		));
 		
-		$this->view->assign('btn_add', TRUE);				//Indica si se mostrará el botón de Agregar
-		$this->view->assign('btn_add_text', TRUE);			//Indica si se mostrará el texto del botón Agregar
-		$this->view->assign('btn_print', TRUE);				//Indica si se mostrará el botón de Imprimir
-		$this->view->assign('btn_shared', FALSE);			//Indica si se mostrará el botón de Compartir
-		$this->view->assign('btn_search_avanced', TRUE);	//Indica si se mostrará el botón de Busqueda Avanzada
-		$this->view->assign('search', TRUE);				//Indica si se mostrará las Opciones de busqueda
+
+		$this->add_action_btn_datatable( 'before', [
+			'onclick' => "detalles(this)"
+		] );
+
+
+		//Indica si se mostrará el botón de Agregar
+		$this->view->assign('btn_add', Acl::access_view_module( 'estudiantes', 'created' ));
+
+		//Indica si se mostrará el texto del botón Agregar
+		$this->view->assign('btn_add_text', TRUE);			
+
+		//Indica si se mostrará el botón de Imprimir
+		$this->view->assign('btn_print', Acl::access_view_module( 'estudiantes', 'print' ));
+
+		//Indica si se mostrará el botón de Compartir
+		$this->view->assign('btn_shared', FALSE);
+
+		//Indica si se mostrará el botón de Busqueda Avanzada
+		$this->view->assign('btn_search_avanced', TRUE);
+
+		//Indica si se mostrará las Opciones de busqueda
+		$this->view->assign('search', TRUE);
+				
+			
 		
-		
-		$this->add_btn_action_datatable('before', 
-			array(			
-				'color'=> 'success',
-				'onclick' => "detalle_estudiante_handler(this)",
-				'tooltip' => 'Prueba',
-				'icon' => 'info-circle',
-			)
-		);
-		
-		$this->view->render('index', 'index');
+		$this->view->template ( 'default' );        
+        $this->view->theme( BACKEND );
+		$this->view->ambit( BACKEND );
+
+		$this->view->render(__FUNCTION__, [
+			'active_menu' => 'estudiantes',
+		]);
 	}
 	
+
+
+	public function detalle_estudiante( $id = NULL )
+	{
+		Acl::access_module( 'estudiantes_listado' );
+
+		$registry = Registry::get( 'estudiantes_listado' );
+				
+		
+		$this->model = $this->load_model(Registry::get('estudiantes_listado')['table']);
+		$data = $this->model->getdata_byid($id);
+
+		$this->view->assign('data'		, $data);
+		$this->view->assign('title'		, ucfirst($this->controller_name) ); //Título de la Vista
+		$this->view->assign('module'	, $this->controller_name ); //Título de la Vista
+		
+		
+		$html = Creative::get( 'Components' )->render('HtmlBasic');
+		/*$panelbox = $html->panelbox([
+			'label'=>'Datos personales'
+		]);
+
+		foreach ($registry['fields_info'] as $key => $attr) {
+			$acl = Acl::access_field( 'estudiantes_listado', $key );
+			if( $acl != 0 )
+			{
+				$comp = $html->component(
+					$attr['type'],
+					[
+						'id'	=> $key,
+						'col'	=> $attr['col'],
+						'type'	=> $attr['type'],
+						'label'	=> $attr['text'],
+						'readonly'=> $acl == 2 ? TRUE : FALSE,
+						'required'=> isset($attr['required']) ? $attr['required'] : FALSE,
+						'items'	=> isset($attr['items']) ? $attr['items'] : NULL,
+						'multiple'=> isset($attr['multiple']) ? $attr['multiple'] : NULL,
+						'row'=> isset($attr['row']) ? $attr['row'] : NULL,
+						'value'=> $data[$key]
+					]
+				);
+				$panelbox->add( $comp );	
+			}	
+		}
+		
+		$panelbox->write();*/
+		
+		
+		$this->view->template ( 'default' );        
+        $this->view->theme( BACKEND );
+		$this->view->ambit( BACKEND );
+
+		$this->view->render( 'detalle_estudiante', [
+			'active_menu' => 'estudiantes',
+		]);
+	}
 }
 
