@@ -35,10 +35,8 @@
         ]
     },
     "suggest": {
-        "monolog/monolog": "Allows more advanced logging of the application flow",
-        "kerras00/geo-api": "",
-        "megacreativo/CedulaVE-API": ""
+        "monolog/monolog": "Allows more advanced logging of the application flow"
     },
-    "minimum-stability": "alpha",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

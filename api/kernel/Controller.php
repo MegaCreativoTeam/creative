@@ -67,7 +67,7 @@ abstract class Controller {
 	protected function load_model( $modelo )
 	{
 		$modelo =  $modelo . 'Model';
-		$path_model = PATH_APP . 'mvc' .DS. 'models' .DS. $modelo . '.php';
+		$path_model = PATH_APP . 'models' .DS. $modelo . '.php';
 		
 		if (is_readable($path_model)) {
 			

@@ -75,7 +75,7 @@ class DataSource
 	 */
 	public function get_stock ( $name )
 	{
-		$path_file = PATH_APP . 'datasources' .DS. $name . '.php';
+		$path_file = PATH_APP . 'resources'.DS.'datasources' .DS. $name . '.php';
 
 		if(is_file($path_file) AND is_readable($path_file)){
 			return include_once $path_file;
@@ -177,7 +177,7 @@ class DataSource
 	public static function load_model( $model, $primary_key = 'id' )
 	{		
 		$model =  $model . 'Model';
-		$path_model = PATH_APP . 'mvc' .DS. 'models' .DS. $model . '.php';
+		$path_model = PATH_APP . 'models' .DS. $model . '.php';
 		
 		if (is_readable($path_model))
 		{

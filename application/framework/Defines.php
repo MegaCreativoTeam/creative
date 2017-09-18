@@ -63,7 +63,7 @@ define('E_PDO', -1001);
 	/**
 	* Directorio de cargador del MVC (Vistas)
 	*/
-	define('PATH_VIEWS', PATH_APP . 'views' .DS);
+	define('PATH_VIEWS', PATH_APP . 'resources'.DS.'views' .DS);
 	
 	
 	/**

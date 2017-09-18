@@ -95,7 +95,8 @@ abstract class Controller extends ControllerBase
 	 *
 	 * @param string $class
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 		$this->controller_name = str_ireplace( 'Controller', '', get_class($this) );
 		/*$this->registry = [
@@ -110,8 +111,8 @@ abstract class Controller extends ControllerBase
 	 * @param [type] $pages
 	 * @return void
 	 */
-	protected function page_offset( $page_settings ){
-
+	protected function page_offset( $page_settings )
+	{
 		$page = 0;
 		$offset = App::get( 'records_per_page' );
 
@@ -139,7 +140,8 @@ abstract class Controller extends ControllerBase
 	* 
 	* @return
 	*/
-	protected function add_action_btn_datatable( $position , $params){
+	protected function add_action_btn_datatable( $position , $params)
+	{
 		$this->view->assign('action_btn_datatable_'.$position, array(
 			array(
 				'color'=> isset($params['color']) ? $params['color'] : 'default',
@@ -149,16 +151,37 @@ abstract class Controller extends ControllerBase
 			)
 		));
 	}
-    
-    protected function include_source_view($file, $group, $ambit = BACKEND){
-    	if( ! file_exists(PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl') ){
+	
+	
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $file
+	 * @param [type] $group
+	 * @param [type] $ambit
+	 * @return void
+	 */
+	protected function include_source_view($file, $group, $ambit = BACKEND
+	){
+		if( ! file_exists(PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl') )
+		{
             return false;
         }
         return file_get_contents( PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl');
     }
 
-	protected function include_tpl($file, $group, $ambit = BACKEND){
-    	if( ! file_exists(PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl') ){
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $file
+	 * @param [type] $group
+	 * @param [type] $ambit
+	 * @return void
+	 */
+	protected function include_tpl($file, $group, $ambit = BACKEND)
+	{
+		if( ! file_exists(PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl') )
+		{
             return false;
         }
         return file_get_contents( PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl');

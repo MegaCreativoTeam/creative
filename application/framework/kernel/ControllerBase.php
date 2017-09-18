@@ -71,10 +71,11 @@ abstract class ControllerBase
 	* 
 	* @return
 	*/
-	protected function load_model( $model, $primary_key = 'id' ) {
+	protected function load_model( $model, $primary_key = 'id' )
+	{
 		
 		$model =  $model . 'Model';
-		$path_model = PATH_APP . 'mvc' .DS. 'models' .DS. $model . '.php';
+		$path_model = PATH_APP . 'models' .DS. $model . '.php';
 		
 		if (is_readable($path_model)) {
 			
@@ -86,7 +87,8 @@ abstract class ControllerBase
 			
 			$path_model =  PATH_KERNEL . 'ModelGenerator.php';
 			
-			if (is_readable($path_model)) {
+			if (is_readable($path_model))
+			{
 				
 				$table = str_ireplace('Model','', $model);
 				$ModelGenerator = 'ModelGenerator';
@@ -94,7 +96,8 @@ abstract class ControllerBase
 		  		return $model;
 				
 			} else {
-				if( ENVIRONMENT == 'development' ){
+				if( ENVIRONMENT == 'development' )
+				{
 					$message = '<h3 style="text-transform: uppercase;">Error al cargar modelo</h3>';
 					$message .= '<strong>Model</strong> [<span style="color:red">'.$model.'</span>]<br/>';
 					$message .= '<strong>Path</strong> [<span style="color:red">'.$path_model.'</span>]';
@@ -116,11 +119,14 @@ abstract class ControllerBase
 	* 
 	* @return
 	**/
-    protected function load_librery($lib, $instance = FALSE) {
+	protected function load_librery($lib, $instance = FALSE)
+	{
         $path_lib = PATH_LIBS . $lib .DS. $lib .'.php';
-        if (is_readable($path_lib)) {
+		if (is_readable($path_lib)) 
+		{
             require_once $path_lib;
-            if($instance){
+			if($instance)
+			{
             	$lib = new $lib;
             	return $lib;
             }
@@ -137,8 +143,10 @@ abstract class ControllerBase
 	* 
 	* @return
 	*/
-    protected function get_string($clave){
-        if(isset($_POST[$clave]) && !empty($_POST[$clave])){
+	protected function get_string($clave)
+	{
+		if(isset($_POST[$clave]) && !empty($_POST[$clave]))
+		{
             $_POST[$clave] = htmlspecialchars($_POST[$clave], ENT_QUOTES);
             return $_POST[$clave];
         }
@@ -152,24 +160,30 @@ abstract class ControllerBase
 	* 
 	* @return
 	*/
-    protected function get_post($clave){
-        if(isset($_POST[$clave]) && !empty($_POST[$clave])){
+	protected function get_post($clave)
+	{
+		if(isset($_POST[$clave]) && !empty($_POST[$clave]))
+		{
             return $_POST[$clave];
         }
         return '';
     }
     
     
-    protected function get_float($clave){
-        if(isset($_POST[$clave]) && !empty($_POST[$clave])){
+	protected function get_float($clave)
+	{
+		if(isset($_POST[$clave]) && !empty($_POST[$clave]))
+		{
             return (float)$_POST[$clave];
         }
         return 0.0;
     }
     
     
-    protected function get_int($clave){
-        if(isset($_POST[$clave]) && !empty($_POST[$clave])){
+	protected function get_int($clave)
+	{
+		if(isset($_POST[$clave]) && !empty($_POST[$clave]))
+		{
             $_POST[$clave] = filter_input(INPUT_POST, $clave, FILTER_VALIDATE_INT);
             return $_POST[$clave];
         }
@@ -185,8 +199,10 @@ abstract class ControllerBase
 	* 
 	* @return string $key 
 	*/
-    protected function get_alphanum($key){
-        if(isset($_POST[$clave]) && !empty($_POST[$key])){
+	protected function get_alphanum($key)
+	{
+		if(isset($_POST[$clave]) && !empty($_POST[$key]))
+		{
             $_POST[$key] = (string) preg_replace('/[^a-zA-Z0-9_]/i', '', $_POST[$clave]);
             return trim($_POST[$key]);
         }
@@ -201,7 +217,8 @@ abstract class ControllerBase
      * 
      * @param string $route
      */
-	protected function location($route){
+	protected function location($route)
+	{
 		header('Location: ' . $route);
 		exit;
     }
@@ -212,7 +229,8 @@ abstract class ControllerBase
      * --------------------------------------------------------
      * Prevents cache in the application
      */
-	protected function no_cache() {
+	protected function no_cache()
+	{
 		header("Expires: Tue, 01 Jul 2001 06:00:00 GMT");
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
 		header("Cache-Control: no-store, no-cache, must-revalidate");
