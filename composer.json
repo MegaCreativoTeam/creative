@@ -39,6 +39,6 @@
         "kerras00/geo-api": "",
         "megacreativo/CedulaVE-API": ""
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "alpha",
     "prefer-stable": true
 }
