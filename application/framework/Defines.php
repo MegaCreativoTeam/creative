@@ -50,20 +50,20 @@ define('E_PDO', -1001);
 	/**
 	*  Directorio de cargador del MVC (Controladores)
 	*/
-	define('PATH_CONTROLLERS', PATH_APP . 'mvc'.DS.'controllers' .DS);
+	define('PATH_CONTROLLERS', PATH_APP . 'controllers' .DS);
 	
 	
 	/**
 	* Directorio de cargador del MVC (Modelos)
 	*/
 
-	define('PATH_MODELS', PATH_APP . 'mvc'.DS.'models' .DS);
+	define('PATH_MODELS', PATH_APP .'models' .DS);
 	
 	
 	/**
 	* Directorio de cargador del MVC (Vistas)
 	*/
-	define('PATH_VIEWS', PATH_APP . 'mvc'.DS.'views' .DS);
+	define('PATH_VIEWS', PATH_APP . 'views' .DS);
 	
 	
 	/**

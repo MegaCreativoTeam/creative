@@ -143,11 +143,17 @@ class estudiantesModel extends Model
     }
 
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $cedula
+     * @return void
+     */
     public function record_academico( $cedula = NULL )
     {
         $data = Creative::get( 'Conexant' )->execute("
                 SELECT
-                        p.semestre
+                     p.semestre
                     ,p.pensum_id
                     ,m.id materia_id
                     ,m.codigo
