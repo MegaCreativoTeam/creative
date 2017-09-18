@@ -11,7 +11,6 @@ class pensumModel extends Model
             ,p.carrera_id carrera_id
             ,c.codigo carrera_codigo
             ,c.nombre carrera_nombre
-                
             ,p.created
             ,p.last_update
             ,p.status
@@ -30,7 +29,6 @@ class pensumModel extends Model
         FROM pensum p 
             LEFT JOIN carreras c ON p.carrera_id = c.id
             LEFT JOIN sedes s ON p.sede_id = s.id ";
-
 
     public function __construct()
     {
@@ -77,13 +75,24 @@ class pensumModel extends Model
 
         if( is_array($data) AND count($data) )
         {
-            return $data[0];
+            $data = $data[0];
+            $materias = Creative::get( 'Conexant' )->execute(
+                "
+                SELECT 
+                    * 
+                FROM pensum_has_materias
+                WHERE pensum_id = :pensum_id
+                ", [ 'pensum_id' => $this->pSQL($data['id']) ]
+            );
+            $data['materias'] = $materias ;
+            return $data;
         }
         else 
         {
             return [];
         }
     }
+
 
 }
 

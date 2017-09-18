@@ -1,7 +1,6 @@
 <?php
 
-
-define('API_CONTENT_TYPE', 'json' );
+//define('API_CONTENT_TYPE', 'json' );
 
 // Constantes de estado
 const STATUS_URL_INCORRECTA = 2;
@@ -22,15 +21,11 @@ const STATUS_METODO_NO_PERMITIDO = 4;
 503	Service Unavailable	Este código se usa cuando el servidor esta temporalmente fuera de servicio.
 */
 
-abstract class Router {
-	
-	private $content_type = [
-		'json'	=>'application/json; charset=utf-8',
-		'xml'	=>'text/xml; charset=utf-8',
-	];
-	
-	
-	public static function execute() {  
+abstract class Router 
+{
+		
+	public static function execute()
+	{  
 		
 		//Setear la URL
 		$request = new Request();
@@ -74,61 +69,9 @@ abstract class Router {
 			call_user_func(array($controller,$method));
 		}//END IF
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		exit;
-		switch ($method) {
-			
-			case 'GET'://consultar
-				echo 'GET';
-			break;
-			
-			case 'POST'://insertar
-				echo 'POST';
-			break; 
-			
-			case 'PUT'://actualizar
-				echo 'PUT';
-			break; 
-			
-			case 'DELETE'://eliminar
-				echo 'DELETE';
-			break;
-			
-			default://metodo NO soportado
-				echo 'METODO NO SOPORTADO';
-			break;
-		}
 	}
 
-	private function clean($data) {  
-		$entrada = array();  
-		if (is_array($data)) {
-			foreach ($data as $key => $value) {  
-				$entrada[$key] = $this->clean($value);  
-			}  
-		} else {  
-			if (get_magic_quotes_gpc()) {
-				//Quitamos las barras de un string con comillas escapadas  
-				//Aunque actualmente se desaconseja su uso, muchos servidores tienen activada la extensión magic_quotes_gpc.   
-				//Cuando esta extensión está activada, PHP añade automáticamente caracteres de escape (\) delante de las comillas que se escriban en un campo de formulario.   
-				$data = trim(stripslashes($data));  
-			}  
-			//eliminamos etiquetas html y php  
-			$data = strip_tags($data);  
-			//Conviertimos todos los caracteres aplicables a entidades HTML  
-			$data = htmlentities($data);  
-			$entrada = trim($data);  
-		}  
-		return $entrada;  
-	}
+
    
 	private function get_codes_responses( $code ) { 
 		$status = array(  

@@ -53,4 +53,3 @@ class ViewXML extends ViewAPI {
 }
 
 
-?>

@@ -17,7 +17,7 @@
  * --------------------------------------------------------
  * Default: ['PUT', 'GET', 'POST', 'DELETE']
  */
-const METHODS = ['PUT', 'GET', 'POST', 'DELETE'];
+const METHODS = ['PUT', 'GET', 'POST', 'DELETE', 'PATH'];
 
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Credentials: true');

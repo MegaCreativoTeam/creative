@@ -1,6 +1,6 @@
 <?php
 
-abstract class ErrorHandler extends Exception
+class ErrorHandler extends Exception
 {
     public $status;
 	public $code;
@@ -66,12 +66,8 @@ abstract class ErrorHandler extends Exception
 		return true;
 	}
 
-	public static function run_exception( $exception_title, $exception_message = '' )
-	{
-
-	}
-
 }
+set_error_handler("ErrorHandler::error");
 
 
 set_exception_handler(
@@ -131,13 +127,6 @@ abstract class log {
 /**
 * Manejador de errores
 * 
-* @param undefined $codigo
-* @param undefined $message
-* @param undefined $file
-* @param undefined $line
-* 
-* @return
-*/
 function _ErrorHandler($code, $message, $file, $line){
     if (!(error_reporting() & $code)) {        
         return; // Este código de error no está incluido en error_reporting
@@ -179,7 +168,7 @@ function _ErrorHandler($code, $message, $file, $line){
     return true;
 }
 set_error_handler("_ErrorHandler");
-
+*/
 
 
 function shutdown() {
@@ -200,6 +189,4 @@ function shutdown() {
 		//var_dump ($error);//do whatever you need with it
     }
 }
-//register_shutdown_function('shutdown');
-
-?>
+register_shutdown_function('shutdown');

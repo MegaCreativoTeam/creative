@@ -41,7 +41,7 @@ function loaddata_handler( id ){
 							}
 						}
 						
-	    			} else if( $("#"+index).is("[typE='date']") || $("#"+index).is("[typE='datetime-local']") ){
+	    			} else if( $("#"+index).is("[type='date']") || $("#"+index).is("[type='datetime-local']") ){
 						var date = item;
 						$("#"+index).val(date);
 						

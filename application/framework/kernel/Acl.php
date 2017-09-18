@@ -192,7 +192,39 @@ abstract class Acl {
 		//Verificar si el usuario está autenticado
 		if( ! self::auth() )
 		{
-			return false;
+			if( self::$_async === FALSE )
+			{
+				if ( !isset($_SERVER['PHP_AUTH_USER']) )
+				{
+					//$realm = 'Authorization Required';
+					//header('WWW-Authenticate: Basic realm="'.$realm.'"' );
+					header('HTTP/1.0 401 Unauthorized');
+					echo '<meta  http-equiv="refresh" content="0;url=/accounts/auth/">';
+					exit;	
+				}
+			}
+			else
+			{	
+				if ( !isset($_SERVER['PHP_AUTH_USER']) )
+				{
+					$realm = 'Authorization Required';
+					//header('WWW-Authenticate: Basic realm="'.$realm.'"' );
+					header('HTTP/1.0 401 Unauthorized');
+
+					$response = [
+						'status'=> 401,
+						'statusText' => Lang::get('http_error.401'),
+						'time' => date('d/m/Y H:m:s'),
+						'icon' => 'error',
+					];						
+					
+					header('Content-Type: application/json; charset=utf8');
+					echo json_encode($response, JSON_PRETTY_PRINT);
+					exit;
+				}				
+			}
+			
+			/** esto estaba antes return false;**/
 		}
 
 		$module = str_ireplace('Controller','',$module);
@@ -212,22 +244,34 @@ abstract class Acl {
 		{
 			if( self::$_async === FALSE )
 			{
-				header('location: /errors/backend/401');
+				if ( !isset($_SERVER['PHP_AUTH_USER']) )
+				{
+					$realm = 'Authorization Required';
+					header('WWW-Authenticate: Basic realm="'.$realm.'"' );
+					header('HTTP/1.0 401 Unauthorized');
+					header('location: /errors/backend/401');
+				}	
 				exit;				
 			}
 			else
-			{
-				$response = [
-					'status'=> 401,
-					'statusText' => Lang::get('http_error.401'),
-					'time' => date('d/m/Y H:m:s'),
-					'icon' => 'error',
-				];
-						
-				
-		        header('Content-Type: application/json; charset=utf8');
-		        echo json_encode($response, JSON_PRETTY_PRINT);
-				exit;
+			{	
+				if ( !isset($_SERVER['PHP_AUTH_USER']) )
+				{
+					$realm = 'Authorization Required';
+					header('WWW-Authenticate: Basic realm="'.$realm.'"' );
+					header('HTTP/1.0 401 Unauthorized');
+
+					$response = [
+						'status'=> 401,
+						'statusText' => Lang::get('http_error.401'),
+						'time' => date('d/m/Y H:m:s'),
+						'icon' => 'error',
+					];						
+					
+					header('Content-Type: application/json; charset=utf8');
+					echo json_encode($response, JSON_PRETTY_PRINT);
+					exit;
+				}				
 			}
 		}
     }

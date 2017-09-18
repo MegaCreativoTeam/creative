@@ -44,6 +44,14 @@ npm('loading');
         });
         $(".select2[readonly]").select2({ "disabled": true });
         $('[data-toggle="popover"]').popover();
+
+        $('form').on("keypress", function (e) {
+            if (e.which == 13){
+                $(this).next().focus();
+                return false;
+            }
+        });
+
     });
 </script>
 </body>

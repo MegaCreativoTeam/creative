@@ -1,4 +1,4 @@
-<div class="box box-default">
+<div class="box box-default :class" :style>
 	<div class="box-header with-border">
 		<h4 class="box-title">:label</h4>
 	</div>

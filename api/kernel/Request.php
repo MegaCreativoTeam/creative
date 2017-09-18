@@ -57,17 +57,28 @@ class Request {
 	  		$this->_format			= DEFAULT_FORMAT;
 	        
 
-			if( $this->_controller == '' ) {
+			if ( $this->_controller == '' )
+			{
 				$this->_controller = DEFAULT_CONTROLLER;
-			} else {
- 				if( strpos( $this->_controller, '.' ) ){
+			}
+			else
+			{
+				if (strpos( $this->_controller, 'xml' ) )
+				{
 					$this->_controller = explode('.',$this->_controller)[0];
-					$this->_format = explode('.',$_GET['url'])[1];
-					//Corregir entrada del Formato
+					$this->_format = 'xml';
+				}
+				elseif ( strpos( $this->_controller, 'json' ) )
+				{
+					$this->_controller = explode('.',$this->_controller)[0];
+					$this->_format = 'json';
+				}
+				else
+				{
+					$this->_format = isset($_GET['format']) ? $_GET['format'] : DEFAULT_FORMAT;
 				}
 			}
-
-	       
+       
 			
 			switch( $this->_resquest_method ){
 				case 'get':
@@ -75,10 +86,10 @@ class Request {
 						$this->_method = DEFAULT_METHOD;
 					} else {
 						//Asegura que solo se ejecuten esos tres tipos de metodos
-						if( $this->_method != 'find' AND $this->_method != 'search' AND $this->_method != 'all' ){
-							array_unshift($this->_args,  $this->_method );
-							$this->_method 	= 'all';
-						}
+						//if( $this->_method != 'find' AND $this->_method != 'search' ){
+							//array_unshift($this->_args,  $this->_method );
+							//$this->_method 	= 'find';
+						//}
 					}
 					
 				break;
@@ -90,6 +101,7 @@ class Request {
 					$this->_method = 'post';
 				break; 
 				
+				case 'path'://actualizar
 				case 'put'://actualizar
 					$this->_method = 'put';
 				break; 
@@ -162,4 +174,3 @@ class Request {
 	}
 	
 }
-?>

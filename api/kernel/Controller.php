@@ -15,31 +15,38 @@ abstract class Controller {
 	 *
 	 * @param boolean $controller
 	 */
-	public function __construct( $controller = FALSE ) {
-
-		$this->_controller = $controller;
+	public function __construct( $controller = FALSE )
+	{
 		$this->request = $GLOBALS['CREATIVE']['request'];
+
+		$this->controller = $controller;
+		$this->controller_name = str_ireplace( 'controller', '', get_class($this) );
+		$this->_controller = $controller;		
 		$this->api_version = $this->request->get_version();
 		$this->api_format = $this->request->get_format();
 		$this->view = Creative::get( 'View' );
+		$this->view->set_format($this->api_format);
 		$this->headers = getallheaders();
+		$this->_put = [];
+		$this->file = [];
+
+		if( isset($this->headers['authorization']) )
+		{
+			$this->authorization = $this->headers['authorization'];
+		}		
 		
-		if( isset($this->headers['Authorization']) ){
-			 $this->headers['Authorization'];
-		}
+		$file = '';
 		
-		$this->_put = array();
-		$file= '';
-		
-		if( $this->request->get_request_method() == 'put' ){
+		if( $this->request->get_request_method() == 'put' )
+		{
 			$file = file_get_contents('php://input');
-			parse_str($file, $this->_put);
+			parse_str($file, $this->file);
+			$this->_put = $this->file;
 		}
 		
 		$this->app = $GLOBALS['CREATIVE']['CONF']['app'];
 
 		$this->model_generic = NULL;
-		
 	}
 	
 	abstract public function index( );
@@ -57,10 +64,8 @@ abstract class Controller {
 	 * 
 	 * @return
 	 */
-	protected function load_model( $modelo ) {
-		
-		$version = $GLOBALS['CREATIVE']['request']->get_version();
-		
+	protected function load_model( $modelo )
+	{
 		$modelo =  $modelo . 'Model';
 		$path_model = PATH_APP . 'mvc' .DS. 'models' .DS. $modelo . '.php';
 		

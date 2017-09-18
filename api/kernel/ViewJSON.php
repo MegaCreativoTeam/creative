@@ -43,7 +43,3 @@ class ViewJSON extends ViewAPI {
         exit;
     }
 }
-
-
-
-?>

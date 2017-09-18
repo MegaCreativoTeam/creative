@@ -3,80 +3,16 @@
 require_once PATH_API .'kernel'.DS. "ViewJSON.php";
 require_once PATH_API .'kernel'.DS. "ViewXML.php";
 
-abstract class ViewAPI {
+abstract class ViewAPI
+{
     //Código de error
     public
 		$status,
 		$module,
 		$statusText;
 	
-    public abstract function response($body, $header = array());
-    
-    const
-		HTTP_100='Continue',
-		HTTP_101='Switching Protocols',
-		
-		/* Especifica que un recurso o colección existe */
-		HTTP_200 = array(200,'OK'),
-		
-		/**
-		* Especifica que se creó un recurso. 
-		* Se puede complementar con el header Location 
-		* para especificar la URI hacia el nuevo recurso. */
-		HTTP_201 = array(201, 'Created'),
-		
-		
-		HTTP_202='Accepted',
-		HTTP_203='Non-Authorative Information',
-		
-		/**
-		* Representa un resultado exitoso pero sin retorno 
-		* de algún dato (viene muy bien en DELETE)
-		*/
-		HTTP_204 = array(204, 'No Content'),
-		
-		
-		HTTP_205='Reset Content',
-		HTTP_206='Partial Content',
-		HTTP_300='Multiple Choices',
-		HTTP_301='Moved Permanently',
-		HTTP_302='Found',
-		HTTP_303='See Other',
-		HTTP_304='Not Modified',
-		HTTP_305='Use Proxy',
-		HTTP_307='Temporary Redirect',
-		HTTP_400='Bad Request',
-		
-		/**
-		* Indica que el cliente debe estar autorizado primero 
-		* antes de realizar operaciones con los recursos
-		*/
-		HTTP_401 = array(401,'Unauthorized'),
-		HTTP_402='Payment Required',
-		HTTP_403='Forbidden',
-		
-		/* Especifica que el recurso buscado no existe */
-		HTTP_404 = array(404,'Not Found'),
-		
-		HTTP_405='Method Not Allowed',
-		HTTP_406='Not Acceptable',
-		HTTP_407='Proxy Authentication Required',
-		HTTP_408='Request Timeout',
-		HTTP_409='Conflict',
-		HTTP_410='Gone',
-		HTTP_411='Length Required',
-		HTTP_412='Precondition Failed',
-		HTTP_413='Request Entity Too Large',
-		HTTP_414='Request-URI Too Long',
-		HTTP_415='Unsupported Media Type',
-		HTTP_416='Requested Range Not Satisfiable',
-		HTTP_417='Expectation Failed',
-		HTTP_500='Internal Server Error',
-		HTTP_501='Not Implemented',
-		HTTP_502='Bad Gateway',
-		HTTP_503='Service Unavailable',
-		HTTP_504='Gateway Timeout',
-		HTTP_505='HTTP Version Not Supported';
+    public abstract function response( $body, $header = [] );
+
 }
 
 
@@ -86,74 +22,80 @@ class View {
 		$_status,
 		$_statusText,
 		$_icon = 'info';
-	function __construct( ) {
+
 		
-	}
+	function __construct( ) { }
 	
-	
-	public function initialize( $status = 400 ) {
+	/**
+	 * Undocumented function
+	 *
+	 * @param integer $status
+	 * @return void
+	 */
+	public function initialize( $status = 400 )
+	{
 		$this->_status = $status;
 	}
 	
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param [type] $format
+	 * @return void
+	 */
+	public function set_format( $format )
+	{
+		$this->_format = $format;
+	}
 	
 	/**
      * Imprime el cuerpo de la respuesta y setea el código de respuesta
      * @param mixed $body de la respuesta a enviar
      */
-    public function response($status, $body){
-    	
-    	switch( $this->_format ){
-			case 'xml':
-			
-				if ($this->_status) {
-		            http_response_code($this->_status);
-		        }
-				if( !isset($body['status']) ){
-					$body['status']= $this->_status;
-				}
-				if( !isset($body['statusText']) ){
-					$body['statusText']= $this->statusText;
-				}
-				//$body['module'] = $this->module;				
+	public function response($status, $body)
+	{
+		
+		$response = [];
+		
+		$this->_status = $status;
+		
+		$response['status']= $this->_status;
+		$response['statusText']= $this->_statusText ? $this->_statusText : $this->get_http_status_text($this->_status);
+		$response['time'] = date('d/m/Y H:m:s');
+		$response['icon'] = $this->_icon;
+		
+		if( $this->_status == 200 OR $this->_status == 201 ){
+			http_response_code($this->_status);
+		}
+
+		$response = array_merge($response, $body);
+		ob_get_clean();
+		ob_start();
+
+		switch( $this->_format )
+		{
+			case 'xml':			
+				
 				header('Content-Type: text/xml; charset=utf-8');
 		        $xml = new SimpleXMLElement('<response/>');
-		        $this->parse($body, $xml);
-		        print $xml->asXML();
-        
+		        $this->parse($response, $xml);
+		        echo $xml->asXML();
+				
 			break;
-			
+
+			case 'json':
 			default:
-				$response = array();
-				
-				$this->_status = $status;
-		        
-				$response['status']= $this->_status;
-				$response['statusText']= $this->_statusText ? $this->_statusText : $this->get_http_status_text($this->_status);
-				$response['time'] = date('d/m/Y H:m:s');
-				$response['icon'] = $this->_icon;
-				
-				if( $this->_status == 200 OR $this->_status == 201 ){
-					http_response_code($this->_status);
-				}
-				
-				//$response['module'] = $this->module;				
-				$response = array_merge($response, $body);				
-				
-		        header('Content-Type: application/json; charset=utf8');
-		        echo json_encode($response, JSON_PRETTY_PRINT);        
+				header('Content-Type: application/json; charset=utf-8');
+				echo json_encode($response, JSON_PRETTY_PRINT);
 			break;
-		}		
+		}
+
+		ob_end_flush(); 
 		exit;        
     }
-    
-    /**
-	* 
-	* @param undefined $data
-	* @param undefined $xml_data
-	* 
-	* @return
-	*/
-    public function parse($data, &$xml_data){
+	
+	public function parse($data, &$xml_data){
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 if (is_numeric($key)) {
@@ -166,9 +108,7 @@ class View {
             }
         }
     }
-    
-    
-    
+	
     public function get_http_status_text($status){
 		$http_status = array(
 			100 => 'Continue',  

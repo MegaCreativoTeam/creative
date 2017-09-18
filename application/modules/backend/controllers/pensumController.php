@@ -21,10 +21,10 @@ class pensumController extends backendController
 	{
 		
 		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', array(
-			'add_record' 	=> TRUE,
+			'add_record' 	=> FALSE,
 			'controller_delete'	=> '/api/v1/'.$this->controller_name.'.json/',
-			'controller_save' 	=> '/api/v1/'.$this->controller_name.'.json/',
-			'controller_load'	=> '/api/v1/'.$this->controller_name.'.json/',
+			/*'controller_save' 	=> '/api/v1/'.$this->controller_name.'.json/',*/
+			/*'controller_load'	=> '/api/v1/'.$this->controller_name.'.json/',*/
 			'size' 				=> 'lg'
 			,'text' => $this->controller_name
 		));

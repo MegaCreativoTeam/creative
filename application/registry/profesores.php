@@ -12,6 +12,8 @@ return
 
     'table' => 'profesores',
 
+    'alias_url' => 'profesores',
+
     'filters' => [
         'dni' => Lang::get('dashboard.personal_attr.dni'),
         'name' => Lang::get('dashboard.personal_attr.name'),
