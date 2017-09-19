@@ -55,8 +55,8 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
 
                 case strripos($file, 'php'):                    
                 default:
-                    $message = end(explode( '/', $directory ));
-                    $this->assertFileIsReadable( $root . $file , $message . ' Not found' );
+                $message = $message != '' ? $message : $directory;
+                    $this->assertFileIsReadable( $root . $file , 'File: "' .$message . '" Not found' );
                 break;
             }            
             
