@@ -44,10 +44,6 @@ application/logs/*
 application/resources/datasources/*
 application/registry/*
 
-application/conf/*
-!application/conf/app.php
-!application/conf/session.php
-
 application/modules/controllers/*
 !application/modules/controllers/accountsController.php
 !application/modules/controllers/dashboardController.php
