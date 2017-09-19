@@ -5,4 +5,5 @@ php:
   - hhvm # on Trusty only
   - nightly
 
-script: phpunit Test/EviromentTest.php
+script:
+  - phpunit Test/EviromentTest.php
