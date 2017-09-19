@@ -19,8 +19,8 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
 
         foreach ( $directories as $directory =>  $message )
         {
-            $message = $message != '' ? $message : end(explode( '/', $directory  ));
-            $this->assertDirectoryExists( $root . $directory,  $message . ' Not found');
+            $message = $message != '' ? $message : $directory;
+            $this->assertDirectoryExists( $root . $directory,  'Directory: "'. $message . '" Not found');
         }
 
     }
@@ -48,12 +48,12 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
         {
             
             switch ( true ) {
-                case strripos($type, 'json'):
+                case strripos($file, 'json'):
                     $content = file_get_contents( $root . $file );
                     $json = json_decode( $content, true );
                 break;
 
-                case strripos($type, 'php'):                    
+                case strripos($file, 'php'):                    
                 default:
                     $message = end(explode( '/', $directory ));
                     $this->assertFileIsReadable( $root . $file , $message . ' Not found' );
