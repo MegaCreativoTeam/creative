@@ -10,7 +10,7 @@
  * @author      Brayan Rincon <brayan262@gmail.com>
  */
 
-require_once __DIR__ . '/../initialize.php';
+require_once __DIR__ . '/../application/initialize.php';
 require_once PATH_APP . 'autoload.php';
 
 Creative::execute();
