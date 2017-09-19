@@ -41,8 +41,6 @@ application/libs/*
 #------------------------------------------------------------------------
 application/logs/*
 application/resources/datasources/*
-application/resources/helpers/*
-application/hooks/*
 application/registry/*
 
 application/conf/*
