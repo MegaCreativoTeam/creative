@@ -57,8 +57,8 @@ class makeCommand extends Console {
 
         
         //print_r($this->_args);print_r($this->_options);exit;
-        $controller_file_name = PATH_ROOT.'application/mvc/controllers/'. $name . 'Controller.php';
-        $view_file_name = PATH_ROOT.'application/mvc/views/'. $name . '/index.tpl';
+        $controller_file_name = PATH_ROOT.'application/controllers/'. $name . 'Controller.php';
+        $view_file_name = PATH_ROOT.'application/resources/views/'. $name . '/index.tpl';
 
         if( file_exists($controller_file_name) AND $force == '0' ){
             $this->dialog = new ConsoleKit\Widgets\Dialog($this->console);
@@ -74,8 +74,8 @@ class makeCommand extends Console {
         $content_controller = str_ireplace( '@name', $name, $content_controller);
         $this->write_file( $controller_file_name, $content_controller );
 
-        if( !file_exists (PATH_ROOT.'application/mvc/views/'. $name) ) 
-            mkdir( PATH_ROOT.'application/mvc/views/'. $name , 0700 );
+        if( !file_exists (PATH_ROOT.'application/resources/views/'. $name) ) 
+            mkdir( PATH_ROOT.'application/resources/views/'. $name , 0700 );
 
         if( file_exists($view_file_name) ){
             $this->dialog = new ConsoleKit\Widgets\Dialog($this->console);
@@ -118,7 +118,7 @@ class makeCommand extends Console {
             $controller = $this->_params['controller'];
         }
 
-        $view_file_name = PATH_ROOT."application/mvc/views/{$controller}/{$name}.tpl";
+        $view_file_name = PATH_ROOT."application/resources/views/{$controller}/{$name}.tpl";
 
         if( file_exists($view_file_name) ){
             $this->dialog = new ConsoleKit\Widgets\Dialog($this->console);
@@ -130,8 +130,8 @@ class makeCommand extends Console {
                 $this->terminate(405, "View [{$name}] has rewrite");
             }
         } else {
-            if( !file_exists (PATH_ROOT."application/mvc/views/{$controller}") ) 
-                mkdir( PATH_ROOT."application/mvc/views/{$controller}" , 0700 );
+            if( !file_exists (PATH_ROOT."application/resources/views/{$controller}") ) 
+                mkdir( PATH_ROOT."application/resources/views/{$controller}" , 0700 );
 
             $content_view = $this->get_template('view');
             $content_view = str_ireplace( '@name', $name, $content_view);
