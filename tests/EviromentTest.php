@@ -6,21 +6,21 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
     {
         $root = __DIR__ . DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR ;
         $directories = [
-            'application',
-            'application/conf',
-            'application/controllers',
-            'application/models',
-            'application/framework',
-            'application/framework/kernel',
-            'application/temporal',
-            'public_html',
-            'api',
-            'application/conf',
+            'application' => 'Directory "application" Not found',
+            'application/conf' => '',
+            'application/controllers' => '',
+            'application/models' => '',
+            'application/framework' => '',
+            'application/framework/kernel' => '',
+            'application/temporal' => '',
+            'public_html' => '',
+            'api' => '',
         ];
 
-        foreach ( $directories as $key =>  $value )
+        foreach ( $directories as $directory =>  $message )
         {
-            $this->assertDirectoryExists( $root . $value );
+            $message = $message != '' ? $message : end(explode( '/', $directory  ));
+            $this->assertDirectoryExists( $root . $directory,  $message . ' Not found');
         }
 
     }
@@ -31,7 +31,6 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
         $root = __DIR__ . DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR ;
         $directories = [
             'application/initialize.php' ,
-            'application/settings.json',
             'application/framework/Autoload.php',
             'application/framework/Creative.php',
             'application/framework/CreativeBase.php',
@@ -56,7 +55,8 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
 
                 case $type == 'php':                    
                 default:
-                    $this->assertFileIsReadable( $root . $file );
+                    $message = end(explode( '/', $directory ));
+                    $this->assertFileIsReadable( $root . $file , $message . ' Not found' );
                 break;
             }            
             
