@@ -15,24 +15,22 @@ abstract class SettingsAnalyzer
     public static function execute()
     {
         $content = '';
-        if ( file_exists( PATH_APP . 'settings.json') ){
-			$file = fopen( PATH_APP . 'settings.json', 'r');
-			while(!feof($file)) {
-				$content .= fgets($file);
-			}
-			fclose($file);
-		} else {
+		if ( file_exists( PATH_APP . 'settings.json') )
+		{
+			$content = json_decode(file_get_contents(PATH_APP . 'settings.json') , true );
+		} 
+		else 
+		{
 			exit( '<strong>Error in Environment Configuration File</strong>' );
 		}
 
-		$content = json_decode($content , true);
-
-		if( $content['hash_key'] == '' ){
-			echo( 'You must generate a new Hash Key. Use the command <strong>"php creative key generate"</strong> to generate a new Hash Key, or modify the key of the file <strong>"/aplication/configuration.json"</strong>' );
-			exit;
+		if( $content['hash_key'] == '' )
+		{
+			exit( 'You must generate a new Hash Key. Use the command <strong>"php creative key generate"</strong> to generate a new Hash Key, or modify the key of the file <strong>"/aplication/configuration.json"</strong>' );
 		}
 
-        foreach( $content as $key => $value ){
+		foreach( $content as $key => $value )
+		{
 			define( strtoupper($key), $value );
 		}
     }
