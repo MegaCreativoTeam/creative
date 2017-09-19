@@ -14,11 +14,10 @@
                 <div class="title">
                     Creative Framework
                 </div>
-
                 <div class="links">
-                    <a href="http://creative.megacreativo.com/docs/">Documentation</a>
-                    <a href="http://creative.megacreativo.com/news/">News</a>
-                    <a href="https://gitlab.com/creative-framework/creative">GitLabs</a>
+                    <a href="https://github.com/megacreativo/creative/tree/master/docs/">Documentation</a>
+                    <a href="https://github.com/megacreativo/creative/wiki/">Wiki</a>
+                    <a href="https://github.com/megacreativo/creative/">Github</a>
                 </div>
             </div>
         </div>
