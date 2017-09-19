@@ -27,7 +27,7 @@ header("Plataform: Creative Framework");
 header('Content-Type: text/html; charset=utf-8');
 header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 
-require_once __DIR__ . '/../../initialize.php';
+require_once __DIR__ . '/../../application/initialize.php';
 require_once PATH_API . 'autoload.php';
 require_once PATH_API . 'initialize.php';
 
