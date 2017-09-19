@@ -30,21 +30,21 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
     {
         $root = __DIR__ . DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR ;
         $directories = [
-            'application/initialize.php' ,
-            'application/framework/Autoload.php',
-            'application/framework/Creative.php',
-            'application/framework/CreativeBase.php',
-            'application/framework/Defines.php',
-            'application/framework/ErrorHandler.php',
-            'application/framework/Eviroment.php',
-            'application/framework/ExceptionHandler.php',
-            'application/framework/Functions.php',
-            'application/framework/ExceptionHandler.php',
-            'application/framework/LogsHandler.php',
-            'application/framework/SettingsAnalyzer.php',
+            'application/initialize.php' => '' ,
+            'application/framework/Autoload.php' => '',
+            'application/framework/Creative.php' => '',
+            'application/framework/CreativeBase.php' => '',
+            'application/framework/Defines.php' => '',
+            'application/framework/ErrorHandler.php' => '',
+            'application/framework/Eviroment.php' => '',
+            'application/framework/ExceptionHandler.php' => '',
+            'application/framework/Functions.php' => '',
+            'application/framework/ExceptionHandler.php' => '',
+            'application/framework/LogsHandler.php' => '',
+            'application/framework/SettingsAnalyzer.php' => '',
         ];
 
-        foreach ( $directories as $index =>  $file )
+        foreach ( $directories as $file =>  $message )
         {
             
             switch ( true ) {
@@ -55,7 +55,7 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
 
                 case strripos($file, 'php'):                    
                 default:
-                $message = $message != '' ? $message : $directory;
+                    $message = $message != '' ? $message : $directory;
                     $this->assertFileIsReadable( $root . $file , 'File: "' .$message . '" Not found' );
                 break;
             }            
