@@ -46,14 +46,14 @@ class EviromentTest extends \PHPUnit_Framework_TestCase
 
         foreach ( $directories as $index =>  $file )
         {
-            $type = end(explode( '.', $root . $file  ));
+            
             switch ( true ) {
-                case $type == 'json':
+                case strripos($type, 'json'):
                     $content = file_get_contents( $root . $file );
                     $json = json_decode( $content, true );
                 break;
 
-                case $type == 'php':                    
+                case strripos($type, 'php'):                    
                 default:
                     $message = end(explode( '/', $directory ));
                     $this->assertFileIsReadable( $root . $file , $message . ' Not found' );
