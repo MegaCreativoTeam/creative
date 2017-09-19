@@ -6,5 +6,5 @@ php:
   - nightly
 
 script:
-  - dir
-  - phpunit Test/EviromentTest.php
+  - cd test && ls
+  - phpunit test/EviromentTest.php
