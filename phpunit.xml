@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
+<phpunit bootstrap="tests/autoload.php" colors="true">
     <testsuites>
         <testsuite name="Hello World Test Suite">
             <directory>./tests/</directory>

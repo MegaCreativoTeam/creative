@@ -6,4 +6,5 @@ php:
   - nightly
 
 script:
+  - cd test && ls
   - phpunit --configuration phpunit.xml --coverage-text
