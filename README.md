@@ -1,17 +1,11 @@
 <p align="center"><img src="http://megacreativo.com/assets/img/creative/logo-creative.png" width="400"></p>
 
 <p align="center">
-
 <a href="https://travis-ci.org/megacreativo/creative"><img src="https://travis-ci.org/megacreativo/creative.svg?branch=master" alt="Build Status"></a>
-
 <a href="https://packagist.org/packages/megacreativo/creative"><img src="https://poser.pugx.org/megacreativo/creative/license" alt="License"></a>
-
 <a href="https://travis-ci.org/megacreativo/creative"><img src="https://poser.pugx.org/megacreativo/creative/downloads" alt="Total Downloads"></a>
-
 <a href="https://travis-ci.org/megacreativo/creative"><img src="https://poser.pugx.org/megacreativo/creative/v/unstable" alt="Latest Unstable Version"></a>
-
 <a href="https://packagist.org/packages/megacreativo/creative"><img src="https://poser.pugx.org/megacreativo/creative/v/stable" alt="Latest Stable Version"></a>
-
 </p>
 
 # Creative Framework
@@ -24,7 +18,7 @@ Creative es un framework para la creación de Aplicaciones Web. Creative es senc
 ## Instalación
 La forma más fácil de instalar Creative es usar [Composer](https://github.com/composer/composer)
 
-```javascript
+```php
 composer create-project megacreativo/creative
 ```
 
